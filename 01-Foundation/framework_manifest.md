@@ -16,7 +16,7 @@ Indeed, a core objective of this framework is to provide a solid foundation for 
 
 ## The Concept
 
-The ZeroSOC Framework aims to become the definitive standard for Security Operations. Instead of relying on disparate, vendor-specific playbooks and siloed definitions, ZeroSOC provides an open, extensible baseline for reasoning, investigating, and responding to cyber threats. 
+The ZeroSOC Framework ambitionally aims to become the definitive standard for Security Operations. Instead of relying on disparate, vendor-specific playbooks and siloed definitions, ZeroSOC provides an open, extensible baseline for reasoning, investigating, and responding to cyber threats. 
 
 This framework is built to guide **human analysts**, **deterministic automation**, and **autonomous AI agents** alike, ensuring consistent, mathematically precise, and auditable outcomes regardless of the underlying detection tooling, automation platform or AI model.
 
