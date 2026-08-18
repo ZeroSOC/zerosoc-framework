@@ -6,7 +6,7 @@ last_updated: 2026-08-17
 license: Apache-2.0
 ---
 
-# Standard SOC Definitions
+# Standard SecOps Definitions
 
 These definitions establish a clear, standardized vocabulary for Security Operations (SecOps) terminology, based on the most widely adopted industry conventions (e.g., NIST, SANS). Disambiguating these terms is critical for efficient triage, incident response, and tool alignment. Crucially, enforcing a standardized vocabulary is essential for maintaining a vendor-agnostic architecture, ensuring that core operations, taxonomies, and playbooks translate seamlessly across diverse security tools, cloud environments, telemetry sources, and agentic orchestration platforms without proprietary terminology lock-in.
 
@@ -119,8 +119,8 @@ A standardized, structured procedure detailing the analytical, investigative, an
 *   **Terminology Note:** In the broader industry or depending on the specific SOAR vendor, these are often referred to as "Runbooks." To avoid ambiguity, the ZeroSOC Framework exclusively uses the term *Playbook* and intentionally omits the use of the term *Runbook*.
 
 ### Triage
-The initial analytical evaluation of an Alert or Case to determine potential risk, evaluate operational urgency, recalibrate priority (Severity and Confidence), and assign the appropriate investigation pathway.
-*   **Context:** In ZeroSOC Framework, triage is strictly an initial quick **prioritization, risk assessment, and routing function**—not a final diagnostic disposition. Triage extracts initial entity context, correlates essential telemetry, and independently recalibrates true operational severity (never accepting raw vendor scores blindly). Its mandate is to ensure that critical, high-impact threats receive immediate investigative attention, while all cases are systematically routed into the appropriate domain or Incident Category (IC) investigation playbook for formal hypothesis testing and disposition.
+The initial, high-velocity analytical phase (System 1 fast-thinking) of evaluating an Alert or Case to enrich context, validate technical authenticity, recalibrate operational priority (Severity and Confidence), and determine immediate disposition: either closing the case as a False Positive or Benign Positive (emitting tuning feedback) or promoting it to active investigation under a candidate Incident Category.
+*   **Context:** In ZeroSOC, Triage acts as a rapid prioritization, scoping, and validation engine. It extracts entity context, correlates historical baselines, independently calculates true operational severity (never accepting raw vendor scores blindly), and executes the primary triage decision gate (Gate G2) to resolve obvious noise at high speed and route genuine potential threats into deep investigation.
 
 ### Investigation
 The diagnostic analytical process of testing competing hypotheses, reconstructing adversary actions, determining attack scope and blast radius, and establishing a definitive case verdict.
