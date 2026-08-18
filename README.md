@@ -118,8 +118,7 @@ graph TD
 
     class Telemetry,Events,Signals input;
     class Triage,Investigate,Respond,Close1,Close2 process;
-    class G2,G3 decision;
-    class G1,G4,G5 gate;
+    class G1,G2,G3,G4,G5 gate;
     class TNote,INote deliverable;
     class Guardrails,Supervision,Gates gov;
 ```
