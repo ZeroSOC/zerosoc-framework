@@ -70,7 +70,9 @@ graph TD
 
     subgraph P1 ["Phase 1: Preparation & Detection"]
         Telemetry[Raw Telemetry] -->|Parsed & Normalized| Events[Security Events]
-        Events -->|Filtered & Correlated| G1["G1: Alert Raised<br>(Detection Finding)"]
+        Events -->|Security Observations| Signals["Signals<br>(Informational Finding)"]
+        Signals -->|Correlated & Thresholded| G1["G1: Alert Raised<br>(Detection Finding severity ≥ 2)"]
+        Events -->|Direct Detection Rules| G1
     end
 
     subgraph P2 ["Phase 2: Detection & Analysis"]
@@ -114,7 +116,7 @@ graph TD
     P2 -.->|Measured by Gates G1-G5| Gates
     P3 -.->|Measured by Gates G1-G5| Gates
 
-    class Telemetry,Events input;
+    class Telemetry,Events,Signals input;
     class Triage,Investigate,Respond,Close1,Close2 process;
     class G2,G3 decision;
     class G1,G4,G5 gate;
