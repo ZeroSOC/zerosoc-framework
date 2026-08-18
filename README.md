@@ -255,7 +255,7 @@ The ZeroSOC Framework is licensed under the **[Apache License 2.0](LICENSE)** (s
 
 Contributions are welcomed! Before contributing, please review our **[Contributing Guidelines](CONTRIBUTING.md)** and ensure all commits are signed off under the Developer Certificate of Origin (DCO).
 
-The license grants no rights to the "ZeroSOC" name (License §6); naming and commercial-branding rules are defined in the **[Trademark Policy](TRADEMARKS.md)**.
+Guidelines for community usage, compatibility naming, and commercial distributions (`[Company] ZeroSOC`) are defined in the **[Trademark Guidelines](TRADEMARKS.md)**.
 
 ---
 *An open standard for the next generation of Security Operations.*
