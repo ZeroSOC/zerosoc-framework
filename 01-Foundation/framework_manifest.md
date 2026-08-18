@@ -61,7 +61,7 @@ Adopters cannot claim conformance against a moving repository, and readers canno
 
 ### Document Release Status
 
-Every framework document declares a `status` field in its YAML frontmatter, alongside `title`, `type`, `last_updated`, and `license` (per DD-15). Exceptions: documents of `type: index` or `type: log`, and everything under `raw/` — navigational and ledger artifacts have no release maturity. `last_updated` remains the per-document **revision** identifier (it is the version recorded in Note provenance); `status` states **maturity**, not revision.
+Every framework document declares a `status` field in its YAML frontmatter, alongside `title`, `type`, `last_updated`, and `license` (per [DD-15](design_decisions.md#dd-15-apache-20-licensing-and-contribution-governance)). Exceptions: documents of `type: index` or `type: log`, and everything under `raw/` — navigational and ledger artifacts have no release maturity. `last_updated` remains the per-document **revision** identifier (it is the version recorded in Note provenance); `status` states **maturity**, not revision.
 
 | Status | Meaning | Guarantees |
 |---|---|---|

@@ -239,6 +239,16 @@ ZeroSOC is designed to interoperate with and build upon the industry's most trus
 *   **Cost & Billing Normalization:** FinOps Foundation FOCUS v1.2 (ratified 2025)
 *   **Regulatory Compliance:** Designed to support EU NIS2 and DORA auditing requirements and notification timelines.
 
+## Intellectual Influences
+
+Concepts and movements that inform the framework's architecture and philosophy (credited here once; normative text describes their operational substance without vendor coupling per [DD-12](01-Foundation/design_decisions.md)):
+
+*   **Autonomic Security Operations (ASO)** (Google Cloud): The tier-less operating model, balanced operations/engineering focus, and SRE principles applied to SecOps (adopted in [Roles & Responsibilities](01-Foundation/roles_and_responsibilities.md)).
+*   **The Tier-less SOC Movement:** Handoff-free case ownership, skill-based routing, and cognitive retention benefits in flat SecOps teams.
+*   **SOC Capability Maturity Model (SOC-CMM)** (Rob van Os): Capability assessment concepts across Business, People, Process, and Technology.
+*   **SANS SEC450:** Foundational triage methodology and analytical structuring for Detection & Analysis.
+*   **dandye/ai-runbooks:** Runbook completion rubrics (Completion Criteria & Critical Failures), typed step outputs, execution provenance conventions, and persona-to-permission boundaries.
+
 ## License, Trademarks & Contributing
 
 The ZeroSOC Framework is licensed under the **[Apache License 2.0](LICENSE)** (see also [NOTICE](NOTICE) and [DD-15](01-Foundation/design_decisions.md)).
@@ -249,3 +259,4 @@ The license grants no rights to the "ZeroSOC" name (License §6); naming and com
 
 ---
 *An open standard for the next generation of Security Operations.*
+
