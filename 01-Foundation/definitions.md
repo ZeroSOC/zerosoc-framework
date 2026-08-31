@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-08-17
+last_updated: 2026-08-31
 license: Apache-2.0
 ---
 
@@ -14,6 +14,12 @@ Where applicable, each term is mapped to its corresponding entity in the [Open C
 
 ## 1. Foundational Data & Activity
 
+### Log Sources (Telemetry Sources)
+The originators, assets, applications, security controls, or infrastructure components that generate logs, measurements, and security-relevant activity records. 
+*   **Context:** Log sources are the origin points of raw telemetry before collection, parsing, forwarding, or normalization. In the ZeroSOC Framework, log sources are categorized across eight core **telemetry domains** (Endpoint, Identity, Network, Cloud, Email, Data, Application, and OT/ICS). Disambiguating the log source from the telemetry it emits is critical: the log source is the generating entity or software system (e.g., a Domain Controller, an EDR sensor, a Kubernetes API server, or a firewall appliance), whereas telemetry is the actual data stream emitted by that source.
+*   **Examples:** Windows Event Log service on a Domain Controller, CrowdStrike Falcon / Microsoft Defender sensor on an endpoint, AWS CloudTrail / Azure Activity logs, Zeek / Suricata network monitor, Okta / Entra ID audit log exporter, or Next-Gen Firewall (NGFW).
+*   **OCSF Mapping:** Corresponds to the generating device, agent, or service context, represented in OCSF objects such as [Metadata (`metadata.log_provider`, `metadata.product`, `metadata.version`)](https://schema.ocsf.io/1.8.0/objects/metadata), [Device](https://schema.ocsf.io/1.8.0/objects/device), [Agent](https://schema.ocsf.io/1.8.0/objects/agent), or [Cloud](https://schema.ocsf.io/1.8.0/objects/cloud).
+
 ### Telemetry (Raw Data)
 The raw, unprocessed data streams continuously emitted by endpoints, network devices, cloud services, and applications. 
 *   **Context:** Telemetry is the foundational layer of visibility—the "source of truth." It is high in volume, low in immediate context, and typically requires parsing before it can be actively used for detection or hunting. The primary difference from an Event is that Telemetry is a continuous state or measurement, whereas an Event is a discrete occurrence.
@@ -24,8 +30,8 @@ The raw, unprocessed data streams continuously emitted by endpoints, network dev
 Records of specific, defined actions or occurrences that happened within the IT infrastructure. Events are discrete, typically parsed and normalized extracts derived from raw telemetry.
 *   **Context:** While an event indicates a significant change in state or an activity took place, it does not inherently imply malicious intent. It is just a record of "what happened" and "when."
 *   **Examples:** A user successfully authenticating, a process starting, a file being modified, or a service shutting down.
-*   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/ipd) — Defines the foundational difference between an *Event* and a *Cybersecurity Incident*.
-*   **OCSF Mapping:** Maps across OCSF's operational activity categories, primarily: **Category 1 (System Activity)** (e.g., [Process Activity [1007]](https://schema.ocsf.io/1.8.0/classes/process_activity), [File Activity [1001]](https://schema.ocsf.io/1.8.0/classes/file_activity)), **Category 3 (IAM)** (e.g., [Authentication [3002]](https://schema.ocsf.io/1.8.0/classes/authentication)), **Category 4 (Network Activity)** (e.g., [Network Activity [4001]](https://schema.ocsf.io/1.8.0/classes/network_activity)), and **Category 6 (Application Activity)** (e.g., [API Activity [6002]](https://schema.ocsf.io/1.8.0/classes/api_activity)). Similar to Telemetry, ZeroSOC strictly avoids normalizing general events into OCSF to reduce compute costs, utilizing them only during investigations.
+*   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) — Defines the foundational difference between an *Event* and a *Cybersecurity Incident*.
+*   **OCSF Mapping:** Maps across OCSF's operational activity categories, primarily: **Category 1 (System Activity)** (e.g., [Process Activity [1007]](https://schema.ocsf.io/1.8.0/classes/process_activity), [File Activity [1001]](https://schema.ocsf.io/1.8.0/classes/file_activity), [Log Activity [1008]](https://schema.ocsf.io/1.8.0/classes/log_activity)), **Category 3 (IAM)** (e.g., [Authentication [3002]](https://schema.ocsf.io/1.8.0/classes/authentication)), **Category 4 (Network Activity)** (e.g., [Network Activity [4001]](https://schema.ocsf.io/1.8.0/classes/network_activity), [HTTP Activity [4002]](https://schema.ocsf.io/1.8.0/classes/http_activity), [DNS Activity [4003]](https://schema.ocsf.io/1.8.0/classes/dns_activity)), and **Category 6 (Application Activity)** (e.g., [API Activity [6003]](https://schema.ocsf.io/1.8.0/classes/api_activity)). Similar to Telemetry, ZeroSOC strictly avoids normalizing general events into OCSF to reduce compute costs, utilizing them only during investigations.
 
 ### Signals
 Observable occurrences (often derived from events or groups of events) that have security relevance but are not immediately actionable or necessarily malicious on their own.
@@ -66,7 +72,7 @@ A broader, administrative workspace used to manage the investigative workflow. I
 An event (or series of events) that has been investigated through a case and **verified as a confirmed security threat** or a serious violation of security policies. 
 *   **Context:** This represents an actual or imminent compromise of confidentiality, integrity, or availability. Escalating a case to an incident fundamentally shifts the workflow from *investigation* to *Incident Response (IR)* (containment, eradication, recovery).
 *   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding) — discriminated by **`verdict_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A closed non-incident Case carries `verdict_id` False Positive (`1`) or Benign (`5`).
-*   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/ipd) — Formal definition of a *Computer Security Incident*. See also ISO/IEC 27001 (Information security management).
+*   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) — Formal definition of a *Computer Security Incident*. See also ISO/IEC 27001 (Information security management).
 
 ### OCSF class-sharing note (Signal vs Alert, Case vs Incident)
 
@@ -113,20 +119,20 @@ Benign activity that correctly did *not* trigger any alarms. (The normal, silent
 
 ### Playbook
 A standardized, structured procedure detailing the analytical, investigative, and response actions for a specific domain or incident category. Playbooks define required telemetry inputs, hypothesis validation queries, containment/eradication procedures, completion criteria, and governance boundaries.
-*   **Context:** ZeroSOC implements a modular two-layer playbook architecture: **Domain Triage Playbooks** (for front-line alert validation and prioritization) and **Incident Category (IC) Investigation & Response Playbooks** (for concurrent A/B hypothesis testing and response).
+*   **Context:** ZeroSOC Framework adopts a modular two-layer playbook architecture: **Domain Triage Playbooks** (for front-line alert validation and prioritization) and **Incident Category (IC) Investigation & Response Playbooks** (for concurrent A/B hypothesis testing and response).
 *   **Terminology Note:** In the broader industry or depending on the specific SOAR vendor, these are often referred to as "Runbooks." To avoid ambiguity, the ZeroSOC Framework exclusively uses the term *Playbook* and intentionally omits the use of the term *Runbook*.
 
 ### Triage
 The initial, high-velocity analytical phase (System 1 fast-thinking) of evaluating an Alert or Case to enrich context, validate technical authenticity, recalibrate operational priority (Severity and Confidence), and determine immediate disposition: either closing the case as a False Positive or Benign Positive (emitting tuning feedback) or promoting it to active investigation under a candidate Incident Category.
-*   **Context:** In ZeroSOC, Triage acts as a rapid prioritization, scoping, and validation engine. It extracts entity context, correlates historical baselines, independently calculates true operational severity (never accepting raw vendor scores blindly), and executes the primary triage decision gate (Gate G2) to resolve obvious noise at high speed and route genuine potential threats into deep investigation.
+*   **Context:** In the ZeroSOC Framework, Triage acts as a rapid prioritization, scoping, and validation engine. It extracts entity context, correlates historical baselines, independently calculates true operational severity (never accepting raw vendor scores blindly), and executes the primary triage decision gate (Gate G2) to resolve obvious noise at high speed and route genuine potential threats into deep investigation.
 
 ### Investigation
 The diagnostic analytical process of testing competing hypotheses, reconstructing adversary actions, determining attack scope and blast radius, and establishing a definitive case verdict.
-*   **Context:** In ZeroSOC, Investigation is governed by the **Concurrent A/B Hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-investigation-sub-phase)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
+*   **Context:** In the ZeroSOC Framework, Investigation is governed by the **Concurrent A/B Hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-investigation-sub-phase)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
 
 ### Containment
 Short-term, tactical actions taken to stop an active threat from spreading or causing further damage. Containment must happen *before* eradication.
-*   **Context:** Per NIST 800-61 r3, containment is about risk mitigation. Examples include isolating a host from the network, disabling an account, or blocking an IP address at the firewall.
+*   **Context:** Per NIST SP 800-61 Rev. 3, containment is about risk mitigation. Examples include isolating a host from the network, disabling an account, or blocking an IP address at the firewall.
 
 ### Eradication
 The process of permanently removing the threat actor's access and malicious artifacts from the environment.
@@ -135,6 +141,10 @@ The process of permanently removing the threat actor's access and malicious arti
 ### Recovery
 The steps taken to restore systems and data to their normal, pristine operational state.
 *   **Context:** Examples include restoring data from offline backups, lifting containment controls (like network isolation), and verifying that systems are functioning correctly without reinfection.
+
+### Post-Incident Activity (Lessons Learned & Root Cause Analysis)
+The retrospective phase of evaluating confirmed incidents or major false-positive disruptions to identify root causes, extract lessons learned, and convert operational findings into engineering and detection improvements.
+*   **Context:** Aligned with NIST SP 800-61 Rev. 3 (Post-Incident Activity) and ISO/IEC 27035 (Lessons Learned), this phase conducts a blameless Root Cause Analysis (RCA) categorizing failures across four systemic buckets (Telemetry Gaps, Software Flaws, Human/Configuration Errors, Policy/Process Deficiencies) and generating actionable tickets for detection tuning, playbook updates, and infrastructure hardening.
 
 ---
 
