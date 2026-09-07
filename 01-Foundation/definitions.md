@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-08-31
+last_updated: 2026-09-07
 license: Apache-2.0
 ---
 
@@ -163,3 +163,21 @@ A metric an organization elevates to actively steer Security Operations: tracked
 ### Key Performance Objective (KPO)
 The concrete target value or band an organization commits to for a KPI, calibrated to its own baseline (alert mix, telemetry coverage, risk tolerance).
 *   **Context:** The framework itself sets no KPOs. [Operational Metrics §9](../05-Metrics/operational_metrics.md#9-reference-bands-for-setting-kpos) publishes illustrative reference bands — inputs for setting KPOs, not targets — which become KPOs only once an organization adopts and calibrates them to its own baseline.
+
+## 6. Executors and Functions
+
+The framework describes *who* performs work at two levels: the **executor** that carries out a step, and the **function** that step belongs to. Neither is a job title or a tier.
+
+### Executor
+The party that carries out a process step or playbook: a **human analyst**, **deterministic automation** (rule-based scripts and orchestration workflows), or an **autonomous AI agent** — or any blend of the three. Every process and playbook is executable by any executor class (Executor Neutrality, per the [Framework Manifest](framework_manifest.md#executor-neutrality-and-human-readability)). The **Provenance** field of a deliverable records which executor performed each step, so every metric can be sliced by executor without changing its definition.
+
+### Function
+A named area of responsibility that any executor class may fulfill. Functions are **peer functions in a tier-less model** (see the [Framework Manifest](framework_manifest.md#tier-less-operating-model)): work is routed by skill and by risk through explicit handover boundaries, never up a seniority ladder, and the executor that takes a Case owns it to conclusion — through investigation and response alike. Custody changes only at the handover boundaries the processes define; skill-based routing happens at intake, not mid-Case. The framework uses the following function names throughout; organizations map their own titles onto them.
+
+| Function | Responsibility | Primary phases |
+| :--- | :--- | :--- |
+| **Security Analyst** | Own a Case end to end: acknowledge, enrich, scope, prioritize and decide Close-or-Promote; investigate to a verdict, producing the Triage Note and Investigation Note; then contain, eradicate and recover the Incident the Case becomes, and contribute its post-incident review. Referred to as *Analyst* in process and playbook text. | Phase 2, Phase 3, Phase 4 |
+| **Detection Engineer** | Author, test, tune and version-control detection logic (Detection-as-Code), and act on the tuning signals that closed Cases emit. | Phase 1, Phase 4 |
+| **Security Platform Engineer** | Deploy, integrate and maintain the security tooling and telemetry pipelines — SIEM, SOAR, EDR/XDR, log collection — including log-source onboarding and health. Often staffed by the same team as Detection Engineering, with distinct skills; commonly titled *SOC Engineer* or *SIEM Engineer*. | Phase 1 |
+| **Threat Hunter** | Formulate and test hunt hypotheses against telemetry, operationalize threat intelligence, and open Cases for threats that bypassed detection logic. | Phase 2 |
+| **SOC Manager** | Own the operating model and its oversight: capacity, quality-assurance supervision of autonomous dispositions, metrics review, and the interface to enterprise risk management. For declared Incidents, own the interface to enterprise incident management — regulatory notification timelines and stakeholder coordination (the *Incident Coordinator* of ISO/IEC 27035). | Phase 3, Phase 4, cross-phase |

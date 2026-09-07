@@ -88,7 +88,7 @@ graph TD
     end
 
     subgraph P3 ["Phase 3: Incident Response"]
-        G3 -->|A: Confirmed TP Incident| Respond[CSIRT Containment, Eradication & Recovery]
+        G3 -->|A: Confirmed TP Incident| Respond[Containment, Eradication & Recovery]
         Respond --> G4["G4: Containment Confirmed"]
     end
 
@@ -241,7 +241,7 @@ ZeroSOC is designed to interoperate with and build upon the industry's most trus
 
 The ZeroSOC Framework stands on the shoulders of pioneering research, open standards, and community initiatives that have transformed modern security operations. We gratefully acknowledge the contributions and concepts from:
 
-*   **[Autonomic Security Operations (ASO)](https://cloud.google.com/blog/products/identity-security/autonomic-security-operations-10x-transformation-of-cybersecurity-operations)** (Google Cloud): Pioneering the tier-less operating model, SRE principles applied to SecOps, and a balanced engineering approach to security operations (adopted in [Roles & Responsibilities](01-Foundation/roles_and_responsibilities.md)).
+*   **[Autonomic Security Operations (ASO)](https://cloud.google.com/blog/products/identity-security/autonomic-security-operations-10x-transformation-of-cybersecurity-operations)** (Google Cloud): Pioneering the tier-less operating model, SRE principles applied to SecOps, and a balanced engineering approach to security operations (adopted in the [Framework Manifest](01-Foundation/framework_manifest.md#tier-less-operating-model)).
 *   **[SOC Capability Maturity Model (SOC-CMM)](https://www.soc-cmm.com/)** by Rob van Os: Benchmark domain framework for evaluating capability maturity across Business, People, Process, and Technology.
 *   **[SANS SEC450: Blue Team Fundamentals](https://www.sans.org/cyber-security-courses/blue-team-fundamentals-secops-triage/)**: Structured analytical triage methodology and decision frameworks for incident analysts.
 *   **[dandye/ai-runbooks](https://github.com/dandye/ai-runbooks)**: Foundational patterns for structured AI runbook execution, completion rubrics, typed step outputs, and execution provenance conventions.

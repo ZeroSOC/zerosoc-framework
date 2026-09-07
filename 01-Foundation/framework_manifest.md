@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-08-17
+last_updated: 2026-09-07
 license: Apache-2.0
 ---
 
@@ -16,9 +16,9 @@ Indeed, a core objective of this framework is to provide a solid foundation for 
 
 ## The Concept
 
-The ZeroSOC Framework ambitionally aims to become the definitive standard for Security Operations. Instead of relying on disparate, vendor-specific playbooks and siloed definitions, ZeroSOC provides an open, extensible baseline for reasoning, investigating, and responding to cyber threats. 
+The ZeroSOC Framework aims to become the definitive standard for Security Operations. Instead of relying on disparate, vendor-specific playbooks and siloed definitions, ZeroSOC provides an open, extensible baseline for reasoning, investigating, and responding to cyber threats. 
 
-This framework is built to guide **human analysts**, **deterministic automation**, and **autonomous AI agents** alike, ensuring consistent, mathematically precise, and auditable outcomes regardless of the underlying detection tooling, automation platform or AI model.
+This framework is built to guide **human analysts**, **deterministic automation**, and **autonomous AI agents** alike, ensuring consistent, precise, measurable, and auditable outcomes regardless of the underlying detection tooling, automation platform or AI model.
 
 ### Executor Neutrality and Human Readability
 
@@ -32,6 +32,12 @@ While the framework's **specifications are executor-neutral**, its **operational
 *   **Human Analysts:** Essential for handling ambiguity, high-blast-radius decisions, and ultimate accountability.
 
 Human readability and actionability are therefore **conformance properties**, not documentation courtesies. They are necessary for transparency, auditability, and to guarantee that a human always understands exactly what an autonomous agent will do. As Andrej Karpathy noted, *"You can outsource thinking, but you cannot outsource understanding."* Enforcing human-readable playbooks ensures that even as execution is automated, the human retainers of the system retain full comprehension and governance over the agent's behavior. Consequently, agent-facing affordances — front-matter selection keys, OCSF enum anchors, machine-readable handoff contracts — are additive and MUST NOT make the prose less readable or less actionable for a human executor. Where a capability is impractical for a human executor (e.g. bulk parallel queries), the documents state the *what* and the *why* so a human achieves the same outcome sequentially.
+
+### Tier-less Operating Model
+
+The operating model is **tier-less by design**. There are no Tier 1/2/3 ranks and no escalation by seniority: the framework's functions (see [Definitions §6](definitions.md#6-executors-and-functions)) are specialized peer functions, work is routed by skill and by risk through explicit handover boundaries, and the executor that takes a Case owns it to conclusion. Tiered handoffs degrade investigative context and stretch response times; they concentrate automatable toil on entry-level staff; and once front-line triage is absorbed by automation and agents, the base of the pyramid is an automation boundary, not an organizational layer.
+
+The same discipline applies software-engineering practice to operations: teams balance their time between running operations and engineering away the toil that operations generate, so recurring manual work is eliminated rather than redistributed.
 
 ### Scope & Boundaries
 
