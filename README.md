@@ -1,7 +1,7 @@
 ---
 title: ZeroSOC Framework Index
 type: index
-last_updated: 2026-08-17
+last_updated: 2026-09-07
 license: Apache-2.0
 ---
 
@@ -19,7 +19,7 @@ The ZeroSOC Framework is a vendor-independent standard for Security Operations, 
 
 ## Mission
 
-Our mission is to standardize how human analysts, deterministic automation, and AI agents reason about, investigate, and respond to security threats. By formalizing the definitions and providing extensible, hierarchical playbooks, the ZeroSOC Framework aims to build a scalable and mathematically precise approach to modern Detection and Response.
+Our mission is to standardize how human analysts, deterministic automation, and AI agents reason about, investigate, and respond to security threats. By formalizing the definitions and providing extensible, hierarchical playbooks, the ZeroSOC Framework aims to build a scalable, precise and measurable approach to modern Detection and Response.
 
 ## Core Principles & Philosophy
 
@@ -33,7 +33,6 @@ graph TD
 
     subgraph Principles ["ZeroSOC Core Philosophy"]
         Mandate["Strategic Mandate: trustworthy, grounded autonomous SecOps"]
-        Karpathy["Karpathy's Law: 'You can outsource thinking, but you cannot outsource understanding.'"]
         
         subgraph Neutrality ["Executor Neutrality"]
             TechAxis["Technology Independence<br>(No vendor/query lock-in)"]
@@ -44,16 +43,15 @@ graph TD
         Transparency["Transparency & Auditability<br>(Glass Box Execution)"]
     end
 
-    Mandate --> Karpathy
-    Karpathy --> Readability
+    Mandate --> Readability
     Readability --> Transparency
     Neutrality --> Readability
     TechAxis -.->|Process & Playbook level| ExecAxis
 ```
 
-1. **Strategic Mandate for Trustworthy Autonomy:** SecOps agents must execute actions based on grounded, mathematically precise playbooks to guarantee consistency and safety.
+1. **Strategic Mandate for Trustworthy Autonomy:** SecOps agents must execute actions based on grounded, precise and measurable playbooks to guarantee consistency and safety.
 2. **Executor Neutrality:** Processes are designed to be independent of both technology (vendor-neutral) and executor (human, deterministic automation, or agent — or any blend of the three). Every step must be fully executable by a qualified analyst reading the documentation alone.
-3. **Human Readability as a Conformance Property:** Because *"you can outsource thinking, but you cannot outsource understanding,"* every playbook must remain human-readable and actionable. Human comprehension is the ultimate boundary for agent auditability and transparency.
+3. **Human Readability as a Conformance Property:** Because *"you can outsource thinking, but you cannot outsource understanding"* (Andrej Karpathy), every playbook must remain human-readable and actionable. Human comprehension is the ultimate boundary for agent auditability and transparency.
 
 ## Operational Architecture & Pipeline
 
@@ -133,7 +131,7 @@ graph TD
 
 The framework is organized into seven foundational modules:
 
-1. **[01-Foundation](01-Foundation/framework_manifest.md)**: The core manifest, roles and responsibilities (Security Analyst, Detection Engineer, Threat Hunter, SOC Manager), design decisions, roadmap, and OCSF-aligned SOC glossary. Standardizes terminology using OCSF `type_id` bands (Scalar primitive types < 20 e.g., Hostname, IP, Hash vs. Full entity objects ≥ 20 e.g., Endpoint, User, File).
+1. **[01-Foundation](01-Foundation/framework_manifest.md)**: The core manifest, roles and responsibilities, design decisions, roadmap, and OCSF-aligned SOC glossary. Standardizes terminology using OCSF `type_id` bands (Scalar primitive types < 20 e.g., Hostname, IP, Hash vs. Full entity objects ≥ 20 e.g., Endpoint, User, File).
 2. **[02-Taxonomy](02-Taxonomy/incident_categories.md)**: An incident classification system focusing on Business Impact. Includes telemetry domain-specific [Alert Type Taxonomy](02-Taxonomy/alert_types.md) and 15 business-impact Incident Categories (IC-01 to IC-15) mapped directly to MITRE ATT&CK/ATLAS threat tactics and techniques.
 3. **[03-Processes](03-Processes/00-detection_and_response_lifecycle.md)**: Core operational workflows mapped to NIST CSF 2.0, NIST SP 800-61 Rev. 3, ISO/IEC 27035:2023, and ISO/IEC 27001:2022 (A.5.24 - A.5.28). Outlines the operational phases (Preparation, Detection & Analysis, Response, and Post-Incident).
 4. **[04-Playbooks](04-Playbooks/README.md)**: Hierarchical playbook standard powered by Concurrent A/B Hypothesis Testing (Malicious vs. Benign). Divided into domain-specific **Triage Playbooks** (normalizing/enriching alerts at Gate G2) and Incident-Category-specific **Investigation & Response Playbooks** (Gate G3).
@@ -186,9 +184,9 @@ graph TD
     end
 
     subgraph Governance ["07-Governance"]
-        G1["Agentic Guardrails"]
-        G2["Agentic Supervision"]
-        G3["Glass Box Protocols"]
+        GV1["Agentic Guardrails"]
+        GV2["Agentic Supervision"]
+        GV3["Glass Box Protocols"]
     end
 
     %% Relationships
@@ -215,12 +213,12 @@ graph TD
     ME3 -->|Measures precision of| P3
     ME5 -->|Tracks compute cost of| P2
     ME5 -->|Tracks compute cost of| P3
-    G2 -->|Audits feed QA to| ME3
+    GV2 -->|Audits feed QA to| ME3
 
-    G1 -->|Constrains Containment in| P3
-    G2 -->|Monitors Agent Actions in| P2
-    G2 -->|Monitors Agent Actions in| P3
-    G3 -->|Ensures Auditable Reasoning in| PB3
+    GV1 -->|Constrains Containment in| P3
+    GV2 -->|Monitors Agent Actions in| P2
+    GV2 -->|Monitors Agent Actions in| P3
+    GV3 -->|Ensures Auditable Reasoning in| PB3
 ```
 
 ## Versioning & Document Status
@@ -231,23 +229,23 @@ Every framework document declares a **release status** in its frontmatter — `d
 
 ZeroSOC is designed to interoperate with and build upon the industry's most trusted standards. This section is the **canonical registry of the exact standard/framework versions** ZeroSOC is currently built upon; other documents reference standards by name only and defer to the versions recorded here.
 
-*   **Strategic Governance:** NIST CSF 2.0
-*   **Tactical Incident Handling:** NIST SP 800-61 Rev. 3
-*   **Process Governance:** ISO/IEC 27035:2023 & ISO/IEC 27001:2022
-*   **Data Schema:** Open Cybersecurity Schema Framework (OCSF) v1.8.0
-*   **Threat Tactics & Techniques:** MITRE ATT&CK® v19
-*   **Cost & Billing Normalization:** FinOps Foundation FOCUS v1.2 (ratified 2025)
-*   **Regulatory Compliance:** Designed to support EU NIS2 and DORA auditing requirements and notification timelines.
+*   **Strategic Governance:** [NIST CSF 2.0](https://www.nist.gov/cyberframework) (Cybersecurity Framework)
+*   **Tactical Incident Handling:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (Computer Security Incident Handling Guide)
+*   **Process Governance:** [ISO/IEC 27035:2023](https://www.iso.org/standard/79393.html) & [ISO/IEC 27001:2022](https://www.iso.org/standard/27001)
+*   **Data Schema:** [Open Cybersecurity Schema Framework (OCSF)](https://ocsf.io/) v1.8.0
+*   **Threat Tactics & Techniques:** [MITRE ATT&CK®](https://attack.mitre.org/) v19 & [MITRE ATLAS™](https://atlas.mitre.org/)
+*   **Cost & Billing Normalization:** FinOps Foundation [FOCUS™ v1.2](https://focus.finops.org/) (ratified 2025)
+*   **Regulatory Compliance:** Designed to support EU [NIS2](https://eur-lex.europa.eu/eli/dir/2022/2555/oj) (Directive 2022/2555) and [DORA](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) (Regulation 2022/2554) auditing requirements and notification timelines.
 
-## Intellectual Influences
+## Acknowledgments & Community Influences
 
-Concepts and movements that inform the framework's architecture and philosophy (credited here once; normative text describes their operational substance without vendor coupling per [DD-12](01-Foundation/design_decisions.md)):
+The ZeroSOC Framework stands on the shoulders of pioneering research, open standards, and community initiatives that have transformed modern security operations. We gratefully acknowledge the contributions and concepts from:
 
-*   **Autonomic Security Operations (ASO)** (Google Cloud): The tier-less operating model, balanced operations/engineering focus, and SRE principles applied to SecOps (adopted in [Roles & Responsibilities](01-Foundation/roles_and_responsibilities.md)).
-*   **The Tier-less SOC Movement:** Handoff-free case ownership, skill-based routing, and cognitive retention benefits in flat SecOps teams.
-*   **SOC Capability Maturity Model (SOC-CMM)** (Rob van Os): Capability assessment concepts across Business, People, Process, and Technology.
-*   **SANS SEC450:** Foundational triage methodology and analytical structuring for Detection & Analysis.
-*   **dandye/ai-runbooks:** Runbook completion rubrics (Completion Criteria & Critical Failures), typed step outputs, execution provenance conventions, and persona-to-permission boundaries.
+*   **[Autonomic Security Operations (ASO)](https://cloud.google.com/blog/products/identity-security/autonomic-security-operations-10x-transformation-of-cybersecurity-operations)** (Google Cloud): Pioneering the tier-less operating model, SRE principles applied to SecOps, and a balanced engineering approach to security operations (adopted in [Roles & Responsibilities](01-Foundation/roles_and_responsibilities.md)).
+*   **[SOC Capability Maturity Model (SOC-CMM)](https://www.soc-cmm.com/)** by Rob van Os: Benchmark domain framework for evaluating capability maturity across Business, People, Process, and Technology.
+*   **[SANS SEC450: Blue Team Fundamentals](https://www.sans.org/cyber-security-courses/blue-team-fundamentals-secops-triage/)**: Structured analytical triage methodology and decision frameworks for incident analysts.
+*   **[dandye/ai-runbooks](https://github.com/dandye/ai-runbooks)**: Foundational patterns for structured AI runbook execution, completion rubrics, typed step outputs, and execution provenance conventions.
+*   **The Tier-Less SecOps Movement**: Thought leadership advocating handoff-free case ownership, skill-based routing, and cognitive retention in modern SecOps teams.
 
 ## License, Trademarks & Contributing
 
@@ -255,7 +253,7 @@ The ZeroSOC Framework is licensed under the **[Apache License 2.0](LICENSE)** (s
 
 Contributions are welcomed! Before contributing, please review our **[Contributing Guidelines](CONTRIBUTING.md)** and ensure all commits are signed off under the Developer Certificate of Origin (DCO).
 
-Guidelines for community usage, compatibility naming, and commercial distributions (`[Company] ZeroSOC`) are defined in the **[Trademark Guidelines](TRADEMARKS.md)**.
+Guidelines for community usage, compatibility naming, and commercial distributions are defined in the **[Trademark Guidelines](TRADEMARKS.md)**.
 
 ---
 *An open standard for the next generation of Security Operations.*
