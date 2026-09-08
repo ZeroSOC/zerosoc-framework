@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-07
+last_updated: 2026-09-08
 license: Apache-2.0
 ---
 
@@ -17,7 +17,7 @@ Where applicable, each term is mapped to its corresponding entity in the [Open C
 ### Log Sources (Telemetry Sources)
 The originators, assets, applications, security controls, or infrastructure components that generate logs, measurements, and security-relevant activity records. 
 *   **Context:** Log sources are the origin points of raw telemetry before collection, parsing, forwarding, or normalization. In the ZeroSOC Framework, log sources are categorized across eight core **telemetry domains** (Endpoint, Identity, Network, Cloud, Email, Data, Application, and OT/ICS). Disambiguating the log source from the telemetry it emits is critical: the log source is the generating entity or software system (e.g., a Domain Controller, an EDR sensor, a Kubernetes API server, or a firewall appliance), whereas telemetry is the actual data stream emitted by that source.
-*   **Examples:** Windows Event Log service on a Domain Controller, CrowdStrike Falcon / Microsoft Defender sensor on an endpoint, AWS CloudTrail / Azure Activity logs, Zeek / Suricata network monitor, Okta / Entra ID audit log exporter, or Next-Gen Firewall (NGFW).
+*   **Examples:** the event log service on a domain controller, an EDR sensor on an endpoint, a cloud provider's control-plane audit log, a network security monitor, an identity provider's audit log exporter, or a next-generation firewall.
 *   **OCSF Mapping:** Corresponds to the generating device, agent, or service context, represented in OCSF objects such as [Metadata (`metadata.log_provider`, `metadata.product`, `metadata.version`)](https://schema.ocsf.io/1.8.0/objects/metadata), [Device](https://schema.ocsf.io/1.8.0/objects/device), [Agent](https://schema.ocsf.io/1.8.0/objects/agent), or [Cloud](https://schema.ocsf.io/1.8.0/objects/cloud).
 
 ### Telemetry (Raw Data)
@@ -41,7 +41,7 @@ Observable occurrences (often derived from events or groups of events) that have
 
 ### Entity
 A discrete actor, asset, or artifact involved in security-relevant activity — the "who" and "what" that Telemetry, Events, and Alerts are *about*. Entities are the **nouns** of Detection & Response: extracted from raw data, normalized to a common schema, and enriched with context during Triage.
-*   **Context:** Entities are the **join keys** of an investigation. Correlating on shared entities — the same user, host, or IP recurring across multiple alerts — is what bounds the scope of a Security Case and drives the domain → Incident Category pivot at the Triage → Investigation handoff. **Entity enrichment** (adding Threat Intelligence, asset/CMDB, and identity context) turns a bare identifier into an actionable picture. Entities are commonly typed as **identity** (user, account, service principal), **asset** (host/device, cloud resource, application), **network** (IP address, domain, URL), and **artifact** (file, hash, process, registry key, email message).
+*   **Context:** Entities are the **join keys** of an investigation. Correlating on shared entities — the same user, host, or IP recurring across multiple alerts — is what bounds the scope of a Security Case and drives the domain → Incident Category pivot at the Triage → Investigation phase transition contract. **Entity enrichment** (adding Threat Intelligence, asset/CMDB, and identity context) turns a bare identifier into an actionable picture. Entities are commonly typed as **identity** (user, account, service principal), **asset** (host/device, cloud resource, application), **network** (IP address, domain, URL), and **artifact** (file, hash, process, registry key, email message).
 *   **Examples:** A user `jdoe`, a host `FIN-LAPTOP-07`, the IP `203.0.113.10`, a SHA-256 file hash, a process `powershell.exe`, a sender domain.
 *   **Entity vs. Observable/Indicator:** We define **entity** broadly as any typed, correlatable pivot (user, host, IP, file, process). An entity and its indicators represent the same concept at different granularities: a complex object (e.g., `User`, `File`) is the entity, while a scalar property of it (e.g., username, file hash, IP address) functions as its indicator.
 *   **OCSF Mapping & Type ID Bands:** OCSF maps both entities and indicators to the [Observable](https://schema.ocsf.io/1.8.0/objects/observable) object, differentiating them using a `type_id` enum divided into two bands:
@@ -128,7 +128,7 @@ The initial, high-velocity analytical phase (System 1 fast-thinking) of evaluati
 
 ### Investigation
 The diagnostic analytical process of testing competing hypotheses, reconstructing adversary actions, determining attack scope and blast radius, and establishing a definitive case verdict.
-*   **Context:** In the ZeroSOC Framework, Investigation is governed by the **Concurrent A/B Hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-investigation-sub-phase)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
+*   **Context:** In the ZeroSOC Framework, Investigation is governed by the **Concurrent A/B Hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-deep-dive-investigation--hypothesis-formulation)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
 
 ### Containment
 Short-term, tactical actions taken to stop an active threat from spreading or causing further damage. Containment must happen *before* eradication.

@@ -12,15 +12,15 @@ This taxonomy defines the common **alert types** a SOC investigates. Alerts are 
 
 Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, Cloud, Email, Data, Application, OT/ICS. Each alert type maps to MITRE ATT&CK tactics/techniques and to one or more **candidate Incident Categories** ([incident_categories.md](incident_categories.md)); the candidate categories are validated during Investigation. An alert may map to more than one category.
 
-**Domain-assignment principle.** An alert type's **home domain is the domain of the primary telemetry that raises it and the entity it is about** — not every sensor that could observe the behavior. The **Detection Source** column lists only sources native to that domain. Cross-domain corroboration (e.g., proxy logs confirming a host download) is **enrichment** performed during Triage/Investigation and does not change the home domain. When the same behavior is meaningfully detected from two domains, it is modeled as **two alert types** (one per domain) with overlapping candidate Incident Categories.
+**Domain-assignment principle.** An alert type's **home domain is the domain of the primary telemetry that raises it and the entity it is about** — not every sensor that could observe the behavior. The **Log Source** column ([definition](../01-Foundation/definitions.md#log-sources-telemetry-sources)) lists only sources native to that domain. Cross-domain corroboration (e.g., proxy logs confirming a host download) is **enrichment** performed during Triage/Investigation and does not change the home domain. When the same behavior is meaningfully detected from two domains, it is modeled as **two alert types** (one per domain) with overlapping candidate Incident Categories.
 
 **SaaS and Container mapping.** SaaS alerts map to **Identity** (authentication/authorization signals) and/or **Cloud** (configuration/API signals) depending on the telemetry. Container/Kubernetes alerts map to **Cloud**.
 
-**Column contract:** `Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs`. Techniques and Candidate ICs use `ID (Name)` form. The **Description** states the generic meaning, then the two competing readings labelled **Malicious:** and **Benign:**, and — only where an adjacent alert type is easily confused — a **Distinct from** clause naming that type and the single feature that separates them.
+**Column contract:** `Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs`. Techniques and Candidate ICs use `ID (Name)` form. The **Description** states the generic meaning, then the two competing readings labelled **Malicious:** and **Benign:**, and — only where an adjacent alert type is easily confused — a **Distinct from** clause naming that type and the single feature that separates them.
 
 ## Endpoint
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | Malware / loader execution | Execution of a suspicious binary or loader on a host. **Malicious:** malware or loader payload. **Benign:** a legitimate signed program flagged in error. **Distinct from** Suspicious script / interpreter execution — that runs via a script engine, this is a compiled binary. | EDR / AV | Execution | T1204 (User Execution), T1059 (Command and Scripting Interpreter) | IC-05 (Commodity Malware / Loader), IC-03 (Ransomware & Digital Extortion) |
 | Suspicious script / interpreter execution | Abnormal use of scripting engines or living-off-the-land binaries. **Malicious:** hands-on-keyboard activity or a script-based loader. **Benign:** legitimate admin scripting. | EDR | Execution | T1059 (Command and Scripting Interpreter), T1218 (System Binary Proxy Execution) | IC-05 (Commodity Malware / Loader) |
@@ -34,7 +34,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Identity
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | Impossible-travel / anomalous sign-in | Sign-in from an improbable geography/velocity or atypical context. **Malicious:** credential or session theft. **Benign:** VPN, proxy, or user roaming. | IdP / CASB | Initial Access | T1078 (Valid Accounts) | IC-06 (Identity & Credential Attack), IC-02 (Business Email Compromise) |
 | Brute force / password spray | High-rate or spread authentication failures. **Malicious:** credential guessing. **Benign:** broken automation or lockout storms. | IdP | Credential Access | T1110 (Brute Force) | IC-06 (Identity & Credential Attack) |
@@ -45,7 +45,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Network
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | C2 beaconing / known-bad destination | Periodic or reputation-flagged outbound connections. **Malicious:** command-and-control traffic. **Benign:** routine telemetry or software updates. | Network / proxy / firewall | Command and Control | T1071 (Application Layer Protocol), T1571 (Non-Standard Port) | IC-05 (Commodity Malware / Loader) |
 | Download from known-malicious / newly-registered domain | Perimeter-observed retrieval from suspicious infrastructure. **Malicious:** payload delivery. **Benign:** a legitimate newly-registered site. **Distinct from** Endpoint "Ingress tool transfer to host" — same download, but seen at the perimeter rather than on the host. | Proxy / DNS / firewall | Command and Control | T1105 (Ingress Tool Transfer) | IC-05 (Commodity Malware / Loader) |
@@ -57,7 +57,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Cloud
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | Suspicious IAM policy / role change | A risky identity or permission change in cloud IAM. **Malicious:** privilege escalation or persistence. **Benign:** an approved infrastructure-as-code change. | Cloud audit logs | Privilege Escalation | T1078.004 (Cloud Accounts), T1098.003 (Additional Cloud Roles) | IC-06 (Identity & Credential Attack), IC-09 (Insider Threat & Privilege Misuse) |
 | Resource hijacking / cryptomining | Unusual compute/GPU provisioning or mining signatures. **Malicious:** compute theft for cryptomining. **Benign:** legitimate scaling. | Cloud audit / billing | Impact | T1496 (Resource Hijacking) | IC-12 (Resource Hijacking / Cryptojacking) |
@@ -69,7 +69,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Email
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | User-reported phishing | An employee-submitted suspected phishing message. **Malicious:** social engineering. **Benign:** unwanted marketing or a mistaken report. | Email gateway / user report | Initial Access | T1566 (Phishing) | IC-01 (Phishing / Social Engineering), IC-02 (Business Email Compromise) |
 | Malicious attachment / URL delivered | An email carrying a weaponized attachment or link. **Malicious:** malware or credential-phishing delivery. **Benign:** a false-positive on a safe file or link. | Email gateway / sandbox | Initial Access | T1566.001 (Spearphishing Attachment), T1566.002 (Spearphishing Link), T1204 (User Execution) | IC-01 (Phishing / Social Engineering), IC-05 (Commodity Malware / Loader) |
@@ -78,7 +78,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Data
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | DLP violation (regulated data) | Movement of regulated or sensitive data against policy. **Malicious:** exfiltration or insider misuse. **Benign:** an approved business transfer. | DLP | Exfiltration | T1567 (Exfiltration Over Web Service) | IC-11 (Data Breach / Exfiltration), IC-09 (Insider Threat & Privilege Misuse) |
 | Mass sensitive-file access by one principal | One user or service reading large volumes of sensitive files. **Malicious:** insider collection or exfiltration. **Benign:** a legitimate bulk task. | DLP / file audit | Collection | T1039 (Data from Network Shared Drive), T1005 (Data from Local System) | IC-09 (Insider Threat & Privilege Misuse), IC-11 (Data Breach / Exfiltration) |
@@ -87,7 +87,7 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## Application
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | Web exploitation / injection | Injection or exploit attempts against a web app (SQLi/XSS/SSRF). **Malicious:** active exploitation. **Benign:** scanner or pen-test noise. | WAF / app logs | Initial Access | T1190 (Exploit Public-Facing Application) | IC-07 (Web App Exploitation) |
 | Authentication bypass / broken access control | Access to resources without or around authorization (auth bypass, IDOR). **Malicious:** exploitation of an access flaw. **Benign:** a misconfigured but legitimate access path. | WAF / app logs | Initial Access | T1190 (Exploit Public-Facing Application) | IC-07 (Web App Exploitation) |
@@ -99,12 +99,11 @@ Alert types are organized by **telemetry domain**: Endpoint, Identity, Network, 
 
 ## OT/ICS
 
-| Alert Type | Description | Detection Source | Tactics | Techniques | Candidate ICs |
+| Alert Type | Description | Log Source | Tactics | Techniques | Candidate ICs |
 |---|---|---|---|---|---|
 | Unauthorized controller / PLC command or logic change | An unsanctioned command or ladder-logic/program change to a controller. **Malicious:** manipulation of the physical process. **Benign:** authorized engineering work. | OT IDS / historian | Impair Process Control | T0855 (Unauthorized Command Message), T0831 (Manipulation of Control) | IC-14 (OT/ICS Attack) |
 | Industrial-protocol anomaly | Abnormal Modbus/DNP3/S7 traffic or function codes. **Malicious:** manipulation or reconnaissance. **Benign:** maintenance activity. | OT IDS | Collection | T0801 (Monitor Process State), T0830 (Adversary-in-the-Middle) | IC-14 (OT/ICS Attack) |
 | Engineering-workstation / HMI compromise | Compromise of an engineering workstation or HMI that bridges IT and OT. **Malicious:** a pivot toward control systems. **Benign:** normal administrator activity. | OT IDS / EDR | Lateral Movement | T0866 (Exploitation of Remote Services), T0822 (External Remote Services) | IC-14 (OT/ICS Attack), IC-08 (Infrastructure Compromise) |
 
-## Usage
-
-During Triage, the executor identifies the observed alert(s), locates the matching alert type(s) here, and carries the mapped **tactics/techniques** and **candidate Incident Categories** into Investigation, where competing A/B hypotheses confirm or refute the classification.
+## Where this taxonomy is used
+Alert types are the index of the domain [Triage playbooks](../04-Playbooks/README.md): during [Triage](../03-Processes/02-detection_and_analysis.md#1-triage-verification-enrichment--prioritization) the executor matches the observed alert(s) to the types here and carries the mapped techniques and candidate Incident Categories into [Investigation](../03-Processes/02-detection_and_analysis.md#2-deep-dive-investigation--hypothesis-formulation), where competing hypotheses confirm or refute the classification.

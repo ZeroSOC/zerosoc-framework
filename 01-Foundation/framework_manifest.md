@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-09-07
+last_updated: 2026-09-08
 license: Apache-2.0
 ---
 
@@ -31,11 +31,11 @@ While the framework's **specifications are executor-neutral**, its **operational
 *   **AI Agents:** Best suited for contextual correlation, hypothesis testing, and reasoning under uncertainty.
 *   **Human Analysts:** Essential for handling ambiguity, high-blast-radius decisions, and ultimate accountability.
 
-Human readability and actionability are therefore **conformance properties**, not documentation courtesies. They are necessary for transparency, auditability, and to guarantee that a human always understands exactly what an autonomous agent will do. As Andrej Karpathy noted, *"You can outsource thinking, but you cannot outsource understanding."* Enforcing human-readable playbooks ensures that even as execution is automated, the human retainers of the system retain full comprehension and governance over the agent's behavior. Consequently, agent-facing affordances — front-matter selection keys, OCSF enum anchors, machine-readable handoff contracts — are additive and MUST NOT make the prose less readable or less actionable for a human executor. Where a capability is impractical for a human executor (e.g. bulk parallel queries), the documents state the *what* and the *why* so a human achieves the same outcome sequentially.
+Human readability and actionability are therefore **conformance properties**, not documentation courtesies. They are necessary for transparency, auditability, and to guarantee that a human always understands exactly what an autonomous agent will do. As Andrej Karpathy noted, *"You can outsource thinking, but you cannot outsource understanding."* Enforcing human-readable playbooks ensures that even as execution is automated, the human retainers of the system retain full comprehension and governance over the agent's behavior. Consequently, agent-facing affordances — front-matter selection keys, OCSF enum anchors, machine-readable phase transition contracts — are additive and MUST NOT make the prose less readable or less actionable for a human executor. Where a capability is impractical for a human executor (e.g. bulk parallel queries), the documents state the *what* and the *why* so a human achieves the same outcome sequentially.
 
 ### Tier-less Operating Model
 
-The operating model is **tier-less by design**. There are no Tier 1/2/3 ranks and no escalation by seniority: the framework's functions (see [Definitions §6](definitions.md#6-executors-and-functions)) are specialized peer functions, work is routed by skill and by risk through explicit handover boundaries, and the executor that takes a Case owns it to conclusion. Tiered handoffs degrade investigative context and stretch response times; they concentrate automatable toil on entry-level staff; and once front-line triage is absorbed by automation and agents, the base of the pyramid is an automation boundary, not an organizational layer.
+The operating model is **tier-less by design**. There are no Tier 1/2/3 ranks and no escalation by seniority: the framework's functions (see [Definitions §6](definitions.md#6-executors-and-functions)) are specialized peer functions, work is routed by skill and by risk through explicit handover boundaries, and the executor that takes a Case owns it to conclusion. Tiered handovers degrade investigative context and stretch response times; they concentrate automatable toil on entry-level staff; and once front-line triage is absorbed by automation and agents, the base of the pyramid is an automation boundary, not an organizational layer.
 
 The same discipline applies software-engineering practice to operations: teams balance their time between running operations and engineering away the toil that operations generate, so recurring manual work is eliminated rather than redistributed.
 
@@ -103,6 +103,6 @@ While the ZeroSOC Taxonomy abstracts incidents based on simplified categories, M
 
 ### 6. Regulatory Auditing (NIS2 & DORA)
 With the rise of Agentic MDR platforms, autonomous actions must be transparent, auditable, and compliant with European reporting timelines:
-*   **Early Warning (24 Hours):** Automated flagging of potential systemic or cross-border impact to trigger the initial 24-hour notification gate under NIS2 (Article 23) or DORA.
+*   **Early Warning (24 Hours):** Automated flagging of potential systemic or cross-border impact to trigger the initial 24-hour notification deadline under NIS2 (Article 23) or DORA.
 *   **Incident Notification (72 Hours):** Verification workflows to populate and submit detailed incident reports within the 72-hour window.
 *   **"Glass Box" Auditing:** The framework's Governance module mandates "Glass Box" design patterns to satisfy the strict reporting and auditing requirements of EU directives like NIS2 and DORA.
