@@ -1,0 +1,576 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
+  "title": "ZeroSOC Case",
+  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "uid",
+    "status_id",
+    "severity_id",
+    "verdict_id",
+    "finding_info_list",
+    "zerosoc"
+  ],
+  "properties": {
+    "uid": {
+      "type": "string",
+      "description": "Case identifier, cited by the Notes, tuning tickets and metrics."
+    },
+    "status_id": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-enum-captions": {
+        "1": "New",
+        "2": "In Progress",
+        "3": "On Hold",
+        "4": "Resolved",
+        "5": "Closed"
+      }
+    },
+    "severity_id": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-enum-captions": {
+        "1": "Informational",
+        "2": "Low",
+        "3": "Medium",
+        "4": "High",
+        "5": "Critical"
+      }
+    },
+    "confidence_id": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "x-enum-captions": {
+        "1": "Low",
+        "2": "Medium",
+        "3": "High"
+      }
+    },
+    "impact_id": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-enum-captions": {
+        "0": "Unknown",
+        "1": "Low",
+        "2": "Medium",
+        "3": "High",
+        "4": "Critical"
+      }
+    },
+    "verdict_id": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2,
+        5,
+        7,
+        10
+      ],
+      "x-enum-captions": {
+        "0": "Unknown",
+        "1": "False Positive",
+        "2": "True Positive",
+        "5": "Benign",
+        "7": "Insufficient Data",
+        "10": "Duplicate"
+      }
+    },
+    "assignee": {
+      "$ref": "#/$defs/ocsf_user",
+      "description": "The Case owner: the executor responsible for advancing the Case and for its verdict."
+    },
+    "finding_info_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/ocsf_finding_info"
+      },
+      "description": "The aggregated Alerts (Detection Findings)."
+    },
+    "attacks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ocsf_attack"
+      }
+    },
+    "observables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ocsf_observable"
+      },
+      "description": "Normalized entities — the join keys of the investigation."
+    },
+    "start_time": {
+      "type": "integer",
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+    },
+    "end_time": {
+      "type": "integer",
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+    },
+    "is_suspected_breach": {
+      "type": "boolean"
+    },
+    "zerosoc": {
+      "$ref": "#/$defs/zerosoc_extension"
+    }
+  },
+  "$defs": {
+    "ocsf_user": {
+      "type": "object",
+      "x-ocsf-object": "user",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "ocsf_product": {
+      "type": "object",
+      "x-ocsf-object": "product",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ocsf_attack": {
+      "type": "object",
+      "x-ocsf-object": "attack",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "tactic": {
+          "type": "object",
+          "x-ocsf-object": "tactic",
+          "additionalProperties": true,
+          "required": [],
+          "properties": {
+            "uid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "technique": {
+          "type": "object",
+          "x-ocsf-object": "technique",
+          "additionalProperties": true,
+          "required": [
+            "uid"
+          ],
+          "properties": {
+            "uid": {
+              "type": "string",
+              "pattern": "^(T[0-9]{4}(\\.[0-9]{3})?|AML\\.T[0-9]{4}(\\.[0-9]{3})?)$"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "sub_technique": {
+          "type": "object",
+          "x-ocsf-object": "sub_technique",
+          "additionalProperties": true,
+          "required": [],
+          "properties": {
+            "uid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ocsf_observable": {
+      "type": "object",
+      "x-ocsf-object": "observable",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "type_id"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ocsf_related_event": {
+      "type": "object",
+      "x-ocsf-object": "related_event",
+      "additionalProperties": true,
+      "required": [
+        "uid"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "type_uid": {
+          "type": "integer"
+        },
+        "type_name": {
+          "type": "string"
+        },
+        "product": {
+          "$ref": "#/$defs/ocsf_product"
+        }
+      }
+    },
+    "ocsf_finding_info": {
+      "type": "object",
+      "x-ocsf-object": "finding_info",
+      "additionalProperties": true,
+      "required": [
+        "uid",
+        "title"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "created_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "attacks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_attack"
+          }
+        },
+        "related_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_related_event"
+          }
+        },
+        "product": {
+          "$ref": "#/$defs/ocsf_product"
+        }
+      }
+    },
+    "ocsf_ticket": {
+      "type": "object",
+      "x-ocsf-object": "ticket",
+      "additionalProperties": true,
+      "required": [
+        "uid"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "src_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "incident_category": {
+      "type": "string",
+      "pattern": "^IC-[0-9]{2}$"
+    },
+    "executor_class": {
+      "type": "string",
+      "enum": [
+        "human",
+        "automation",
+        "agent"
+      ]
+    },
+    "timeline_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "kind",
+        "desc"
+      ],
+      "description": "One entry of the Case Timeline. Attacker actions cite the finding or events that ground them; detection, response, handover and notification entries record what the SOC did.",
+      "properties": {
+        "time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "attacker-action",
+            "detection",
+            "triage",
+            "investigation",
+            "handover",
+            "containment",
+            "eradication",
+            "recovery",
+            "notification",
+            "closure"
+          ]
+        },
+        "desc": {
+          "type": "string"
+        },
+        "executor": {
+          "$ref": "#/$defs/executor_class"
+        },
+        "finding": {
+          "$ref": "#/$defs/ocsf_finding_info",
+          "description": "The Detection Finding this entry is grounded on, when one exists."
+        },
+        "related_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_related_event"
+          },
+          "description": "Event references grounding the entry (never raw log dumps)."
+        },
+        "is_t0": {
+          "type": "boolean",
+          "description": "True on the earliest confirmed malicious event."
+        }
+      }
+    },
+    "zerosoc_extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_path",
+        "provenance"
+      ],
+      "properties": {
+        "candidate_incident_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/incident_category"
+          }
+        },
+        "incident_category": {
+          "$ref": "#/$defs/incident_category"
+        },
+        "entry_path": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "hunt",
+            "out-of-band"
+          ]
+        },
+        "t0": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/timeline_entry"
+          }
+        },
+        "visibility_gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "data_source",
+              "check_prevented"
+            ],
+            "properties": {
+              "data_source": {
+                "type": "string"
+              },
+              "check_prevented": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "playbooks",
+            "executors"
+          ],
+          "properties": {
+            "playbooks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "version"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "The playbook's last_updated date."
+                  }
+                }
+              }
+            },
+            "executors": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/executor_class"
+              },
+              "minItems": 1
+            },
+            "capability_classes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ocsf_product"
+              }
+            }
+          }
+        },
+        "significant": {
+          "type": "boolean",
+          "description": "NIS2 Article 23(3) significance test."
+        },
+        "cross_border": {
+          "type": "boolean"
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "recipient",
+              "deadline"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "internal",
+                  "nis2-early-warning",
+                  "nis2-notification",
+                  "nis2-final-report",
+                  "dora-initial",
+                  "dora-intermediate",
+                  "dora-final",
+                  "other"
+                ]
+              },
+              "recipient": {
+                "type": "string"
+              },
+              "deadline": {
+                "type": "integer",
+                "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+              },
+              "sent_at": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tuning_ticket": {
+          "$ref": "#/$defs/ocsf_ticket"
+        },
+        "handover_reason": {
+          "type": "string",
+          "enum": [
+            "crown-jewel",
+            "privileged-identity",
+            "novel-behavior",
+            "contradiction",
+            "timebox",
+            "budget"
+          ]
+        },
+        "master_case_uid": {
+          "type": "string",
+          "description": "Set on a Duplicate close: the open master Case that handles the activity."
+        }
+      }
+    }
+  }
+}

@@ -81,7 +81,7 @@ graph TD
         end
 
         subgraph P22 ["Phase 2.b: Investigation"]
-            G2 -->|Promote to Investigation| Investigate[IC Playbook<br>Concurrent A/B Hypothesis Testing]
+            G2 -->|Promote to Investigation| Investigate[IC Playbook<br>Concurrent Malicious/Benign hypothesis testing]
             Investigate --> G3{"G3: Case Verdict"}
             G3 -->|Close: Benign / FP| Close2[Close Case & Emit Tuning Signal]
         end
@@ -122,7 +122,7 @@ graph TD
 ```
 
 * **Domain Triage Playbooks (Phase 2.a):** Initial alert ingest (Gate G1) routes to one of 8 telemetry domains (Endpoint, Cloud, Identity, Network, etc.) where entities are enriched and operational priority is recalibrated. Alerts are either closed as False Positive / Benign Positive (emitting tuning feedback) or promoted to active investigation with a candidate Incident Category (Gate G2).
-* **Incident Category (IC) Investigation Playbooks (Phase 2.b):** Promoted cases undergo Concurrent A/B Hypothesis Testing (Malicious vs. Benign) to establish a definitive Case Verdict (Gate G3).
+* **Incident Category (IC) Investigation Playbooks (Phase 2.b):** Promoted cases undergo Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign) to establish a definitive Case Verdict (Gate G3).
 * **Incident Response (Phase 3):** Confirmed True Positive incidents trigger active incident response, tactical containment execution (Gate G4), eradication, and recovery.
 * **Deliverables & Provenance:** Every Phase produces structured, human-readable documentation (Triage Note, Investigation Note) with mandatory audit trails.
 * **Governance & Metrics:** Agent and automation execution is bound by Least Access / JIT guardrails and audited by human supervision QA (Gate G5), with metrics tracking velocity (MTTA/MTTC/MTTR), stage-differentiated false-positive surfaces, and token economics.
@@ -132,9 +132,9 @@ graph TD
 The framework is organized into seven foundational modules:
 
 1. **[01-Foundation](01-Foundation/framework_manifest.md)**: The core manifest, roles and responsibilities, design decisions, roadmap, and OCSF-aligned SOC glossary. Standardizes terminology using OCSF `type_id` bands (Scalar primitive types < 20 e.g., Hostname, IP, Hash vs. Full entity objects ≥ 20 e.g., Endpoint, User, File).
-2. **[02-Taxonomy](02-Taxonomy/incident_categories.md)**: An incident classification system focusing on Business Impact. Includes telemetry domain-specific [Alert Type Taxonomy](02-Taxonomy/alert_types.md) and 15 business-impact Incident Categories (IC-01 to IC-15); MITRE ATT&CK/ATLAS technique mappings are carried by the alert types and by each Investigation & Response playbook.
+2. **[02-Taxonomy](02-Taxonomy/incident_categories.md)**: An incident classification system focusing on Business Impact. Includes the telemetry domain-specific [Alert Type Taxonomy](02-Taxonomy/alert_types.md), 15 business-impact Incident Categories (IC-01 to IC-15), and the [Case Schema](02-Taxonomy/case_schema.md) — the single definition of the Case, with a JSON Schema; MITRE ATT&CK/ATLAS technique mappings are carried by the alert types and by each Investigation & Response playbook.
 3. **[03-Processes](03-Processes/00-detection_and_response_lifecycle.md)**: Core operational workflows mapped to NIST CSF 2.0, NIST SP 800-61 Rev. 3, ISO/IEC 27035:2023, and ISO/IEC 27001:2022 (A.5.24 - A.5.28). Outlines the operational phases (Preparation, Detection & Analysis, Response, and Post-Incident).
-4. **[04-Playbooks](04-Playbooks/README.md)**: Hierarchical playbook standard powered by Concurrent A/B Hypothesis Testing (Malicious vs. Benign). Divided into domain-specific **Triage Playbooks** (normalizing/enriching alerts at Gate G2) and Incident-Category-specific **Investigation & Response Playbooks** (Gate G3).
+4. **[04-Playbooks](04-Playbooks/README.md)**: Hierarchical playbook standard powered by Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign). Divided into domain-specific **Triage Playbooks** (normalizing/enriching alerts at Gate G2) and Incident-Category-specific **Investigation & Response Playbooks** (Gate G3).
 5. **[05-Metrics](05-Metrics/operational_metrics.md)**: Process-anchored speed metrics (MTTD, MTTA, MTTV, MTTC, MTTR, HITL Dwell Time), stage-differentiated False-Positive Surface (Promotion Precision, Case Noise Rate), paired autonomy-quality metrics, and Token Economics (compute/LLM pricing).
 6. **[06-Deliverables](06-Deliverables/README.md)**: Fill-in templates and golden exemplars for the framework's written deliverables (Triage Note and Investigation Note), with mandatory provenance metadata for Glass Box audit trails.
 7. **[07-Governance](07-Governance/agentic_guardrails.md)**: Guardrails for autonomous execution (automation and AI agents) in SecOps. Details Least Access identity (JIT Scoping, Time-Boxing), standard HITL containment payloads, autonomous action boundaries, and OSINT data egress restrictions.
@@ -200,7 +200,7 @@ graph TD
     PB1 -.->|Governs structure of| PB2
     PB1 -.->|Governs structure of| PB3
     P2 -->|Triage uses| PB2
-    P2 -->|Investigation executes A/B| PB3
+    P2 -->|Investigation executes Malicious/Benign| PB3
     PB3 -->|Confirms Incident| P3
     P2 -->|Produces| Deliverables
     P3 -->|Triggers Post-Mortem| P4
@@ -249,7 +249,7 @@ The ZeroSOC Framework stands on the shoulders of pioneering research, open stand
 
 ## License, Trademarks & Contributing
 
-The ZeroSOC Framework is licensed under the **[Apache License 2.0](LICENSE)** (see also [NOTICE](NOTICE) and [DD-15](01-Foundation/design_decisions.md)).
+The ZeroSOC Framework is licensed under the **[Apache License 2.0](LICENSE)** (see also [NOTICE](NOTICE) and [Design Decisions](01-Foundation/design_decisions.md)).
 
 Contributions are welcomed! Before contributing, please review our **[Contributing Guidelines](CONTRIBUTING.md)** and ensure all commits are signed off under the Developer Certificate of Origin (DCO).
 

@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-08
+last_updated: 2026-09-09
 license: Apache-2.0
 ---
 
@@ -51,6 +51,11 @@ A discrete actor, asset, or artifact involved in security-relevant activity — 
 
 ---
 
+### SOC Knowledge Base (SOC KB)
+The organization's institutional knowledge about its own environment, maintained by the SOC for use during triage, investigation and response: VIP and high-risk users, approved exceptions and known-benign activity, naming conventions, network ranges and diagrams, vulnerability-scan and maintenance schedules, business-critical (Crown Jewel) assets, and the lessons learned from past Incidents.
+*   **Context:** Many security teams keep this knowledge in internal documentation of varying structure and maturity, often to compensate for an incomplete CMDB. The framework treats it as a foundational component: it is an enrichment source in Triage (Organizational Context, [Detection & Analysis §1.2](../03-Processes/02-detection_and_analysis.md#12-multi-vector-context-enrichment)), it receives the lessons learned of Post-Incident Activity, and it is maintained as part of Preparation & Engineering. Because every executor — human, automation or agent — reads the same knowledge base, it is the mechanism by which institutional knowledge reaches automated execution.
+*   **OCSF Mapping:** None. The knowledge base is a source consulted during enrichment; the facts drawn from it are recorded in the Triage Note and Investigation Note as findings with references.
+
 ## 2. Detection & Investigation Entities
 
 ### Security Alerts
@@ -67,6 +72,8 @@ A broader, administrative workspace used to manage the investigative workflow. I
 *   **Context:** A case can be opened as soon as an alert fires. A single case may group together multiple related Security Alerts, Signals, and Event Logs. It is the tactical "investigation folder." 
 *   **Outcome:** A closed case will ultimately be dispositioned (e.g., as an Incident, a False Positive, or a Benign Positive).
 *   **OCSF Mapping:** A Case maps to [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding) — the aggregation object that groups the constituent [Detection Findings [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding) (Alerts) and carries the case verdict — in a **pre-confirmation** state: `verdict_id` still open (Unknown `0` / Suspicious `4` / Insufficient Data `7`) and `status_id` New (`1`) / In Progress (`2`). Workflow metadata can additionally be tracked via the [Ticket](https://schema.ocsf.io/1.8.0/objects/ticket) object. A Case becomes a **Security Incident** only when its verdict is confirmed (see below).
+
+*   **Data model:** the fields a Case carries — OCSF fields and the framework's own — are defined once in the [Case Schema](../02-Taxonomy/case_schema.md).
 
 ### Security Incidents
 An event (or series of events) that has been investigated through a case and **verified as a confirmed security threat** or a serious violation of security policies. 
@@ -107,6 +114,11 @@ Cases where the detection tool worked exactly as intended and correctly identifi
 *   **Outcome:** The case is closed. Benign Positives typically require minor tuning such as whitelisting to reduce noise.
 *   **OCSF `verdict_id`:** `5` (Benign)
 
+### Duplicate
+A Case closed because its activity, root cause and threat vector are already handled by an open master Case, and the recurrence adds neither risk nor evidence to it.
+*   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, active ownership of the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
+*   **OCSF `verdict_id`:** `10` (Duplicate). The closing Note records the master Case identifier.
+
 ### False Negative (FN)
 Malicious activity that occurred but failed to generate a Security Alert. (Not a direct case classification, but a critical metric for SOC health representing "missed detections").
 
@@ -119,7 +131,7 @@ Benign activity that correctly did *not* trigger any alarms. (The normal, silent
 
 ### Playbook
 A standardized, structured procedure detailing the analytical, investigative, and response actions for a specific domain or incident category. Playbooks define required telemetry inputs, hypothesis validation queries, containment/eradication procedures, completion criteria, and governance boundaries.
-*   **Context:** ZeroSOC Framework adopts a modular two-layer playbook architecture: **Domain Triage Playbooks** (for front-line alert validation and prioritization) and **Incident Category (IC) Investigation & Response Playbooks** (for concurrent A/B hypothesis testing and response).
+*   **Context:** ZeroSOC Framework adopts a modular two-layer playbook architecture: **Domain Triage Playbooks** (for front-line alert validation and prioritization) and **Incident Category (IC) Investigation & Response Playbooks** (for concurrent Malicious/Benign hypothesis testing and response).
 *   **Terminology Note:** In the broader industry or depending on the specific SOAR vendor, these are often referred to as "Runbooks." To avoid ambiguity, the ZeroSOC Framework exclusively uses the term *Playbook* and intentionally omits the use of the term *Runbook*.
 
 ### Triage
@@ -128,7 +140,7 @@ The initial, high-velocity analytical phase (System 1 fast-thinking) of evaluati
 
 ### Investigation
 The diagnostic analytical process of testing competing hypotheses, reconstructing adversary actions, determining attack scope and blast radius, and establishing a definitive case verdict.
-*   **Context:** In the ZeroSOC Framework, Investigation is governed by the **Concurrent A/B Hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-deep-dive-investigation--hypothesis-formulation)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
+*   **Context:** In the ZeroSOC Framework, Investigation is governed by the **Concurrent Malicious/Benign hypothesis Engine** ([Detection & Analysis §2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)). It systematically executes deep-dive queries across endpoint, identity, network, and cloud telemetry to seek evidence that confirms or invalidates competing hypotheses (Malicious True Positive vs. Benign). The outcome of an investigation is a conclusive **Case Verdict** (documented in an Investigation Note), which either closes the case (False Positive / Benign) or promotes it to a confirmed **Security Incident** for immediate containment and eradication.
 
 ### Containment
 Short-term, tactical actions taken to stop an active threat from spreading or causing further damage. Containment must happen *before* eradication.
@@ -147,6 +159,9 @@ The retrospective phase of evaluating confirmed incidents or major false-positiv
 *   **Context:** Aligned with NIST SP 800-61 Rev. 3 (Post-Incident Activity) and ISO/IEC 27035 (Lessons Learned), this phase conducts a blameless Root Cause Analysis (RCA) categorizing failures across four systemic buckets (Telemetry Gaps, Software Flaws, Human/Configuration Errors, Policy/Process Deficiencies) and generating actionable tickets for detection tuning, playbook updates, and infrastructure hardening.
 
 ---
+
+### Phase Transition Contract
+The defined set of Case fields that a Case carries when it moves forward from one phase to the next — from Triage to Investigation on promotion, from Investigation to Response on confirmation. A data boundary, specified once in the [Playbook Architecture](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts-ocsf-aligned) as subsets of the [Case Schema](../02-Taxonomy/case_schema.md). A closed Case carries none.
 
 ## 5. Measurement & Performance Terminology
 
@@ -172,7 +187,7 @@ The framework describes *who* performs work at two levels: the **executor** that
 The party that carries out a process step or playbook: a **human analyst**, **deterministic automation** (rule-based scripts and orchestration workflows), or an **autonomous AI agent** — or any blend of the three. Every process and playbook is executable by any executor class (Executor Neutrality, per the [Framework Manifest](framework_manifest.md#executor-neutrality-and-human-readability)). The **Provenance** field of a deliverable records which executor performed each step, so every metric can be sliced by executor without changing its definition.
 
 ### Function
-A named area of responsibility that any executor class may fulfill. Functions are **peer functions in a tier-less model** (see the [Framework Manifest](framework_manifest.md#tier-less-operating-model)): work is routed by skill and by risk through explicit handover boundaries, never up a seniority ladder, and the executor that takes a Case owns it to conclusion — through investigation and response alike. Custody changes only at the handover boundaries the processes define; skill-based routing happens at intake, not mid-Case. The framework uses the following function names throughout; organizations map their own titles onto them.
+A named area of responsibility that any executor class may fulfill. Functions are **peer functions in a tier-less model** (see the [Framework Manifest](framework_manifest.md#tier-less-operating-model)): work is routed by skill and by risk through explicit handover boundaries, never up a seniority ladder, and the executor that takes a Case owns it to conclusion — through investigation and response alike. Ownership changes only under the handover conditions the processes define; skill-based routing happens at intake, not mid-Case. The framework uses the following function names throughout; organizations map their own titles onto them.
 
 | Function | Responsibility | Primary phases |
 | :--- | :--- | :--- |
@@ -181,3 +196,44 @@ A named area of responsibility that any executor class may fulfill. Functions ar
 | **Security Platform Engineer** | Deploy, integrate and maintain the security tooling and telemetry pipelines — SIEM, SOAR, EDR/XDR, log collection — including log-source onboarding and health. Often staffed by the same team as Detection Engineering, with distinct skills; commonly titled *SOC Engineer* or *SIEM Engineer*. | Phase 1 |
 | **Threat Hunter** | Formulate and test hunt hypotheses against telemetry, operationalize threat intelligence, and open Cases for threats that bypassed detection logic. | Phase 2 |
 | **SOC Manager** | Own the operating model and its oversight: capacity, quality-assurance supervision of autonomous dispositions, metrics review, and the interface to enterprise risk management. For declared Incidents, own the interface to enterprise incident management — regulatory notification timelines and stakeholder coordination (the *Incident Coordinator* of ISO/IEC 27035). | Phase 3, Phase 4, cross-phase |
+
+### Handover
+The transfer of a Case's **ownership** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the processes define ([Detection & Analysis §2.3](../03-Processes/02-detection_and_analysis.md#23-conditions-requiring-human-ownership-handover)). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
+
+## 7. Classification Levels
+
+Every Case carries three measures, defined in the [Case Schema](../02-Taxonomy/case_schema.md) and assessed in [Detection & Analysis](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact): **Severity** ("how bad"), **Confidence** ("how sure") and **Impact** ("how much harm"). The levels below are the framework's readable definitions; the numeric values are OCSF's.
+
+### Severity (OCSF `severity_id`)
+Severity estimates the *potential* harm of the observed activity and sets the urgency of the response. It combines the threat severity of the behavior with the criticality of what it touches.
+
+| Level | OCSF meaning | Framework guidance | Example |
+|---|---|---|---|
+| **1 Informational** | Informational message; no action required. | A Signal, not an Alert. Consulted during triage, never triaged on its own. | A single failed login; a new process seen for the first time on a host. |
+| **2 Low** | The user decides if action is needed. | Suspicious but contained in scope; routine triage, no deadline pressure. | A password spray blocked by lockout on standard accounts. |
+| **3 Medium** | Action is required but the situation is not serious at this time. | Likely malicious or policy-relevant activity on non-critical entities; investigate within the shift. | Commodity malware detected and quarantined on a standard workstation. |
+| **4 High** | Action is required immediately. | Malicious activity with a credible path to material harm, or touching a critical entity; investigate now, response likely. | Credential dumping on a server; a privileged role granted outside change control. |
+| **5 Critical** | Action is required immediately and the scope is broad. | Active, spreading or Crown-Jewel-level threat; response and notification run in parallel with investigation. | Ransomware propagating; domain controller compromise; confirmed exfiltration of regulated data. |
+
+### Confidence (OCSF `confidence_id`)
+Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework binds them to the evidence resolution rule of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
+
+| Level | Definition | Example |
+|---|---|---|
+| **1 Low** | The hypothesis is plausible but rests on a single supporting finding, on ambiguous evidence, or on findings with an unresolved contradiction. Not sufficient to act autonomously. | A reputation lookup flags a domain on one engine out of many; nothing else corroborates. |
+| **2 Medium** | The hypothesis is proven by two or more independent, convergent supporting findings, with no strongly-supporting finding. Sufficient for a verdict; autonomous containment requires human review. | An unusual process plus an outbound connection to a newly registered domain, each explainable alone, together not. |
+| **3 High** | The hypothesis is proven by at least one unrebutted strongly-supporting finding. Sufficient for a verdict and for pre-authorized autonomous containment. | Multi-engine hash consensus on a known malware family; a decoded command line that stages a payload. |
+
+A visibility gap — a required data source unavailable during triage or investigation — caps Confidence at Medium regardless of the findings, because the missing source could have contradicted them.
+
+### Impact (OCSF `impact_id`)
+Impact records the *realized or expected* harm of a confirmed or suspected Incident. The framework assesses it on three effects, after NIST SP 800-61 — **functional** (services and operations), **informational** (confidentiality and integrity of data) and **recoverability** (time and effort to recover) — and binds the top level to the NIS2 significance test. Impact is assessed at triage when already known and otherwise at incident confirmation; until assessed it is recorded as unknown, never guessed.
+
+| Level | OCSF meaning | Framework definition | Example |
+|---|---|---|---|
+| **1 Low** | The magnitude of harm is low. | Minimal or no effect on services; no data compromised; recovery within normal operations. | Malware quarantined before execution on one workstation. |
+| **2 Medium** | The magnitude of harm is moderate. | A non-critical service degraded or one business unit affected; non-sensitive data accessed; recovery with supplemented resources within the day. | A compromised standard account used to read internal, non-regulated documents. |
+| **3 High** | The magnitude of harm is high. | A critical service disrupted or a Crown Jewel affected; regulated or proprietary data breached; extended recovery. | Ransomware on a production file server with backups intact. |
+| **4 Critical** | The magnitude of harm is high and the scope is widespread. | Severe operational disruption or financial loss, or considerable damage to other persons or organizations — the NIS2 Article 23 significance test — or harm that cannot be recovered. Triggers regulatory notification. | Enterprise-wide ransomware with backups destroyed; exfiltration of customer personal data at scale; a cross-border outage of a regulated service. |
+
+The **significant** and **cross-border** flags of the Case Schema are set from this assessment; a Critical Impact is always significant, and a High Impact is significant when the NIS2 criteria are met.
