@@ -41,11 +41,11 @@ It is deliberately **not** a dated list of modules to ship. It is written as a s
 
 ### P2 — Proactive Threat Hunting
 
-**Problem.** The A/B Hypothesis engine is a reactive, post-alert construct. There is no standardized way to hunt *before* an alert fires — to look for adversary activity that no rule caught — and the coverage gaps such hunting reveals are exactly what should drive detection engineering downstream.
+**Problem.** The Malicious/Benign hypothesis engine is a reactive, post-alert construct. There is no standardized way to hunt *before* an alert fires — to look for adversary activity that no rule caught — and the coverage gaps such hunting reveals are exactly what should drive detection engineering downstream.
 
 **Outcome we want.** Hypothesis-driven hunting is a first-class, pre-alert workflow that both catches what detection missed and continuously feeds the detection pipeline with new requirements.
 
-**Candidate bet.** A *Proactive Hunting* module that reuses the existing A/B engine (smallest lift of the proactive bets) and outputs structured coverage gaps.
+**Candidate bet.** A *Proactive Hunting* module that reuses the existing Malicious/Benign hypothesis engine (smallest lift of the proactive bets) and outputs structured coverage gaps.
 
 ### P3 — Detection Engineering & Detection-as-Code
 

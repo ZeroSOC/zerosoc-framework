@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-08-18
+last_updated: 2026-09-09
 license: Apache-2.0
 ---
 
@@ -34,7 +34,7 @@ Every entry in this registry follows this structure:
 - **Alternatives:** Organizing all phases by Incident Category (forces alerts into impact categories before classification is established); organizing all phases by domain (misfits response, which is incident- and impact-centric); assigning multiple home domains per alert type (causes redundant rows and ambiguous ownership).
 
 ## DD-05: Prioritization via Severity and Confidence (No Redundant Priority Axis)
-- **Decision:** Prioritize alerts and cases along two orthogonal axes: **Severity** (Informational to Critical, OCSF `severity_id`) and **Confidence** (Low/Medium/High, OCSF `confidence_id`), without a separate ITIL "priority" matrix.
+- **Decision:** Prioritize alerts and cases along two orthogonal axes: **Severity** (Informational to Critical, OCSF `severity_id`) and **Confidence** (Low/Medium/High, OCSF `confidence_id`), without a separate ITIL "priority" matrix. A third measure, **Impact** (OCSF `impact_id`), is assessed only when a Case is confirmed as an Incident: it records realized or expected harm and drives regulatory notification (NIS2 Article 23 requires both severity and impact), whereas Severity estimates potential harm to drive urgency. Impact is assessed at triage when it is already known (an external report stating the harm, or entities classified as critical assets or VIP users) and otherwise at incident confirmation; it is recorded as unknown until assessed.
 - **Rationale:** Matches modern SecOps and MDR practice. Severity represents potential business impact ("how bad"), while Confidence represents certainty and fidelity ("how sure"). In security operations, urgency is intrinsic to the threat severity and confidence; adding an ITIL Impact × Urgency matrix creates redundant complexity without improving operational triage.
 - **Alternatives:** NIST SP 800-61 three-factor scoring (retained purely as inputs to Severity); ITIL Impact × Urgency priority matrices (redundant with Severity).
 
@@ -48,9 +48,9 @@ Every entry in this registry follows this structure:
 - **Rationale:** Explicit data contracts prevent context loss between operational stages and enforce vendor-neutral interoperability via OCSF. Disambiguating phase transition contracts from operational handovers resolves terminology confusion between data interchange and operational accountability transfer.
 - **Alternatives:** Implicit prose descriptions at stage boundaries (silent context loss); bespoke data interchange schemas (reinvents OCSF); using "handoff/handover" interchangeably for both data artifacts and human escalation (creates operational ambiguity).
 
-## DD-08: Concurrent A/B Hypothesis Validation Engine
-- **Decision:** Investigation systematically evaluates competing hypotheses (**Hypothesis A:** confirmed threat / True Positive activity vs. **Hypothesis B:** authorized, expected, or benign activity) by seeking targeted corroborating and discriminant evidence for both possibilities concurrently, rather than following linear if-then branch trees or assuming malicious intent.
-- **Rationale:** Sequential investigation often falls victim to confirmation bias (seeking only evidence that confirms initial alert alarms). Concurrent hypothesis validation ensures that evidence supporting benign explanations (e.g., scheduled maintenance, approved administrative scripts, authorized penetration testing, user travel) is tested with equal rigor alongside threat indicators before reaching a definitive Case Verdict (Gate G3).
+## DD-08: Concurrent Malicious/Benign Hypothesis Validation Engine
+- **Decision:** Investigation systematically evaluates competing hypotheses (**Malicious hypothesis:** confirmed threat / True Positive activity vs. **Benign hypothesis:** authorized, expected, or benign activity) by seeking targeted corroborating and discriminant evidence for both possibilities concurrently, rather than following linear if-then branch trees or assuming malicious intent.
+- **Rationale:** Sequential investigation often falls victim to confirmation bias (seeking only evidence that confirms initial alert alarms). Concurrent hypothesis validation ensures that evidence supporting benign explanations (e.g., scheduled maintenance, approved administrative scripts, authorized penetration testing, user travel) is tested with equal rigor alongside threat indicators before reaching a definitive Case Verdict (Gate G3). Hypotheses resolve by the evidence-weight score of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence), which is additive and explainable by design.
 - **Alternatives:** Linear conditional playbooks (often assume malicious intent upon alert generation, leading to confirmation bias and elevated false positive rates); unstructured open-ended forensic queries (inconsistent, difficult to automate or audit).
 
 ## DD-09: Eight Telemetry Domains and Aggregated Alert Taxonomy
@@ -80,10 +80,22 @@ Every entry in this registry follows this structure:
 - **Alternatives:** Two-class human/agent model (erases deterministic automation from audit logs and inflates agent autonomy metrics); enumerated "hybrid" class (hides actual execution breakdown).
 
 ## DD-18: Bifurcated Phase 2 (Triage vs. Investigation) and Triage-Level Case Closure
-- **Decision:** Phase 2 (Detection & Analysis) maintains two distinct operational sub-phases: **Triage (Phase 2.a)** and **Investigation (Phase 2.b)**. Triage is explicitly authorized to close cases definitively with a verdict (Gate G2: False Positive / Benign Positive) and emit upstream detection tuning feedback, rather than mandating that every alert progress to deep investigation.
+- **Decision:** Phase 2 (Detection & Analysis) maintains two distinct operational sub-phases: **Triage (Phase 2.a)** and **Investigation (Phase 2.b)**. Triage is explicitly authorized to close cases definitively with a verdict (Gate G2: False Positive / Benign Positive / Duplicate, the last only under the validation criteria of Detection & Analysis §1.5) and emit upstream detection tuning feedback, rather than mandating that every alert progress to deep investigation.
 - **Rationale:**
   1. *Cognitive & Computational Economics (System 1 vs. System 2):* Triage provides rapid, low-cost **System 1 (fast thinking)** filtering (enriching entities, baseline comparison, priority recalibration, obvious noise suppression). Deep multi-agent graph traversal and hypothesis testing (**System 2 slow thinking**) are reserved for ambiguous or high-risk cases to conserve analyst attention and LLM compute.
   2. *Stage-Differentiated Diagnostic Feedback:* Closing false positives at Gate G2 identifies simple rule misconfigurations and missing allowlists for immediate suppression, whereas false positives uncovered at Gate G3 highlight subtle behavioral ambiguities requiring playbook or model refinement.
   3. *Unified Measurement:* Provides consistent, auditable measurement gates (G1 Alert Raised → G2 Triage Decision → G3 Investigation Verdict) across human, automated, and agentic workflows.
 - **Alternatives:** Single undifferentiated detection phase (forces all alerts through heavy investigation or blurs triage metrics); routing all alerts to investigation without triage closure (overwhelms senior responders and exhausts token budgets).
 - **Cross-links:** [Definitions — Triage and Investigation](definitions.md); [Detection & Analysis](../03-Processes/02-detection_and_analysis.md); [Operational Metrics — §5 Disposition Quality](../05-Metrics/operational_metrics.md).
+
+## DD-19: Single Case Schema
+- **Decision:** The Case is defined once, in the [Case Schema](../02-Taxonomy/case_schema.md) and its JSON Schema: the OCSF Incident Finding fields the framework uses (status, severity, confidence, impact, verdict, owner, aggregated alerts, techniques, observables, times) and the framework's own fields (candidate and confirmed Incident Category, entry path, T0 and timeline, visibility gaps, provenance, regulatory significance and cross-border flags, notifications, tuning ticket, handover reason). Processes, playbooks, deliverables, metrics and the phase transition contracts refer to these names and do not define fields of their own.
+- **Rationale:** Field names were scattered across the processes, the playbook architecture and the deliverables with drifting names (`confidence` vs `confidence_id`) and no single answer to "which fields does a Case carry". One model removes the drift, lets the phase transition contracts be stated as subsets, and gives adopters a mapping target for their platform.
+- **Alternatives:** Keep per-document field lists (drift, no canonical source); adopt a bespoke schema instead of OCSF (reinvents OCSF, breaks vendor neutrality).
+- **Cross-links / Revisit trigger:** [Case Schema](../02-Taxonomy/case_schema.md); [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md); [Detection & Analysis](../03-Processes/02-detection_and_analysis.md); [Deliverables](../06-Deliverables/README.md). Revisit when OCSF adds native equivalents of the framework's extension fields.
+
+## DD-20: SOC Knowledge Base as a Foundational Component
+- **Decision:** The framework names the [SOC Knowledge Base](definitions.md#soc-knowledge-base-soc-kb) — the organization's institutional knowledge about its own environment — as a foundational component: an enrichment source in Triage (Organizational Context), an output of Post-Incident Activity (lessons learned), and a maintenance responsibility of Preparation & Engineering.
+- **Rationale:** Most security teams hold this knowledge in internal documentation of varying maturity, often compensating an incomplete CMDB, and it is exactly the context that separates a benign recurrence from a new intrusion. Naming it makes it a required input that every executor reads — the mechanism by which institutional knowledge reaches automated and agentic execution instead of living only in analysts' heads.
+- **Alternatives:** Rely on the CMDB and directory alone (incomplete in practice); leave the knowledge implicit (unavailable to automation and agents, lost with staff turnover).
+- **Cross-links / Revisit trigger:** [Definitions](definitions.md#soc-knowledge-base-soc-kb); [Detection & Analysis §1.2](../03-Processes/02-detection_and_analysis.md#12-multi-vector-context-enrichment); [Preparation & Engineering](../03-Processes/01-preparation_and_engineering.md); [Post-Incident Activity](../03-Processes/04-post_incident_activity.md). Revisit if a structured schema for the knowledge base is standardized.
