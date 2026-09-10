@@ -1,7 +1,7 @@
 ---
 title: Phase 3 - Incident Response
 type: process
-status: development
+status: draft
 last_updated: 2026-09-10
 license: Apache-2.0
 ---
