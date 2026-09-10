@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 license: Apache-2.0
 ---
 
@@ -116,7 +116,7 @@ Cases where the detection tool worked exactly as intended and correctly identifi
 
 ### Duplicate
 A Case closed because its activity, root cause and threat vector are already handled by an open master Case, and the recurrence adds neither risk nor evidence to it.
-*   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, active ownership of the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
+*   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, an active assignee on the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
 *   **OCSF `verdict_id`:** `10` (Duplicate). The closing Note records the master Case identifier.
 
 ### False Negative (FN)
@@ -187,7 +187,7 @@ The framework describes *who* performs work at two levels: the **executor** that
 The party that carries out a process step or playbook: a **human analyst**, **deterministic automation** (rule-based scripts and orchestration workflows), or an **autonomous AI agent** — or any blend of the three. Every process and playbook is executable by any executor class (Executor Neutrality, per the [Framework Manifest](framework_manifest.md#executor-neutrality-and-human-readability)). The **Provenance** field of a deliverable records which executor performed each step, so every metric can be sliced by executor without changing its definition.
 
 ### Function
-A named area of responsibility that any executor class may fulfill. Functions are **peer functions in a tier-less model** (see the [Framework Manifest](framework_manifest.md#tier-less-operating-model)): work is routed by skill and by risk through explicit handover boundaries, never up a seniority ladder, and the executor that takes a Case owns it to conclusion — through investigation and response alike. Ownership changes only under the handover conditions the processes define; skill-based routing happens at intake, not mid-Case. The framework uses the following function names throughout; organizations map their own titles onto them.
+A named area of responsibility that any executor class may fulfill. Functions are **peer functions in a tier-less model** (see the [Framework Manifest](framework_manifest.md#tier-less-operating-model)): work is routed by skill and by risk through explicit handover boundaries, never up a seniority ladder, and the executor that takes a Case owns it to conclusion — through investigation and response alike. The assignee changes only under the handover conditions the Guardrails define; skill-based routing happens at intake, not mid-Case. The framework uses the following function names throughout; organizations map their own titles onto them.
 
 | Function | Responsibility | Primary phases |
 | :--- | :--- | :--- |
@@ -198,7 +198,7 @@ A named area of responsibility that any executor class may fulfill. Functions ar
 | **SOC Manager** | Own the operating model and its oversight: capacity, quality-assurance supervision of autonomous dispositions, metrics review, and the interface to enterprise risk management. For declared Incidents, own the interface to enterprise incident management — regulatory notification timelines and stakeholder coordination (the *Incident Coordinator* of ISO/IEC 27035). | Phase 3, Phase 4, cross-phase |
 
 ### Handover
-The transfer of a Case's **ownership** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the processes define ([Detection & Analysis §2.3](../03-Processes/02-detection_and_analysis.md#23-conditions-requiring-human-ownership-handover)). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
+The change of a Case's **assignee** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the [Agentic Guardrails](../07-Governance/agentic_guardrails.md) define (accountability for Crown Jewel assets and privileged identities; metering of automation and agents). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
 
 ## 7. Classification Levels
 
@@ -216,15 +216,15 @@ Severity estimates the *potential* harm of the observed activity and sets the ur
 | **5 Critical** | Action is required immediately and the scope is broad. | Active, spreading or Crown-Jewel-level threat; response and notification run in parallel with investigation. | Ransomware propagating; domain controller compromise; confirmed exfiltration of regulated data. |
 
 ### Confidence (OCSF `confidence_id`)
-Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework binds them to the evidence resolution rule of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
+Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework uses one scale for two things: every **finding** — an alert, an enrichment result, a query result — is tagged with a side and a confidence (`Malicious (High)`, `Benign (Medium)`, …), and the **Case's** confidence is the highest confidence on the side its verdict rests on ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). The levels weigh 1, 2 and 3; a side is proven at 3.
 
-| Level | Definition | Example |
-|---|---|---|
-| **1 Low** | The hypothesis is plausible but rests on a single supporting finding, on ambiguous evidence, or on findings with an unresolved contradiction. Not sufficient to act autonomously. | A reputation lookup flags a domain on one engine out of many; nothing else corroborates. |
-| **2 Medium** | The hypothesis is proven by two or more independent, convergent supporting findings, with no strongly-supporting finding. Sufficient for a verdict; autonomous containment requires human review. | An unusual process plus an outbound connection to a newly registered domain, each explainable alone, together not. |
-| **3 High** | The hypothesis is proven by at least one unrebutted strongly-supporting finding. Sufficient for a verdict and for pre-authorized autonomous containment. | Multi-engine hash consensus on a known malware family; a decoded command line that stages a payload. |
+| Level | Weight | A finding at this level | The Case at this level | Example |
+|---|---|---|---|---|
+| **1 Low** | 1 | Consistent with its side, explainable otherwise. Three independent Low findings prove a side. | The verdict rests on Low findings only. A True Positive at Low is declared, and every containment action requires approval; a Benign close at Low carries a monitoring watch and is sampled by QA. | An unsigned process; a sign-in at an unusual hour; a domain registered last week. |
+| **2 Medium** | 2 | Corroborates its side; not conclusive alone. Medium plus Low, or two Medium, prove a side. | The verdict rests on a Medium finding at best. Sufficient for a verdict; autonomous containment requires human review. | A scheduled task created shortly before the activity; a consent seen for six colleagues the same morning. |
+| **3 High** | 3 | Sufficient on its own to prove its side. On the Benign side, a finding that **explains** the alert. | A High finding carries the verdict. Sufficient for pre-authorized autonomous containment. | Multi-engine hash consensus on a known family; a threat-feed C2 destination; an approved exception or authorized test window in the SOC Knowledge Base. |
 
-A visibility gap — a required data source unavailable during triage or investigation — caps Confidence at Medium regardless of the findings, because the missing source could have contradicted them.
+A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as a finding. A visibility gap — a required data source unavailable during triage or investigation — caps the Case's confidence at Medium regardless of the findings, because the missing source could have retracted them.
 
 ### Impact (OCSF `impact_id`)
 Impact records the *realized or expected* harm of a confirmed or suspected Incident. The framework assesses it on three effects, after NIST SP 800-61 — **functional** (services and operations), **informational** (confidentiality and integrity of data) and **recoverability** (time and effort to recover) — and binds the top level to the NIS2 significance test. Impact is assessed at triage when already known and otherwise at incident confirmation; until assessed it is recorded as unknown, never guessed.
