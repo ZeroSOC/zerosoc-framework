@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-09-08
+last_updated: 2026-09-10
 license: Apache-2.0
 ---
 
@@ -62,7 +62,7 @@ Adopters cannot claim conformance against a moving repository, and readers canno
 *   **MAJOR (`X.0.0`)**: Breaking changes to `stable` content — renumbered identifiers, removed sections, changed normative schemas or lifecycle requirements.
 *   **MINOR (`X.Y.0`)**: Additive, backwards-compatible extensions — new domain triage playbooks, additional Incident Categories, or expanded metrics.
 *   **PATCH (`X.Y.Z`)**: Non-normative errata, typo corrections, link fixes, and editorial clarifications.
-*   The chronological ledger ([log.md](../log.md)) doubles as the changelog; each release adds a release entry summarizing changes since the previous tag.
+*   [CHANGELOG.md](../CHANGELOG.md) records every release, following Keep a Changelog; each release entry summarizes the changes since the previous tag and credits the contributors.
 *   Until `v1.0.0` the framework is in the `0.x` series: stability guarantees are best-effort, and `development` is the default status for active normative content.
 
 ### Document Release Status
@@ -78,9 +78,9 @@ Every framework document declares a `status` field in its YAML frontmatter, alon
 
 ### Promotion & Demotion
 
-*   **Transitions are governance events.** Every status change is recorded in [log.md](../log.md) with its rationale; a promotion that settles a contested design choice also warrants a [design decision](design_decisions.md) entry.
+*   **Transitions are governance events.** Every status change is recorded in [CHANGELOG.md](../CHANGELOG.md) with its rationale; a promotion that settles a contested design choice also warrants a [design decision](design_decisions.md) entry.
 *   **Promotion to `stable` requires, at minimum:** (a) validation by a flow-test, tabletop exercise, or equivalent check against real material; (b) complete cross-links with no dangling references; (c) one review pass by an executor other than the author — human or agent, per Executor Neutrality; (d) all normative dependencies declared at `stable` status.
-*   **Demotion is legitimate.** A `stable` document invalidated by new insight returns to `development` with a log entry. Honesty over face-saving.
+*   **Demotion is legitimate.** A `stable` document invalidated by new insight returns to `development` with a changelog entry. Honesty over face-saving.
 
 ## Standard Alignment
 

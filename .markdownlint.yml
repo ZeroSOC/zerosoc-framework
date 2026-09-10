@@ -1,0 +1,34 @@
+# Relaxed markdownlint config for a prose-heavy documentation standard.
+# Two classes of rule are disabled:
+#   1. Rules that fight the content model (long normative sentences, tables,
+#      frontmatter, deliberate bold-as-label in DD entries and playbooks).
+#   2. Whitespace/style rules the existing corpus consistently deviates from
+#      (house style: `*   ` list markers, compact headings/lists). These can be
+#      re-enabled after a dedicated formatting sweep — tracked in the
+#      status-checks issue — without mixing reformatting into content PRs.
+# Structural rules (heading syntax, link syntax, code fences, bare URLs) stay on.
+default: true
+
+# -- content-model exemptions --
+MD013: false  # line length — normative prose and tables run long by design
+MD033: false  # inline HTML — anchors and template comments are legitimate
+MD041: false  # first line heading — files start with YAML frontmatter
+MD024:
+  siblings_only: true  # repeated headings allowed across sections (playbook skeletons)
+MD025: false  # frontmatter title + H1 coexist
+MD036: false  # bold-as-heading used deliberately in DD entries and playbooks
+
+# -- house-style exemptions (corpus-wide, pending formatting sweep) --
+MD004: false  # ul style mixes - and *
+MD005: false  # list indent
+MD007: false  # ul indent
+MD009: false  # trailing spaces
+MD012: false  # multiple blank lines
+MD022: false  # blanks around headings
+MD026: false  # trailing punctuation in headings
+MD030: false  # spaces after list marker (`*   ` house style)
+MD031: false  # blanks around fences
+MD032: false  # blanks around lists
+MD038: false  # space inside code spans
+MD058: false  # blanks around tables
+MD060: false  # table column style
