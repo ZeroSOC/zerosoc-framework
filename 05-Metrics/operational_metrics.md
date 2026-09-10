@@ -133,7 +133,7 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 
 ### 5.7 Visibility-Gap Rate
 *   **KPI candidate.**
-*   **Definition:** Cases whose Triage or Investigation Note records at least one Visibility Gap — a required data source unavailable ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-dynamic-agentic-execution)) — ÷ Cases dispositioned.
+*   **Definition:** Cases whose Triage or Investigation Note records at least one Visibility Gap — a required data source unavailable ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor)) — ÷ Cases dispositioned.
 *   **Purpose:** the telemetry-investment signal for SOC leadership and Phase 1 log-source health. A persistent gap is a telemetry problem, never an executor problem.
 
 ## 6. Autonomy Metrics
@@ -222,7 +222,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Verdict Overturn Rate — *KPI candidate*, Reopen Rate | G5 | [Agentic Supervision §2](../07-Governance/agentic_supervision.md); [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager |
 | Observed Detection Recall — *KPI candidate* | G3 / G5 | [Detection & Analysis §3.1, §4, §5](../03-Processes/02-detection_and_analysis.md); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | Leadership, Detection Engineer |
 | Tuning Loop Latency — *KPI candidate* | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
-| Visibility-Gap Rate — *KPI candidate* | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-dynamic-agentic-execution) | SOC leadership, Security Platform Engineer |
+| Visibility-Gap Rate — *KPI candidate* | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor) | SOC leadership, Security Platform Engineer |
 | ADR — *KPI candidate*, Handover Rate, HITL Modification Rate — *KPI candidate* | G2–G4 | Note Provenance; [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions); [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
 | TCpC, Noise Tax — *KPI candidates* | G1–G4 | [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering) | Leadership, FinOps |
 
