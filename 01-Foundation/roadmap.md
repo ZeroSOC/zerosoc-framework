@@ -28,7 +28,7 @@ It is deliberately **not** a dated list of modules to ship. It is written as a s
 
 ### P1 — Metrics & Maturity
 
-**Problem.** The metrics and maturity layer is at an early stage. [05-Metrics](../05-Metrics/operational_metrics.md) captures *speed* (MTTD/MTTA/MTTC/MTTR) and *detection quality* (FPR, precision, coverage), but the framework cannot yet answer two questions adopters keep asking: **"Is autonomous SecOps economically efficient?"** and **"How mature are we, and what should we build next?"** Measurement comes first because it is how every other bet on this roadmap is judged.
+**Problem.** The metrics and maturity layer is at an early stage. [05-Metrics](../05-Metrics/operational_metrics.md) captures *speed* (MTTD/MTTI/MTTC/MTTR) and *detection quality* (FPR, precision, coverage), but the framework cannot yet answer two questions adopters keep asking: **"Is autonomous SecOps economically efficient?"** and **"How mature are we, and what should we build next?"** Measurement comes first because it is how every other bet on this roadmap is judged.
 
 **Outcome we want.** Adopters can measure the *economics* of autonomous SecOps alongside its speed and quality, and can see a staged, benchmarkable path from their current state toward a mature target state.
 
@@ -79,7 +79,7 @@ It is deliberately **not** a dated list of modules to ship. It is written as a s
 **Outcome we want.** Playbooks and agents are validated the same way software is — every change is gated by an executable test, and detection efficacy is *demonstrated* against real adversary behavior rather than mapped on paper.
 
 **Key results.**
-- Detection efficacy is proven continuously through adversary emulation, feeding the existing **Effective MITRE ATT&CK Coverage** metric in [operational_metrics.md](../05-Metrics/operational_metrics.md) (demonstrated coverage within a rolling 90-day window).
+- Detection efficacy is proven continuously through adversary emulation, defining **Measured Recall** — techniques that raised an Alert over techniques exercised per emulation campaign, aggregated over a rolling 90-day window as demonstrated ATT&CK coverage — the known-denominator complement of the Observed Detection Recall in [05-Metrics](../05-Metrics/operational_metrics.md).
 
 **Candidate bet.** A *Simulation & Validation* layer: standardized per-playbook test fixtures plus adversary-emulation hooks wired into **[Atomic Red Team](https://github.com/redcanaryco/atomic-red-team)** (and Breach-and-Attack-Simulation tooling) so playbooks and agents are unit-tested on every change. This turns "continuous validation" from an aspiration into a check that runs against every playbook edit.
 
@@ -104,6 +104,7 @@ These are **ideas, not commitments** — deliberately *not* on the roadmap so th
 - **Cross-IC Campaign Scenarios:** thin scenario overlays chaining multiple Incident Category playbooks along common kill chains (e.g. phishing → BEC → exfiltration), referencing — never duplicating — the underlying playbooks.
 - **Per-Playbook Efficacy Metrics:** per-playbook MTTC/MTTR, verdict-overturn rate at QA sampling, and HITL-modification rate — a natural feeder for the **Metrics & Maturity (P1)** objective once that work matures.
 - **Machine-Readable Integration Contract:** JSON Schemas freezing playbook frontmatter, the [§5 Phase Transition Contracts](../04-Playbooks/playbook_architecture.md), and Triage/Investigation Note structures — versioning the "markdown-as-interface" promise under explicit control.
+- **Deferred metrics:** the measures kept out of [05-Metrics](../05-Metrics/operational_metrics.md) until the program they need exists — Measured Recall and demonstrated ATT&CK coverage (adversary emulation, P5), Hunt Yield (P2), a Re-classification Rate as a taxonomy diagnostic, and coverage economics (token cost per protected endpoint or identity) once enough baselines exist to compare.
 - **Phase 3 and Phase 4 deliverable templates:** an Incident Record (containment-verification evidence) and a Post-Incident Review report, alongside the Triage Note and Investigation Note in [06-Deliverables](../06-Deliverables/README.md). Deferred by decision: the first release standardizes the Phase 2 deliverables only.
 - **Regulatory Communications playbooks:** notification decision trees and report skeletons keyed to the NIS2/DORA gates in [Incident Response §6](../03-Processes/03-response.md), extended to GDPR breach notification. The notification *triggers, timelines, and gates* already exist in the response process and Governance's Glass Box auditing; this idea would add only the human-owned communications templates on top.
 

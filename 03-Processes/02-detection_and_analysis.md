@@ -18,7 +18,7 @@ The objective of this phase is to rapidly determine whether the activity is a ge
 graph TD
     Start([Alert ingested]) --> Agg[Aggregate related Alerts into a Case]
     OOB[Out-of-band report: user, IT, partner, authority, disclosure] --> Agg
-    Agg --> Ack[Acknowledge the Case: assignee set within MTTA]
+    Agg --> Ack[Acknowledge the Case: assignee set]
     Ack --> Cart[Open the domain Triage playbook]
     Cart --> Enrich[Enrich: threat intelligence, asset, identity, SOC Knowledge Base]
     Enrich --> Scope[Scope and correlate: prior Cases, history, lateral scope, campaign]
@@ -63,7 +63,7 @@ The triage process begins as soon as an Alert is triggered and a Case is opened.
 2.  **Deduplication & Throttling Rules:**
     *   *Active Case Correlation:* The triage system queries the active Cases database. If an open, unresolved Case exists for the same host, identity, or IP address, incoming alerts are automatically appended to that existing Case instead of spawning a new one.
     *   *Rate Throttling:* If the same alert type repeatedly triggers from a single source within a sliding window (e.g., 1 hour), the system consolidates them into a single summary signal and suppresses duplicate alerts.
-3.  **Acknowledgment:** The Analyst (human, automation, or agent — see [Definitions §6](../01-Foundation/definitions.md#6-executors-and-functions)) acknowledges the Case (and its constituent alerts) and shifts its state to `In Progress` within the **Mean Time to Acknowledge (MTTA)** SLA. MTTA targets and tiering are defined in [Operational Metrics](../05-Metrics/operational_metrics.md).
+3.  **Acknowledgment:** The Analyst (human, automation, or agent — see [Definitions §6](../01-Foundation/definitions.md#6-executors-and-functions)) acknowledges the Case (and its constituent alerts) and shifts its state to `In Progress`.
 4.  **Review the Alert(s):** Read the detection logic and key fields and form a first impression before enrichment — do not skim. Identify what behavior triggered the alert and whether it plainly warrants deeper work, so the steps that follow are directed rather than exploratory. In case multiple alerts are aggregated in a Case by the SecOps tools try to understand the relationships between the alerts and the related entities. A case with multiple alerts of different types and mapping to multiple techniques has a higher probability of representing an incident compared to an alert with a single Low / Medium severity alert.
 5.  **Watch the Case while it is open:** while triage and investigation are in progress, the SecOps tooling may append new alerts to the Case and, in some cases, change its severity or its affected assets. The executor re-reads the Case at each step and before the decision, so that no newly added activity is overlooked.
 
@@ -277,13 +277,13 @@ Hunt hypotheses are generated from:
 ### 4.3 Pipeline Integration
 If a threat hunt uncovers signs of malicious activity:
 1. Immediately generate a high-priority Alert.
-2. Formulate a Case and ingest it directly into **Investigation** (§2) for immediate validation, prioritization, and response. A hunt-found incident is, by definition, a detection false negative — its Alert was registered by the hunt, not produced by Phase-1 detection content — and feeds the recall metrics in [Operational Metrics §5.7](../05-Metrics/operational_metrics.md).
+2. Formulate a Case and ingest it directly into **Investigation** (§2) for immediate validation, prioritization, and response. A hunt-found incident is, by definition, a detection false negative — its Alert was registered by the hunt, not produced by Phase-1 detection content — and feeds the recall metrics in [Operational Metrics §5.5](../05-Metrics/operational_metrics.md).
 
 ---
 
 ## 5. Out-of-Band Incident Intake
 
-Detection does not only fail loudly; it also fails silently. Suspected incidents surface outside the alert pipeline: a user report, an IT anomaly ticket, a partner / CERT / law-enforcement notification, a vendor breach disclosure, or activity stumbled upon during an unrelated investigation. Each of these is a potential **detection false negative**. The framework treats their intake as a first-class Phase 2 entry point — not an ad-hoc side channel — so that misses are investigated with the same rigor as alerts and measured honestly ([Operational Metrics §5.7](../05-Metrics/operational_metrics.md)).
+Detection does not only fail loudly; it also fails silently. Suspected incidents surface outside the alert pipeline: a user report, an IT anomaly ticket, a partner / CERT / law-enforcement notification, a vendor breach disclosure, or activity stumbled upon during an unrelated investigation. Each of these is a potential **detection false negative**. The framework treats their intake as a first-class Phase 2 entry point — not an ad-hoc side channel — so that misses are investigated with the same rigor as alerts and measured honestly ([Operational Metrics §5.5](../05-Metrics/operational_metrics.md)).
 
-1. **Register:** create an Alert (`Detection Finding [2004]`, severity per initial assessment) and aggregate it into a Case per §1.1. Out-of-band reports run the standard triage → investigation pipeline and produce the same Notes and deliverables — no shadow process. Because the Alert is registered by this intake step rather than produced by Phase-1 detection content, the discovery channel is evident from the Case itself; no additional marking is required ([Operational Metrics §5.7](../05-Metrics/operational_metrics.md)).
+1. **Register:** create an Alert (`Detection Finding [2004]`, severity per initial assessment) and aggregate it into a Case per §1.1. Out-of-band reports run the standard triage → investigation pipeline and produce the same Notes and deliverables — no shadow process. Because the Alert is registered by this intake step rather than produced by Phase-1 detection content, the discovery channel is evident from the Case itself; no additional marking is required ([Operational Metrics §5.5](../05-Metrics/operational_metrics.md)).
 2. **Evaluate & attribute:** triage and investigate per §1–§2. If the Case is confirmed as an Incident, it is a **confirmed detection false negative**: the Post-Incident Review MUST perform the missed-detection analysis ([Phase 4 §3](04-post_incident_activity.md)), converting the miss into detection requirements rather than just a closed ticket.
