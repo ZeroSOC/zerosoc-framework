@@ -161,7 +161,7 @@ The retrospective phase of evaluating confirmed incidents or major false-positiv
 ---
 
 ### Phase Transition Contract
-The defined set of Case fields that a Case carries when it moves forward from one phase to the next — from Triage to Investigation on promotion, from Investigation to Response on confirmation. A data boundary, specified once in the [Playbook Architecture](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts-ocsf-aligned) as subsets of the [Case Schema](../02-Taxonomy/case_schema.md). A closed Case carries none.
+The defined set of Case fields that a Case carries when it moves forward from one phase to the next — from Triage to Investigation on promotion, from Investigation to Response on confirmation. A data boundary, specified once in the [Playbook Architecture](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) as subsets of the [Case Schema](../02-Taxonomy/case_schema.md). A closed Case carries none.
 
 ## 5. Measurement & Performance Terminology
 
