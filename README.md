@@ -108,7 +108,7 @@ graph TD
     end
 
     subgraph Metrics ["05-Metrics"]
-        Gates[Operational Metrics<br>Speed: MTTA / MTTC / MTTR<br>Quality: FP Surface & Promotion Precision<br>Cost: Token Economics]
+        Gates[Operational Metrics<br>Speed: MTTD / MTTI / MTTC / MTTR<br>Quality: FP Surface & Promotion Precision<br>Cost: Token Economics]
     end
 
     P2 -.->|Measured by Gates G1-G5| Gates
@@ -125,7 +125,7 @@ graph TD
 * **Incident Category (IC) Investigation Playbooks (Phase 2.b):** Promoted cases undergo Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign) to establish a definitive Case Verdict (Gate G3).
 * **Incident Response (Phase 3):** Confirmed True Positive incidents trigger active incident response, tactical containment execution (Gate G4), eradication, and recovery.
 * **Deliverables & Provenance:** Every Phase produces structured, human-readable documentation (Triage Note, Investigation Note) with mandatory audit trails.
-* **Governance & Metrics:** Agent and automation execution is bound by Least Access / JIT guardrails and audited by human supervision QA (Gate G5), with metrics tracking velocity (MTTA/MTTC/MTTR), stage-differentiated false-positive surfaces, and token economics.
+* **Governance & Metrics:** Agent and automation execution is bound by Least Access / JIT guardrails and audited by human supervision QA (Gate G5), with metrics tracking speed (MTTD/MTTI/MTTC/MTTR), stage-differentiated false-positive surfaces, and token economics.
 
 ## Core Modules Index
 
@@ -135,7 +135,7 @@ The framework is organized into seven foundational modules:
 2. **[02-Taxonomy](02-Taxonomy/incident_categories.md)**: An incident classification system focusing on Business Impact. Includes the telemetry domain-specific [Alert Type Taxonomy](02-Taxonomy/alert_types.md), 15 business-impact Incident Categories (IC-01 to IC-15), and the [Case Schema](02-Taxonomy/case_schema.md) — the single definition of the Case, with a JSON Schema; MITRE ATT&CK/ATLAS technique mappings are carried by the alert types and by each Investigation & Response playbook.
 3. **[03-Processes](03-Processes/00-detection_and_response_lifecycle.md)**: Core operational workflows mapped to NIST CSF 2.0, NIST SP 800-61 Rev. 3, ISO/IEC 27035:2023, and ISO/IEC 27001:2022 (A.5.24 - A.5.28). Outlines the operational phases (Preparation, Detection & Analysis, Response, and Post-Incident).
 4. **[04-Playbooks](04-Playbooks/README.md)**: Hierarchical playbook standard powered by Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign). Divided into domain-specific **Triage Playbooks** (normalizing/enriching alerts at Gate G2) and Incident-Category-specific **Investigation & Response Playbooks** (Gate G3).
-5. **[05-Metrics](05-Metrics/operational_metrics.md)**: Process-anchored speed metrics (MTTD, MTTA, MTTV, MTTC, MTTR, HITL Dwell Time), stage-differentiated False-Positive Surface (Promotion Precision, Case Noise Rate), paired autonomy-quality metrics, and Token Economics (compute/LLM pricing).
+5. **[05-Metrics](05-Metrics/operational_metrics.md)**: Process-anchored speed metrics (MTTD, MTTI, MTTC, MTTR, HITL Dwell Time), disposition quality per gate (Disposition Mix, Promotion Precision, Verdict Overturn Rate), paired autonomy-quality metrics, and Token Economics (compute/LLM pricing).
 6. **[06-Deliverables](06-Deliverables/README.md)**: Fill-in templates and golden exemplars for the framework's written deliverables (Triage Note and Investigation Note), with mandatory provenance metadata for Glass Box audit trails.
 7. **[07-Governance](07-Governance/agentic_guardrails.md)**: Guardrails for autonomous execution (automation and AI agents) in SecOps. Details Least Access identity (JIT Scoping, Time-Boxing), standard HITL containment payloads, autonomous action boundaries, and OSINT data egress restrictions.
 

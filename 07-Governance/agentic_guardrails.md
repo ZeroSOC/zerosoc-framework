@@ -22,7 +22,7 @@ Automation and agents do not operate with standing, highly privileged accounts.
 
 ## 2. The Human-in-the-Loop (HITL) Presentation Payload
 
-An action that requires approval under the containment autonomy matrix of [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) is requested with the payload below, whoever the executor is: a human analyst asking the SOC Manager to isolate a production server submits the same payload an agent does. The payload is what the approver decides on; the decision — approved, modified, rejected — is recorded in the Case timeline, and a rejection is an overturn source for [Operational Metrics §5.6](../05-Metrics/operational_metrics.md).
+An action that requires approval under the containment autonomy matrix of [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) is requested with the payload below, whoever the executor is: a human analyst asking the SOC Manager to isolate a production server submits the same payload an agent does. The payload is what the approver decides on; the decision — approved, modified, rejected — is recorded in the Case timeline, and a rejection is an overturn source for [Operational Metrics §5.4](../05-Metrics/operational_metrics.md).
 
 1.  **Context:** the Incident Category, the Case severity and confidence, and in plain language why the Malicious hypothesis was proven — the score and the findings that carry it ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
 2.  **Evidence:** the findings, each with its tag and the event references and queries behind it.
