@@ -1,0 +1,9 @@
+# lychee link-checker configuration.
+# PR runs use --offline (internal links + anchors only); the weekly scheduled
+# job checks external links too.
+exclude_path = ["raw", "node_modules"]
+cache = true
+max_cache_age = "7d"
+accept = [200, 201, 202, 203, 204, 206, 429]
+max_retries = 2
+timeout = 20
