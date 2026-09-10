@@ -247,7 +247,7 @@ Notification is the responsibility of the [SOC Manager](../01-Foundation/definit
 *   **High:** notify the affected asset owners and the security lead within 30 minutes.
 *   **Critical:** notify the CISO, legal counsel, risk management and executive leadership within 15 minutes.
 
-**Regulatory notification** applies when the Incident is **significant** (§3.1) and the organization is in scope of the regulation. Deadlines run from awareness of the Incident; the reporting procedure and the content of each report are specified in [Incident Response §6](03-response.md#6-regulatory-reporting--timeline-gates-nis2--dora):
+**Regulatory notification** applies when the Incident is **significant** (§3.1) and the organization is in scope of the regulation. Deadlines run from awareness of the Incident; the reporting procedure and the content of each report are specified in [Incident Response §6](03-response.md#6-regulatory-reporting-nis2--dora):
 *   **NIS2 (Article 23):** early warning within **24 hours** (whether the Incident is suspected to be malicious or unlawful, and whether it has cross-border effect); incident notification within **72 hours** with the initial assessment of severity and impact and the indicators of compromise; final report within **one month**.
 *   **DORA (Article 19):** initial notification, intermediate report and final report on the deadlines of the regulation, with the classification of the Incident as major.
 

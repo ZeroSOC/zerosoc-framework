@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 license: Apache-2.0
 ---
 
@@ -99,3 +99,9 @@ Every entry in this registry follows this structure:
 - **Rationale:** Most security teams hold this knowledge in internal documentation of varying maturity, often compensating an incomplete CMDB, and it is exactly the context that separates a benign recurrence from a new intrusion. Naming it makes it a required input that every executor reads — the mechanism by which institutional knowledge reaches automated and agentic execution instead of living only in analysts' heads.
 - **Alternatives:** Rely on the CMDB and directory alone (incomplete in practice); leave the knowledge implicit (unavailable to automation and agents, lost with staff turnover).
 - **Cross-links / Revisit trigger:** [Definitions](definitions.md#soc-knowledge-base-soc-kb); [Detection & Analysis §1.2](../03-Processes/02-detection_and_analysis.md#12-multi-vector-context-enrichment); [Preparation & Engineering](../03-Processes/01-preparation_and_engineering.md); [Post-Incident Activity](../03-Processes/04-post_incident_activity.md). Revisit if a structured schema for the knowledge base is standardized.
+
+## DD-21: Single Target-Aware Containment Autonomy Matrix
+- **Decision:** Containment autonomy is specified once, in [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment), and keyed on three things: the reversibility of the action, the criticality of the entity it acts on, and the Case confidence and severity. Pre-authorized actions are reversible and leave the affected entity serving — any executor applies them without approval, on a Crown Jewel included. Actions that stop a critical service, are not reversible or affect many entities at once require approval, requested with the Guardrails payload whoever the executor is. At Low confidence every action requires approval. The Guardrails govern how approval is requested and granted and when the assignee must be human; the playbooks list the actions of each Incident Category; neither restates the matrix.
+- **Rationale:** Autonomy boundaries were stated in three places (the Response process, the Guardrails, the playbook failure criteria) with drifting lists, and the lists keyed on the asset alone — so disabling a compromised administrator account was blocked because it touched a domain controller, while the same action was pre-authorized on a workstation. Keying on what the action does to the entity's service lets the fast, reversible actions run everywhere, and reserves approval for the disruptive ones. Keying on confidence connects the matrix to the evidence model: a verdict proven on Low-confidence findings is acted on, but under approval.
+- **Alternatives:** Asset-only boundaries (blocks reversible actions on the assets that most need them); per-Incident-Category matrices in the playbooks (duplication and drift); autonomy by executor class (breaks executor neutrality — a human executor needs the same approval to shut down a production database).
+- **Cross-links / Revisit trigger:** [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence); [Agentic Guardrails](../07-Governance/agentic_guardrails.md); [Playbook Architecture](../04-Playbooks/playbook_architecture.md). Revisit if organizations report that the reversibility test is insufficient to classify an action, or when OCSF standardizes a containment-action vocabulary.
