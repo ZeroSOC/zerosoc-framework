@@ -560,15 +560,16 @@
           "enum": [
             "crown-jewel",
             "privileged-identity",
-            "novel-behavior",
-            "contradiction",
-            "timebox",
-            "budget"
+            "manual"
           ]
         },
         "master_case_uid": {
           "type": "string",
           "description": "Set on a Duplicate close: the open master Case that handles the activity."
+        },
+        "watch_until": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close."
         }
       }
     }

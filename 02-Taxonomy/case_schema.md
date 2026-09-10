@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 license: Apache-2.0
 ---
 
@@ -24,7 +24,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)); capped by visibility gaps |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
 | `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
-| `assignee` | user | 2.a; changes at handover | The Case **owner**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-conditions-requiring-human-ownership-handover)) |
+| `assignee` | user | 2.a; changes at handover | The Case **owner**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-ownership)) |
 | `finding_info_list` | list of finding_info | 2.a; appended while open | The aggregated Alerts |
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
@@ -46,7 +46,8 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `cross_border` | boolean | 2.b | Cross-border effect, required in the NIS2 early warning |
 | `notifications` | list of {recipient, deadline, sent_at} | 3 | Stakeholder and regulatory notifications and their deadlines |
 | `tuning_ticket` | reference | 2.a / 2.b, on a False Positive close | The Phase 1 ticket that closes the tuning loop |
-| `handover_reason` | `crown-jewel` · `privileged-identity` · `novel-behavior` · `contradiction` · `timebox` · `budget` | 2.b | Why ownership moved to a human |
+| `handover_reason` | `crown-jewel` · `privileged-identity` · `manual` | any | Why ownership moved to a human |
+| `watch_until` | timestamp | 2.a / 2.b close | Monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close |
 | `master_case_uid` | Case `uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
 
 ## 4. Where the Fields Are Populated
