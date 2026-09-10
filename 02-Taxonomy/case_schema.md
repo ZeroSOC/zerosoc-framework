@@ -24,7 +24,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)); capped by visibility gaps |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
 | `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
-| `assignee` | user | 2.a; changes at handover | The Case **owner**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-ownership)) |
+| `assignee` | user | 2.a; changes at handover | The Case **assignee**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-assignment)) |
 | `finding_info_list` | list of finding_info | 2.a; appended while open | The aggregated Alerts |
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
@@ -46,13 +46,13 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `cross_border` | boolean | 2.b | Cross-border effect, required in the NIS2 early warning |
 | `notifications` | list of {recipient, deadline, sent_at} | 3 | Stakeholder and regulatory notifications and their deadlines |
 | `tuning_ticket` | reference | 2.a / 2.b, on a False Positive close | The Phase 1 ticket that closes the tuning loop |
-| `handover_reason` | `crown-jewel` · `privileged-identity` · `manual` | any | Why ownership moved to a human |
+| `handover_reason` | `crown-jewel` · `privileged-identity` · `manual` | any | Why the assignee became a human |
 | `watch_until` | timestamp | 2.a / 2.b close | Monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close |
 | `master_case_uid` | Case `uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
 
 ## 4. Where the Fields Are Populated
 
-*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and owner (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
+*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
 *   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): confidence and verdict (§2.4); timeline and T0 (§2.5); confirmed category, impact, significance and cross-border effect (§3.1); handover reason (§2.3).
 *   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; containment actions appended to the timeline.
 *   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by `uid`.

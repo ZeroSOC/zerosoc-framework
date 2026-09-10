@@ -103,7 +103,7 @@
     },
     "assignee": {
       "$ref": "#/$defs/ocsf_user",
-      "description": "The Case owner: the executor responsible for advancing the Case and for its verdict."
+      "description": "The Case assignee: the executor responsible for advancing the Case and for its verdict."
     },
     "finding_info_list": {
       "type": "array",

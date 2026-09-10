@@ -18,7 +18,7 @@ The objective of this phase is to rapidly determine whether the activity is a ge
 graph TD
     Start([Alert ingested]) --> Agg[Aggregate related Alerts into a Case]
     OOB[Out-of-band report: user, IT, partner, authority, disclosure] --> Agg
-    Agg --> Ack[Acknowledge the Case: owner assigned within MTTA]
+    Agg --> Ack[Acknowledge the Case: assignee set within MTTA]
     Ack --> Cart[Open the domain Triage playbook]
     Cart --> Enrich[Enrich: threat intelligence, asset, identity, SOC Knowledge Base]
     Enrich --> Scope[Scope and correlate: prior Cases, history, lateral scope, campaign]
@@ -109,7 +109,7 @@ There is no separate "priority" axis. Organizations running risk-based alerting 
 
 ### 1.5 Triage Decision
 
-Triage ends in a decision: **Close** the Case (False Positive, Benign, or Duplicate) or **Promote** it to Investigation. There is no "escalate" outcome: stakeholder notification (§3.2) happens only after Investigation confirms an Incident, and a change of Case ownership (§2.3) is not a triage outcome.
+Triage ends in a decision: **Close** the Case (False Positive, Benign, or Duplicate) or **Promote** it to Investigation. There is no "escalate" outcome: stakeholder notification (§3.2) happens only after Investigation confirms an Incident, and a change of assignee (§2.3) is not a triage outcome.
 
 **Evidence at triage.** Every finding is tagged with a **side** and a **confidence** — `Malicious (High)`, `Benign (Medium)`, … — or left untagged as context (§1.6). The alerts themselves are the first Malicious findings: each independent alert in the Case is tagged `Malicious` at the confidence its tool assigned, or at the level its severity maps to when the tool gives none. Alerts of the same type on the same entity count once. A `Benign (High)` finding is one that **explains** an alert on its own: an approved exception or documented change in the SOC Knowledge Base, an authorized test window covering the host and the time, a known-benign recurrence with the same parameters.
 
@@ -132,7 +132,7 @@ Otherwise promote — including when there is no finding at all: an alert that e
 
 *   **Matching core entities:** the same primary identifiers — host, user, file hash, process, command line — as the master Case, not merely the same detection rule name.
 *   **Overlapping timeline:** the activity falls in the master Case's time window and is a known step of its course of action (e.g., further beacons during an intrusion already under investigation).
-*   **Active ownership:** the master Case has an owner and is In Progress, or its tuning ticket is open.
+*   **Active assignment:** the master Case has an assignee and is In Progress, or its tuning ticket is open.
 *   **Evidence merged:** every new timestamp, event reference or indicator from the recurrence is linked or merged into the master Case before the duplicate is closed.
 
 Do **not** close as Duplicate when the identical alert fires on a *different* host or user — that is scope expansion (possible lateral movement): add the entity to the master Case instead; when the recurrence comes long after the prior Case was resolved — treat it as possible re-infection, incomplete eradication or new compromise; or when the only similarity is the rule name. The Triage Note (§1.6) of a duplicate records the master Case identifier and the parameters that matched (e.g., "same host, user and file hash; part of the containment in progress"), so the lineage survives audit and post-incident review.
@@ -162,7 +162,7 @@ Investigation is driven by testing competing hypotheses rather than unstructured
 | | |
 |---|---|
 | **Consumes** | The promoted Case, its Triage → Investigation phase transition contract, and its Triage Note (§1.6). The Note's tagged Findings — the enrichment of §1.2 and the scope and correlation results of §1.3 — are the starting evidence of the investigation and seed its score (§2.4); they are verified and extended, not re-collected. The Note also carries the reason the Case could not close: the Malicious findings beyond the alerts, and the Benign findings they were weighed against — the conflict Investigation starts from. |
-| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)); or (b) a **Confirmed Incident** — Malicious hypothesis proven — by setting `verdict_id = 2` (True Positive), assigning the definitive Incident Category, severity and impact, and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of Case ownership (§2.3) is a within-phase control. |
+| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)); or (b) a **Confirmed Incident** — Malicious hypothesis proven — by setting `verdict_id = 2` (True Positive), assigning the definitive Incident Category, severity and impact, and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of assignee (§2.3) is a within-phase control. |
 
 ### 2.1 Concurrent Malicious/Benign Hypothesis Formulation
 The executor formulates two competing narratives based on the observed behaviors and MITRE ATT&CK techniques:
@@ -178,8 +178,8 @@ There are always exactly two sides. Competing explanations within a side — whi
 4. Resolve per §2.4, then act on the outcome: a proven Malicious hypothesis promotes the Case to a confirmed Incident (§3.1); a proven Benign hypothesis closes the Case (a False Positive submits a tuning ticket to [Phase 1: Preparation & Engineering](01-preparation_and_engineering.md)).
 5. **Re-classify on evidence drift:** if evidence reveals the activity's objective differs from, or exceeds, the current candidate Incident Category (e.g. a commodity loader staging ransomware, or phishing that yielded credentials), update the candidate `incident_category`, switch to the matching Investigation & Response playbook, and carry all accumulated evidence forward. Record the pivot, and its reason, in the Investigation Note (§2.5). The classification remains provisional until `verdict_id = 2` is set at incident promotion (§3.1).
 
-### 2.3 Case Ownership
-Every Case has one **owner** (OCSF `assignee`): the executor responsible for advancing it and for its verdict. A change of owner is a [handover](../01-Foundation/definitions.md#handover). The conditions under which a human must own a Case — accountability for Crown Jewel assets and privileged identities — and the metering of automation and agents (investigation timebox, token budget) are specified in [Agentic Guardrails](../07-Governance/agentic_guardrails.md); this process applies the same resolution rule (§2.4) whoever the owner is. A handover does not block the containment actions that [Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment) pre-authorizes.
+### 2.3 Case Assignment
+Every Case has one **assignee** (OCSF `assignee`): the executor responsible for advancing it and for its verdict. A change of assignee is a [handover](../01-Foundation/definitions.md#handover). The conditions under which the assignee must be a human — accountability for Crown Jewel assets and privileged identities — and the metering of automation and agents (investigation timebox, token budget) are specified in [Agentic Guardrails](../07-Governance/agentic_guardrails.md); this process applies the same resolution rule (§2.4) whoever the assignee is. A handover does not block the containment actions that [Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment) pre-authorizes.
 
 ### 2.4 Hypothesis Resolution, Verdict and Confidence
 
@@ -240,7 +240,7 @@ The moment Malicious hypothesis is proven:
 5. Pass the initial scope (blast radius) directly to [Phase 3: Incident Response](03-response.md) for immediate containment.
 
 ### 3.2 Stakeholder & Regulatory Notification
-Notification is owned by the [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) and keyed on the Incident's severity and impact (§3.1).
+Notification is the responsibility of the [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) and keyed on the Incident's severity and impact (§3.1).
 
 **Internal notification, by severity** (reference response times; the values are an organization policy knob):
 *   **Low / Medium:** incident ticket to the affected asset owners; no out-of-hours notification.

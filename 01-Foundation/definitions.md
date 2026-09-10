@@ -116,7 +116,7 @@ Cases where the detection tool worked exactly as intended and correctly identifi
 
 ### Duplicate
 A Case closed because its activity, root cause and threat vector are already handled by an open master Case, and the recurrence adds neither risk nor evidence to it.
-*   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, active ownership of the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
+*   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, an active assignee on the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
 *   **OCSF `verdict_id`:** `10` (Duplicate). The closing Note records the master Case identifier.
 
 ### False Negative (FN)
@@ -198,7 +198,7 @@ A named area of responsibility that any executor class may fulfill. Functions ar
 | **SOC Manager** | Own the operating model and its oversight: capacity, quality-assurance supervision of autonomous dispositions, metrics review, and the interface to enterprise risk management. For declared Incidents, own the interface to enterprise incident management — regulatory notification timelines and stakeholder coordination (the *Incident Coordinator* of ISO/IEC 27035). | Phase 3, Phase 4, cross-phase |
 
 ### Handover
-The transfer of a Case's **ownership** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the [Agentic Guardrails](../07-Governance/agentic_guardrails.md) define (accountability for Crown Jewel assets and privileged identities; metering of automation and agents). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
+The change of a Case's **assignee** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the [Agentic Guardrails](../07-Governance/agentic_guardrails.md) define (accountability for Crown Jewel assets and privileged identities; metering of automation and agents). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
 
 ## 7. Classification Levels
 

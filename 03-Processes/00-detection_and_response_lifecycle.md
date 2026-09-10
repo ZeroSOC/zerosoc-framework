@@ -59,7 +59,7 @@ Because different international frameworks define their incident lifecycles with
 ### Critical Alignment & Translation Notes:
 1. **The Lessons Learned Feedback Loop:** While NIST SP 800-61 Rev. 3 groups lessons learned (Identify–Improvement) alongside preparation in Table 2, ZeroSOC isolates these tasks operationally in **Phase 4: Post-Incident Activity**. The output of Phase 4 is fed back into **Phase 1** to update detection configurations.
 2. **Assessment & Promotion boundaries:** ISO/IEC 27035 separates the identification of an event (Detect & Report) from the decision that it is an incident (Assess & Decide). ZeroSOC maps both segments into **Phase 2: Detection & Analysis**, where Alerts are aggregated into Cases, investigated, and promoted to Incidents.
-3. **Notification deadlines** are regulatory reporting obligations owned by the SOC Manager; they are distinct from the framework's measurement gates (G1–G5), which are quantitative funnel checkpoints defined in [Operational Metrics](../05-Metrics/operational_metrics.md).
+3. **Notification deadlines** are regulatory reporting obligations of the SOC Manager; they are distinct from the framework's measurement gates (G1–G5), which are quantitative funnel checkpoints defined in [Operational Metrics](../05-Metrics/operational_metrics.md).
 
 ---
 
@@ -78,12 +78,12 @@ Because different international frameworks define their incident lifecycles with
 
 ## Phase 3: Incident Response
 *   **Objective:** Containing and eradicating confirmed threats (Incidents) and recovering affected services.
-*   **Functions:** [Security Analyst](../01-Foundation/definitions.md#6-executors-and-functions) owning the Incident; [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) for enterprise coordination and regulatory notification.
+*   **Functions:** [Security Analyst](../01-Foundation/definitions.md#6-executors-and-functions) assigned the Incident; [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) for enterprise coordination and regulatory notification.
 *   **Process Flow:** Cases confirmed as True Positives become Incidents. Execution of containment guardrails and eradication playbooks to restore services.
 *   **Detailed Process:** [03-response.md](03-response.md)
 
 ## Phase 4: Post-Incident Activity
 *   **Objective:** Feeding tuning data back into Phase 1 based on True Positive or critical False Positive findings.
-*   **Functions:** [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions), [Detection Engineer](../01-Foundation/definitions.md#6-executors-and-functions) and the [Security Analyst](../01-Foundation/definitions.md#6-executors-and-functions) who owned the Incident.
+*   **Functions:** [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions), [Detection Engineer](../01-Foundation/definitions.md#6-executors-and-functions) and the [Security Analyst](../01-Foundation/definitions.md#6-executors-and-functions) who was assigned the Incident.
 *   **Process Flow:** Conducting blameless post-mortems and generating actionable tickets for continuous improvement.
 *   **Detailed Process:** [04-post_incident_activity.md](04-post_incident_activity.md)
