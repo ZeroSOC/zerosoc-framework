@@ -1,7 +1,7 @@
 ---
 title: ZeroSOC Framework Index
 type: index
-last_updated: 2026-09-07
+last_updated: 2026-09-10
 license: Apache-2.0
 ---
 
@@ -223,7 +223,7 @@ graph TD
 
 ## Versioning & Document Status
 
-Every framework document declares a **release status** in its frontmatter — `draft` / `development` / `stable` / `deprecated` — defined, together with the promotion rules and the framework's Semantic Versioning scheme (`MAJOR.MINOR.PATCH`, e.g. `v0.1.0`), in the [Framework Manifest](01-Foundation/framework_manifest.md#versioning--document-release-status). Adopters conform to a tagged release, never to the live repository; [log.md](log.md) doubles as the changelog.
+Every framework document declares a **release status** in its frontmatter — `draft` / `development` / `stable` / `deprecated` — defined, together with the promotion rules and the framework's Semantic Versioning scheme (`MAJOR.MINOR.PATCH`, e.g. `v0.1.0`), in the [Framework Manifest](01-Foundation/framework_manifest.md#versioning--document-release-status). Adopters conform to a tagged release, never to the live repository; [CHANGELOG.md](CHANGELOG.md) doubles as the changelog.
 
 ## Standard Alignment
 
