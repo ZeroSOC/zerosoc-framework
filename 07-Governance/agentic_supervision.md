@@ -27,7 +27,7 @@ A Case closed by automation or an agent with no human touch is reviewed after th
 
 *   **Objective:** find wrong verdicts — the verdict false negatives of [Operational Metrics §5.7](../05-Metrics/operational_metrics.md) — and the drift, hallucination or confirmation bias behind them, before an Incident does.
 *   **Review basis:** the Triage Note and the Investigation Note ([Detection & Analysis §1.6 and §2.5](../03-Processes/02-detection_and_analysis.md)) — the findings, their tags and the resolution — not raw execution transcripts.
-*   **Outcome:** an overturned verdict reopens the Case and counts in the Verdict Overturn Rate ([Operational Metrics §5.6](../05-Metrics/operational_metrics.md)); a wrong verdict traced to a playbook query or a missing organizational context becomes a playbook update or a [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb) entry.
+*   **Outcome:** an overturned verdict reopens the Case and counts in the Verdict Overturn Rate ([Operational Metrics §5.4](../05-Metrics/operational_metrics.md)); a wrong verdict traced to a playbook query or a missing organizational context becomes a playbook update or a [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb) entry.
 *   **Standing input:** budget-exhaustion closes and per-action ceiling trips ([Agentic Guardrails §5](agentic_guardrails.md#5-resource--token-metering)) are always in the sample: they indicate playbook inefficiency or runaway behavior, a failure mode distinct from verdict quality.
 
 ## 3. Playbook Drift Monitoring
@@ -36,4 +36,7 @@ Two signals show that a playbook no longer fits the environment: approvers consi
 
 ## 4. Autonomy Grant
 
-An executor closes Cases or applies pre-authorized containment autonomously only under a grant the SOC Manager gives after the shadow-mode deployment gate of [Operational Metrics §6.5](../05-Metrics/operational_metrics.md) and keeps under review with the sampling of §2. The grant is withdrawn, for the executor or for an alert type, when the Verdict FN Rate of [Operational Metrics §5.7](../05-Metrics/operational_metrics.md) exceeds the organization's threshold; the executor then proposes, and a human decides, until the grant is restored.
+An executor closes Cases or applies pre-authorized containment autonomously only under a grant the SOC Manager gives and keeps under review with the sampling of §2.
+
+*   **Entry: shadow mode.** Before the grant, the executor runs against live traffic without acting — its verdicts are recorded and compared with the human verdicts on the same Cases over a defined sample. The agreement rate is the entry bar; it measures conformity to human judgment, not ground truth, so the sampling of §2 remains the standing control after the grant. Agreement rates published by vendors are measured on their own baselines; they count only once reproduced on the organization's alert mix.
+*   **Withdrawal.** The grant is withdrawn, for the executor or for an alert type, when the close-overturned direction of the Verdict Overturn Rate ([Operational Metrics §5.4](../05-Metrics/operational_metrics.md)) exceeds the organization's threshold; the executor then proposes, and a human decides, until the grant is restored through shadow mode.

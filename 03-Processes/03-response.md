@@ -16,7 +16,7 @@ The Case [assignee](../01-Foundation/definitions.md#6-executors-and-functions) c
 
 | | |
 |---|---|
-| **Consumes** | A **Confirmed Incident** with its Investigation → Response [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract): confirmed Incident Category, scope (affected entities), timeline with T0, severity, confidence, impact, the significance and cross-border flags, and the recommended containment, eradication and recovery actions (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts-ocsf-aligned)). |
+| **Consumes** | A **Confirmed Incident** with its Investigation → Response [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract): confirmed Incident Category, scope (affected entities), timeline with T0, severity, confidence, impact, the significance and cross-border flags, and the recommended containment, eradication and recovery actions (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts)). |
 | **Produces** | A contained, eradicated and recovered environment (services restored, containment lifted); every response action appended to the Case timeline ([Case Schema](../02-Taxonomy/case_schema.md)); the regulatory notifications the Incident requires (§6); and the transition to [Phase 4: Post-Incident Activity](04-post_incident_activity.md) (§5). |
 
 ## Process Flowchart

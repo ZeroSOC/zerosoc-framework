@@ -43,7 +43,7 @@ graph TD
 
 ## 1. Detection Engineering & Tuning
 
-This sub-process governs the lifecycle of detection logic, ensuring the SOC maintains a high signal-to-noise ratio and meets its [False Positive Rate (FPR)](../05-Metrics/operational_metrics.md#51-detection-precision-per-alert-type--rule--g1-judged-downstream) KPO (see [Definitions §5](../01-Foundation/definitions.md#5-measurement--performance-terminology) for the metric/KPI/KPO chain).
+This sub-process governs the lifecycle of detection logic, ensuring the SOC maintains a high signal-to-noise ratio and meets its [Detection Precision](../05-Metrics/operational_metrics.md#51-detection-precision) KPO (see [Definitions §5](../01-Foundation/definitions.md#5-measurement--performance-terminology) for the metric/KPI/KPO chain).
 
 ### 1.1 Rule Lifecycle (Detection-as-Code Pipeline)
 All rules follow a GitOps-based Detection-as-Code (DaC) pipeline to ensure stability, precision, and version control:

@@ -161,7 +161,7 @@ The retrospective phase of evaluating confirmed incidents or major false-positiv
 ---
 
 ### Phase Transition Contract
-The defined set of Case fields that a Case carries when it moves forward from one phase to the next — from Triage to Investigation on promotion, from Investigation to Response on confirmation. A data boundary, specified once in the [Playbook Architecture](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts-ocsf-aligned) as subsets of the [Case Schema](../02-Taxonomy/case_schema.md). A closed Case carries none.
+The defined set of Case fields that a Case carries when it moves forward from one phase to the next — from Triage to Investigation on promotion, from Investigation to Response on confirmation. A data boundary, specified once in the [Playbook Architecture](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) as subsets of the [Case Schema](../02-Taxonomy/case_schema.md). A closed Case carries none.
 
 ## 5. Measurement & Performance Terminology
 
@@ -169,15 +169,15 @@ These three terms form a chain: the framework defines **metrics**; an organizati
 
 ### Metric
 A quantitative measure defined in [Operational Metrics](../05-Metrics/operational_metrics.md) with a mathematically precise formula, explicit numerator and denominator, and defined boundary rules (including duration metrics anchored to OCSF state transitions, as well as quality, cost, and coverage measures).
-*   **Context:** A metric is descriptive — it carries no target. Detection Precision, MTTA, and Token Cost per Case are all metrics whether or not any organization tracks them as KPIs.
+*   **Context:** A metric is descriptive — it carries no target. Detection Precision, MTTI, and Token Cost per Case are all metrics whether or not any organization tracks them as KPIs.
 
 ### Key Performance Indicator (KPI)
 A metric an organization elevates to actively steer Security Operations: tracked over time, sliced by executor, and reviewed at a defined governance cadence.
-*   **Context:** KPI selection is an organizational decision, not a framework mandate. The framework marks its recommended default KPI candidates — the metrics carrying [§9](../05-Metrics/operational_metrics.md#9-reference-bands-for-setting-kpos) reference bands — as **KPI candidate** in [Operational Metrics](../05-Metrics/operational_metrics.md); an organization may adopt, extend, or replace that set.
+*   **Context:** KPI selection is an organizational decision, not a framework mandate. The framework marks its recommended default KPI candidates — the metrics carrying [§8](../05-Metrics/operational_metrics.md#8-reference-bands-for-setting-kpos) reference bands — as **KPI candidate** in [Operational Metrics](../05-Metrics/operational_metrics.md); an organization may adopt, extend, or replace that set.
 
 ### Key Performance Objective (KPO)
 The concrete target value or band an organization commits to for a KPI, calibrated to its own baseline (alert mix, telemetry coverage, risk tolerance).
-*   **Context:** The framework itself sets no KPOs. [Operational Metrics §9](../05-Metrics/operational_metrics.md#9-reference-bands-for-setting-kpos) publishes illustrative reference bands — inputs for setting KPOs, not targets — which become KPOs only once an organization adopts and calibrates them to its own baseline.
+*   **Context:** The framework itself sets no KPOs. [Operational Metrics §8](../05-Metrics/operational_metrics.md#8-reference-bands-for-setting-kpos) publishes illustrative reference bands — inputs for setting KPOs, not targets — which become KPOs only once an organization adopts and calibrates them to its own baseline.
 
 ## 6. Executors and Functions
 

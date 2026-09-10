@@ -8,7 +8,7 @@ license: Apache-2.0
 
 # Case Schema
 
-The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§5). The [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts-ocsf-aligned) are subsets of this model.
+The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§5). The [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) are subsets of this model.
 
 ## 1. Object Mapping
 
@@ -19,7 +19,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | Field | Values | Set in | Meaning in the framework |
 |---|---|---|---|
 | `uid` | string | 2.a | Case identifier, cited by the Notes, tuning tickets and metrics |
-| `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment (MTTA) |
+| `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment |
 | `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification |
 | `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)); capped by visibility gaps |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
@@ -40,7 +40,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `entry_path` | `alert` · `hunt` · `out-of-band` | 2.a | How the Case entered the loop; hunt and out-of-band Cases are detection false negatives by construction |
 | `t0` | timestamp | 2.b | Earliest confirmed malicious event; anchor for MTTD / MTTC / MTTR |
 | `timeline` | ordered entries with event references | 2.b → 3 | The Case Timeline of the Investigation Note, extended with response actions |
-| `visibility_gaps` | list of required data sources unavailable | 2.a / 2.b | Caps confidence ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-dynamic-agentic-execution)); counted by the Visibility-Gap Rate |
+| `visibility_gaps` | list of required data sources unavailable | 2.a / 2.b | Caps confidence ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor)); counted by the Visibility-Gap Rate |
 | `provenance` | playbooks used (path and version), executor classes, capability classes | every phase | Glass Box audit trail |
 | `significant` | boolean | 2.b | NIS2 Article 23(3) significance test: severe operational disruption or financial loss, or considerable damage to other persons |
 | `cross_border` | boolean | 2.b | Cross-border effect, required in the NIS2 early warning |
