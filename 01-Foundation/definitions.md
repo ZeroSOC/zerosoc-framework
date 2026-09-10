@@ -198,7 +198,7 @@ A named area of responsibility that any executor class may fulfill. Functions ar
 | **SOC Manager** | Own the operating model and its oversight: capacity, quality-assurance supervision of autonomous dispositions, metrics review, and the interface to enterprise risk management. For declared Incidents, own the interface to enterprise incident management — regulatory notification timelines and stakeholder coordination (the *Incident Coordinator* of ISO/IEC 27035). | Phase 3, Phase 4, cross-phase |
 
 ### Handover
-The change of a Case's **assignee** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the [Agentic Guardrails](../07-Governance/agentic_guardrails.md) define (accountability for Crown Jewel assets and privileged identities; metering of automation and agents). A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
+The change of a Case's **assignee** (OCSF `assignee`) from one executor to another — in the framework, from automation or an agent to a human — under the conditions that the [Agentic Guardrails](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions) define: a Crown Jewel asset or a privileged identity in the Case scope, or a human taking the Case over. A handover moves responsibility for the Case and its verdict; it is not a data boundary (that is the phase transition contract) and it does not by itself stop pre-authorized containment.
 
 ## 7. Classification Levels
 
