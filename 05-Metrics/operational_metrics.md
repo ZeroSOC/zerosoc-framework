@@ -13,7 +13,7 @@ description: Process-anchored volume, speed, quality, autonomy and token-economi
 
 Every metric in this module is anchored to a defined state transition in the [Detection & Response Lifecycle](../03-Processes/00-detection_and_response_lifecycle.md): if a metric's start and stop cannot be pointed to as a field change on the [Case](../02-Taxonomy/case_schema.md), the metric is not conformant. Speed alone does not measure security, and in an autonomous SOC **automation volume alone measures nothing**: "95% of alerts closed automatically" describes equally a world-class autonomous SOC and a noisy detection stack flushing its own garbage. The metrics below make those two worlds distinguishable: they measure noise at each pipeline stage, pair every autonomy metric with a quality counterweight, and price the compute that autonomous operations consume.
 
-**Terminology** (canonical definitions in [Definitions §5](../01-Foundation/definitions.md#5-measurement--performance-terminology)). A **metric** is a measure defined below with a formula and a gate (§2); it is descriptive and carries no target. A **KPI** is a metric an organization elevates to steer Security Operations: tracked over time, sliced by executor, reviewed at a governance cadence. The framework marks its recommended candidates; the selection is the organization's. A **KPO** is the target value or band an organization commits to for a KPI, calibrated to its own baseline; the framework sets none, and the reference bands of §8 are inputs for setting them.
+**Terminology** (canonical definitions in [Definitions §5](../01-Foundation/definitions.md#5-measurement--performance-terminology)). A **metric** is a measure defined below with a formula and a gate (§2); it is descriptive and carries no target. A **KPI** is a metric an organization elevates to steer Security Operations: tracked over time, sliced by executor, reviewed at a governance cadence. The metrics the framework recommends an organization set as its KPIs are marked **KPI candidate**; the selection remains the organization's. A **boundary rule** states what a metric's denominator includes and excludes, and the conditions under which the figure may be reported at all. A **KPO** is the target value or band an organization commits to for a KPI, calibrated to its own baseline; the framework sets none, and the reference bands of §8 are inputs for setting them.
 
 ## 1. Measurement Principles
 
@@ -39,7 +39,7 @@ All metrics reference the five gates below. Objects and verdicts are as defined 
 | **G4 — Containment** | A containment action applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
 | **G5 — Review** | A verdict re-examined: an approval rejected or a containment rolled back, [QA sampling](../07-Governance/agentic_supervision.md), or the [Post-Incident Review](../03-Processes/04-post_incident_activity.md) | Governance and Phase 4 |
 
-**Denominator discipline.** Alerts consolidated by the deduplication, throttling and aggregation rules applied at reception ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) never enter triage and are excluded from every triage denominator and from every *automation* numerator: consolidation is plumbing, not a verdict. A Case closed as **Duplicate** is merged into its master Case and leaves every denominator the same way. A Case closed as **Insufficient Data** is a disposition — it counts in the denominators — but it is neither noise nor an Incident; the Disposition Mix (§5.2) reports it on its own.
+**Denominator discipline.** Alerts consolidated by the deduplication, throttling and aggregation rules applied at reception ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) never enter triage and are excluded from every triage denominator and from every *automation* numerator: consolidation is plumbing, not a verdict. A Case closed as **Duplicate** is merged into its master Case and leaves every denominator the same way. A Case closed as **Insufficient Data** is a disposition — it counts in the denominators — but it is neither noise nor an Incident; the Disposition Mix (§5.1) reports it on its own.
 
 ## 3. Volume Metrics
 
@@ -82,22 +82,39 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 
 **Verdict split.** False Positive (`verdict_id 1`, detection failure → tuning ticket) and Benign (`verdict_id 5`, context gap → Knowledge Base entry) are tracked separately at every gate; their remediation paths differ ([Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts)). "Noise" below means the two together.
 
-### 5.1 Detection Precision
+### 5.1 Disposition Mix
+*   **KPI candidate.**
+*   **Definition:** the distribution of the decisions taken at a gate in the window. Each share is the count of Cases with that outcome ÷ all Cases decided at the gate. At **G2** the outcomes are Closed False Positive, Closed Benign, Closed Duplicate and Promoted; at **G3** they are Closed False Positive, Closed Benign, Closed Duplicate, Closed Insufficient Data and Confirmed Incident. The **noise share** of a gate is its False Positive share plus its Benign share.
+*   **Reading the shares by gate:**
+
+| Share | At G2 (triage decisions) | At G3 (investigation verdicts) |
+|---|---|---|
+| False Positive | Detection misfires caught cheaply; each is a tuning ticket. Read with Detection Precision (§5.2). | Misfires that survived triage: the subtle rule problems, and the tuning tickets that matter most. |
+| Benign | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each is a Knowledge Base entry. |
+| Duplicate | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
+| Insufficient Data | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
+| Promoted / Confirmed Incident | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
+
+*   **Purpose:** one distribution answers the questions a SOC asks about its noise: how much of the pipeline is noise, whether it is caught at triage or only after an investigation, how much triage promotes, and how much ends undecided. A high noise share is acceptable only while Detection Precision (§5.2) shows the detection layer is being tuned in response; a stable high noise share with no rising precision means the tuning loop is broken, and Tuning Loop Latency (§5.6) proves it.
+
+**Precision and recall, per gate.** Quality is expressed in two questions asked at each decision gate. **Precision**: of what the gate flagged, how much was real? **Recall**: of what was real, how much did the gate flag?
+
+| Question | At G1 (detection) | At G2 (triage decisions) | At G3 (investigation verdicts) |
+|---|---|---|---|
+| **Precision** — of what we flagged, how much was real | **Detection Precision** (§5.2): alerts whose Case was confirmed ÷ alerts whose Case reached a verdict | **Triage Precision** (§5.3): promoted Cases confirmed ÷ promoted Cases | **Verdict Precision** (§5.4): confirmed Incidents that stand at review ÷ confirmed Incidents |
+| **Recall** — of what was real, how much we flagged | **Observed Detection Recall** (§5.5): confirmed Incidents that detection content alerted on ÷ all confirmed Incidents | **Observed Triage Recall** (§5.5): confirmed Incidents that triage promoted ÷ those plus the threats triage closed | **Observed Verdict Recall** (§5.5): confirmed Incidents ÷ those plus the threats investigation closed |
+
+An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing a verdict. Every recall is *Observed*: an estimate bounded by the channels that surface misses (§5.5). Precision and recall of the same gate are reported together and never averaged into one "accuracy": most Cases are noise, so a single figure would be dominated by correct closes and hide the missed threats.
+
+### 5.2 Detection Precision
 *   **KPI candidate.**
 *   **Definition:** alerts whose Case was confirmed True Positive ÷ all alerts whose Case reached a verdict, per detection rule and per [Alert Type](../02-Taxonomy/alert_types.md). Alerts inherit their Case's verdict; alerts of Cases closed as Insufficient Data are excluded.
 *   **Purpose:** drives the retirement or refinement of detection content through the Phase 1 tuning loop. The upstream number every automation claim is read against (§6.4).
 
-### 5.2 Disposition Mix
-*   **KPI candidate.**
-*   **Definition:** the share of Cases dispositioned in the window by verdict — False Positive, Benign, Insufficient Data, True Positive — and, at G2, promoted; reported per gate, with Duplicates counted separately as a volume.
-*   **Purpose:** one distribution answers the questions a SOC asks about its noise: how much of the pipeline is noise (False Positive plus Benign share), how much is caught at triage versus after an investigation (the G2 versus G3 split), how much triage promotes, and how much ends undecided (the Insufficient Data share, the signal of investigative thrash or missing telemetry). A high noise share is acceptable only while Detection Precision (§5.1) shows the detection layer is being tuned in response; a stable high noise share with no rising precision means the tuning loop is broken, and Tuning Loop Latency (§5.6) proves it.
-
-**Precision and recall, per gate.** Quality is expressed in two questions asked at each decision gate. **Precision**: of what the gate flagged, how much was real? **Recall**: of what was real, how much did the gate flag? Detection (G1) has Detection Precision (§5.1) and Observed Detection Recall (§5.5); Triage (G2) has Triage Precision (§5.3), with its recall side the triage slice of Observed Verdict Recall (§5.5); the verdict (G3) has Verdict Precision (§5.4) and Observed Verdict Recall (§5.5). Precision and recall of the same gate are reported together and never averaged into one "accuracy": most Cases are noise, so a single figure would be dominated by correct closes and hide the missed threats.
-
 ### 5.3 Triage Precision
 *   **KPI candidate.**
 *   **Definition:** promoted Cases confirmed as Incidents ÷ promoted Cases. Of what triage flagged, how much was real.
-*   **A band, not a maximum:** triage promotes a Case whenever the Benign findings do not cover its alerts ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), so promoting an unexplained Case is correct triage. A value near 100% signals over-closing at triage, a false-negative risk; a very low value signals promotion out of fear. The recall side that bounds it is the triage slice of Observed Verdict Recall (§5.5): the misses found among the Cases triage closed.
+*   **A band, not a maximum:** triage promotes a Case whenever the Benign findings do not cover its alerts ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), so promoting an unexplained Case is correct triage. A value near 100% signals over-closing at triage, a false-negative risk; a very low value signals promotion out of fear. Its recall side is Observed Triage Recall (§5.5).
 
 ### 5.4 Verdict Precision
 *   **KPI candidate.**
@@ -127,21 +144,23 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 *   **Definition:** confirmed Incidents whose originating Alert was produced by Phase 1 detection content ÷ all confirmed Incidents, in the window.
 *   **Boundary rule:** an optimistic estimate — misses no channel surfaced are absent from the denominator, so the figure can only overstate recall. It is conformant only when reported with the activity of the channels that bound it: hunts executed, intake reports received, QA sample size (§6.4). Recall measured against a known denominator, through adversary emulation, is staged on the [Roadmap](../01-Foundation/roadmap.md).
 
+#### Observed Triage Recall
+*   **KPI candidate.**
+*   **Definition:** confirmed Incidents that triage promoted ÷ (confirmed Incidents that triage promoted + triage misses surfaced), in the window. A **triage miss** is a Case closed at G2 that review finds was a threat, surfaced through three channels: a triage close overturned in the QA sample, extrapolated to the closes of the window with its confidence interval; a prior triage close flagged by the retrospective entity sweep and confirmed; a reopened triage close confirmed as an Incident. Cases that entered at Investigation (hunt-found) are outside both terms.
+*   **Slices:** by executor, by alert type and by the confidence of the wrong close. Every miss is a critical finding; per executor and alert type, this is the number the autonomy grant for triage is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
+
 #### Observed Verdict Recall
 *   **KPI candidate.**
-*   **Definition:** confirmed Incidents ÷ (confirmed Incidents + verdict misses surfaced), in the window. A **verdict miss** is a Case closed as noise that review finds was a threat: a close overturned in the QA sample, a prior close flagged by the retrospective entity sweep and confirmed, or a reopened Case confirmed as an Incident. Of what was real among the Cases the SOC decided, how much did it confirm.
-*   **Miss rate of autonomous closes:** closes overturned in the QA sample ÷ closes sampled, reported with its confidence interval and extrapolated to the autonomous closes of the window. This is the component the autonomy grant keys on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)); each miss is a critical finding, and the reference band is near zero.
-*   **Slices:** by the gate that closed the miss — the **triage slice** (closes at G2) is the recall side of Triage Precision (§5.3), the investigation slice (closes at G3) that of Verdict Precision (§5.4) — and by executor and by the confidence of the wrong close.
-*   **Boundary rule:** the same as Observed Detection Recall: reported with the QA sample size, the sweeps run and the reopens counted, never as a bare figure.
+*   **Definition:** confirmed Incidents ÷ (confirmed Incidents + investigation misses surfaced), in the window. An **investigation miss** is a Case closed at G3 — False Positive, Benign, Duplicate or Insufficient Data — that review finds was a threat, surfaced through the same three channels: the QA sample (extrapolated with its confidence interval), the retrospective entity sweep, a reopen confirmed as an Incident.
+*   **Slices:** by executor, by Incident Category and by the confidence of the wrong close. Every miss is a critical finding; per executor and Incident Category, this is the number the autonomy grant for verdicts is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
+*   **Boundary rule (both recalls):** optimistic estimates, as with Observed Detection Recall: reported with the QA sample size, the sweeps run and the reopens counted, never as a bare figure.
 *   **Reopen Rate** (auxiliary): closed Cases reopened within 30 days ÷ Cases closed — the passive complement to QA sampling, including Insufficient Data closes whose monitoring watch fired. A reopen that ends in a confirmed Incident is a verdict miss.
 
 ### 5.6 Tuning Loop Latency
-*   **KPI candidate.**
 *   **Definition:** time from a False Positive or Benign disposition emitting a tuning ticket ([Preparation & Engineering §1.2](../03-Processes/01-preparation_and_engineering.md)) to the corresponding detection change deployed ([Preparation & Engineering §1.1](../03-Processes/01-preparation_and_engineering.md)); median and p95 per ticket.
 *   **Boundary rule:** a sample exists only for a ticket that *reached* deployment. Reported with the count and age of open tuning tickets: a flattering median next to a growing, aging backlog is the gamed state.
 
 ### 5.7 Visibility-Gap Rate
-*   **KPI candidate.**
 *   **Definition:** Cases whose Triage or Investigation Note records at least one Visibility Gap — a required data source unavailable ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor)) — ÷ Cases dispositioned.
 *   **Purpose:** the telemetry-investment signal for SOC leadership and Phase 1 log-source health. A persistent gap is a telemetry problem, never an executor problem.
 
@@ -158,9 +177,8 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 *   **Definition:** Cases handed over to a human ÷ Cases automation or an agent was assigned, sliced by the recorded reason (`handover_reason`: crown-jewel, privileged-identity, manual — [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions)).
 *   **Purpose:** the reason mix is the diagnostic. A rising share of manual takeovers means humans do not trust the autonomous verdicts on the Cases they watch; read it with Verdict Precision (§5.4) and Observed Verdict Recall (§5.5), which say whether they are right.
 
-### 6.3 HITL Modification Rate
-*   **KPI candidate.**
-*   **Definition:** of the actions automation or agents submit for approval: share approved as proposed, modified, rejected.
+### 6.3 Approval Override Rate
+*   **Definition:** of the containment actions automation or an agent submitted for approval in the window ([Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload)), the share the approver **modified** — approved with a changed target, scope or timing — and the share **rejected**, each ÷ actions submitted; the remainder were approved as proposed. Sliced by executor, by Incident Category playbook and by action type.
 *   **Purpose:** consistent modification is the playbook-drift signal of [Agentic Supervision §3](../07-Governance/agentic_supervision.md); a rising rejection share is the early warning of confirmed Incidents being overturned (§5.4).
 
 ### 6.4 Paired Reporting
@@ -169,8 +187,8 @@ Reporting the left column without the right column is non-conformant:
 
 | Efficiency claim | Mandatory quality pair |
 |---|---|
-| Autonomous Disposition Rate | Detection Precision (§5.1), Verdict Precision (§5.4) and Observed Verdict Recall (§5.5) |
-| "X% of alerts closed automatically" | Disposition Mix (§5.2) — closing 95% automatically while 90% of alerts are noise is automated waste, not capability |
+| Autonomous Disposition Rate | Detection Precision (§5.2), Verdict Precision (§5.4), Observed Triage Recall and Observed Verdict Recall (§5.5) |
+| "X% of alerts closed automatically" | Disposition Mix (§5.1) — closing 95% automatically while 90% of alerts are noise is automated waste, not capability |
 | Alert-volume reduction | Consolidation Rate (§3) and autonomous verdicts (§6.1), split |
 | Any speed metric (§4) | Verdict Precision (§5.4) |
 | Recall claims (§5.5) | The activity of the observation channels: hunts executed, intake reports, QA sample size |
@@ -206,13 +224,13 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | MTTD (§4) | Executor-independent: a detection-content property | Executor-independent | Executor-independent | Minutes to hours for actively tuned techniques; track the trend. |
 | MTTC (§4) | 4–24 h typical | Minutes, for pre-authorized actions | ≤ 30 min, excluding HITL Dwell Time, for pre-authorized actions | Approval-loop time is never counted as containment time. |
 | HITL Dwell Time (§4) | Critical ≤ 30 min · High ≤ 2 h | n/a: automation requests approval, it does not grant it | n/a: agents request approval, they do not grant it | — |
-| Detection Precision (§5.1) | Executor-independent | Executor-independent | Executor-independent | ≥ 80–90% per active rule, after tuning. |
-| Disposition Mix (§5.2) | Noise share ≤ 30% and falling | same | same | Legacy human-run SOCs commonly run 30–70% noise. An Insufficient Data share above 10% is a telemetry or playbook signal. |
+| Detection Precision (§5.2) | Executor-independent | Executor-independent | Executor-independent | ≥ 80–90% per active rule, after tuning. |
+| Disposition Mix (§5.1) | Noise share ≤ 30% and falling | same | same | Legacy human-run SOCs commonly run 30–70% noise. An Insufficient Data share above 10% is a telemetry or playbook signal. |
 | Triage Precision (§5.3) | 50–90% | 50–90% | 50–90% | Below 50%, triage over-promotes; above 90%, it over-closes. Parity across executors on the same alert mix. |
 | Verdict Precision (§5.4) | ≥ 95–98% (confirmed Incidents overturned ≤ 2–5%) | same, ≥ the human baseline | same, ≥ the human baseline | Reported with Observed Verdict Recall, never averaged with it. |
-| Observed Verdict Recall (§5.5) | Miss rate of autonomous closes ≈ 0%, each occurrence a critical finding | same, ≤ the human baseline | same, ≤ the human baseline | Reported with the QA sample size. |
-| HITL Modification Rate (§6.3) | n/a: humans are the reviewers here | ≤ 10% of proposed actions modified or rejected | ≤ 10% | A higher share means the playbooks or the autonomy matrix need work. |
-| Autonomous Disposition Rate (§6.1) | n/a by definition | Maturity-staged: initial < 20% → operating 20–60% → mature > 80% of G2 dispositions | same | The binding constraint at every stage is Observed Verdict Recall, not this band. |
+| Observed Triage Recall, Observed Verdict Recall (§5.5) | ≈ 100%: every miss surfaced is a critical finding | same, ≥ the human baseline | same, ≥ the human baseline | Reported with the QA sample size; never averaged with the gate's precision. |
+| Approval Override Rate (§6.3) | n/a: humans are the reviewers here | ≤ 10% of proposed actions modified or rejected | ≤ 10% | A higher share means the playbooks or the autonomy matrix need work. |
+| Autonomous Disposition Rate (§6.1) | n/a by definition | Maturity-staged: initial < 20% → operating 20–60% → mature > 80% of G2 dispositions | same | The binding constraint at every stage is the observed recall of the gate being automated, not this band. |
 | Tuning Loop Latency (§5.6) | Executor-independent: a Phase 1 property | Executor-independent | Executor-independent | ≤ 14 days median, matching the High risk band of the Phase 4 [remediation deadlines](../03-Processes/04-post_incident_activity.md#5-remediation-deadlines). |
 | Visibility-Gap Rate (§5.7) | Trending to < 5% of Cases | same | same | A persistent gap is a telemetry-investment signal. |
 | TCpC and Noise Tax (§7) | Organization-specific by design | same | same | No industry reference exists: baseline in the first 90 days, then manage the trend, Noise Tax down. |
@@ -230,11 +248,11 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Disposition Mix — *KPI candidate* | G2, G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager, Detection Engineer |
 | Triage Precision — *KPI candidate* | G2, judged at G3 | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) | SOC Manager |
 | Verdict Precision — *KPI candidate* | G5 | [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager |
-| Observed Verdict Recall — *KPI candidate*, Reopen Rate | G5 | [Agentic Supervision §2](../07-Governance/agentic_supervision.md); [Detection & Analysis §3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager, leadership |
+| Observed Triage Recall, Observed Verdict Recall — *KPI candidates*; Reopen Rate | G5 | [Agentic Supervision §2](../07-Governance/agentic_supervision.md); [Detection & Analysis §3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager, leadership |
 | Observed Detection Recall — *KPI candidate* | G3 / G5 | [Detection & Analysis §3.1, §4, §5](../03-Processes/02-detection_and_analysis.md); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | Leadership, Detection Engineer |
-| Tuning Loop Latency — *KPI candidate* | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
-| Visibility-Gap Rate — *KPI candidate* | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor) | SOC leadership, Security Platform Engineer |
-| ADR — *KPI candidate*, Handover Rate, HITL Modification Rate — *KPI candidate* | G2–G4 | Note Provenance; [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions); [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
+| Tuning Loop Latency | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
+| Visibility-Gap Rate | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution-by-any-executor) | SOC leadership, Security Platform Engineer |
+| ADR — *KPI candidate*, Handover Rate, Approval Override Rate | G2–G4 | Note Provenance; [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions); [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
 | TCpC, Noise Tax — *KPI candidates* | G1–G4 | [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering) | Leadership, FinOps |
 
 ## 10. Sources & Prior Art
@@ -244,5 +262,3 @@ Foundations this module builds on rather than reinvents; credited here once, per
 *   **Standards and schemas:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (lifecycle), [OCSF v1.8.0](https://schema.ocsf.io/1.8.0/categories) (state fields), SOC-CMM (maturity alignment), [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) (token-capture naming, provisional), [FinOps FOCUS 1.2](https://www.finops.org/insights/focus-1-2-available/) (cost data normalization).
 *   **Research and practitioner:** [Alahmadi et al., USENIX Security 2022](https://www.usenix.org/system/files/sec22summer_alahmadi.pdf) (false-positive ambiguity; benign triggers), [SpecterOps, Funnel of Fidelity](https://specterops.io/blog/2019/11/20/introducing-the-funnel-of-fidelity/) (stage model), MITRE, *11 Strategies of a World-Class Cybersecurity SOC* (measurement strategy), SANS SOC Surveys (noise burden, adoption data), [Bono et al., arXiv:2511.13860](https://arxiv.org/abs/2511.13860) (randomized controlled trial of AI-assisted phishing triage: human reviewers under-catch the assistant's false negatives — the basis of the oversampling rule), Gartner's evaluation guidance on investigation quality over alert volume.
 *   **Empirical anchors, vendor-published and indicative only:** [RunReveal](https://blog.runreveal.com/ai-soc-investigation-cost-token-pricing/) (per-alert token cost), [Elastic Security Labs](https://www.elastic.co/security-labs/alert-triage-agentic-soc-elastic-workflows) (deterministic-first cost architecture), [SecurityWeek](https://www.securityweek.com/the-ai-token-costs-that-can-break-cybersecurity/) (token tiering), managed-detection per-endpoint pricing aggregates.
-
-Where this module names metrics no standards body has defined — **Disposition Mix, Observed Verdict Recall, Noise Tax, Token Cost per Case** — the definitions above are offered as the vendor-neutral standard, anchored to the precedent cited.

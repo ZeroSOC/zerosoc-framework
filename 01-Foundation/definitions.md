@@ -173,7 +173,7 @@ A quantitative measure defined in [Operational Metrics](../05-Metrics/operationa
 
 ### Key Performance Indicator (KPI)
 A metric an organization elevates to actively steer Security Operations: tracked over time, sliced by executor, and reviewed at a defined governance cadence.
-*   **Context:** KPI selection is an organizational decision, not a framework mandate. The framework marks its recommended default KPI candidates — the metrics carrying [§8](../05-Metrics/operational_metrics.md#8-reference-bands-for-setting-kpos) reference bands — as **KPI candidate** in [Operational Metrics](../05-Metrics/operational_metrics.md); an organization may adopt, extend, or replace that set.
+*   **Context:** KPI selection is an organizational decision, not a framework mandate. The metrics the framework recommends an organization set as its KPIs are marked **KPI candidate** in [Operational Metrics](../05-Metrics/operational_metrics.md); an organization may adopt, extend, or replace that set. Every metric, candidate or not, carries a reference band in [§8](../05-Metrics/operational_metrics.md#8-reference-bands-for-setting-kpos) where one can be stated.
 
 ### Key Performance Objective (KPO)
 The concrete target value or band an organization commits to for a KPI, calibrated to its own baseline (alert mix, telemetry coverage, risk tolerance).
