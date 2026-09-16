@@ -32,7 +32,7 @@ A Case closed by automation or an agent with no human touch is reviewed after th
 
 ## 3. Playbook Drift Monitoring
 
-Two signals show that a playbook no longer fits the environment: approvers consistently modifying the queries or containment actions an executor proposes (HITL Modification Rate, [Operational Metrics §6.3](../05-Metrics/operational_metrics.md)), and findings retracted during investigation or in the evidence review of the Post-Incident Review ([Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda)). Either triggers a playbook update.
+Two signals show that a playbook no longer fits the environment: approvers consistently modifying the queries or containment actions an executor proposes (Approval Override Rate, [Operational Metrics §6.3](../05-Metrics/operational_metrics.md)), and findings retracted during investigation or in the evidence review of the Post-Incident Review ([Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda)). Either triggers a playbook update.
 
 ## 4. Autonomy Grant
 
