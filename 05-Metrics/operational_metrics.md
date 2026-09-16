@@ -99,11 +99,10 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 
 **Precision and recall, per gate.** Quality is expressed in two questions asked at each decision gate. **Precision**: of what the gate flagged, how much was real? **Recall**: of what was real, how much did the gate flag?
 
-| Gate | Precision — of what we flagged, how much was real | Recall — of what was real, how much we flagged |
-|---|---|---|
-| **Detection (G1)** | **Detection Precision** (§5.2): alerts whose Case was confirmed ÷ alerts whose Case reached a verdict | **Observed Detection Recall** (§5.5): confirmed Incidents that detection content alerted on ÷ all confirmed Incidents |
-| **Triage (G2)** | **Triage Precision** (§5.3): promoted Cases confirmed ÷ promoted Cases | **Observed Triage Recall** (§5.5): confirmed Incidents that triage promoted ÷ those plus the threats triage closed |
-| **Verdict (G3)** | **Verdict Precision** (§5.4): confirmed Incidents that stand at review ÷ confirmed Incidents | **Observed Verdict Recall** (§5.5): confirmed Incidents ÷ those plus the threats investigation closed |
+| Question | At G1 (detection) | At G2 (triage decisions) | At G3 (investigation verdicts) |
+|---|---|---|---|
+| **Precision** — of what we flagged, how much was real | **Detection Precision** (§5.2): alerts whose Case was confirmed ÷ alerts whose Case reached a verdict | **Triage Precision** (§5.3): promoted Cases confirmed ÷ promoted Cases | **Verdict Precision** (§5.4): confirmed Incidents that stand at review ÷ confirmed Incidents |
+| **Recall** — of what was real, how much we flagged | **Observed Detection Recall** (§5.5): confirmed Incidents that detection content alerted on ÷ all confirmed Incidents | **Observed Triage Recall** (§5.5): confirmed Incidents that triage promoted ÷ those plus the threats triage closed | **Observed Verdict Recall** (§5.5): confirmed Incidents ÷ those plus the threats investigation closed |
 
 An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing a verdict. Every recall is *Observed*: an estimate bounded by the channels that surface misses (§5.5). Precision and recall of the same gate are reported together and never averaged into one "accuracy": most Cases are noise, so a single figure would be dominated by correct closes and hide the missed threats.
 
