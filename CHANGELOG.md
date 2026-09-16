@@ -17,7 +17,7 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **02-Taxonomy:** Incident Categories (IC-01 to IC-15), Alert Types by telemetry domain, the Case Schema with its JSON Schema.
 - **03-Processes:** Detection & Response Lifecycle; Preparation & Engineering (draft); Detection & Analysis with the evidence model — findings tagged by side and confidence, triage close by coverage, verify-or-retract investigation, verdict and confidence by score; Incident Response with the containment autonomy matrix; Post-Incident Activity.
 - **04-Playbooks (draft):** Playbook Architecture, Operating Guide, eight domain triage playbooks, sixteen Investigation & Response playbooks and a catch-all, five shared enrichment sub-playbooks.
-- **05-Metrics (draft):** nineteen process-anchored volume, speed, quality, autonomy and token-economics metrics with reference bands.
+- **05-Metrics (draft):** twenty process-anchored volume, speed, quality, autonomy and token-economics metrics with reference bands; disposition quality is expressed as precision and recall per gate (Detection, Triage, Verdict).
 - **06-Deliverables:** Triage Note and Investigation Note templates with worked examples.
 - **07-Governance (draft):** Agentic Guardrails and Agentic Supervision.
 - Community and project files: Contributing guidelines, Governance, Security policy, Code of Conduct, Trademarks, continuous checks (markdownlint, link check, frontmatter validation, DCO).
