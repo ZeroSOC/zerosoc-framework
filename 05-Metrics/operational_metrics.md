@@ -89,11 +89,11 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 
 | Share | At G2 (triage decisions) | At G3 (investigation verdicts) |
 |---|---|---|
-| False Positive | Detection misfires caught cheaply; each is a tuning ticket. Read with Detection Precision (§5.2). | Misfires that survived triage: the subtle rule problems, and the tuning tickets that matter most. |
-| Benign | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each is a Knowledge Base entry. |
-| Duplicate | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
-| Insufficient Data | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
-| Promoted / Confirmed Incident | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
+| **False Positive** | Detection misfires caught cheaply; each is a tuning ticket. Read with Detection Precision (§5.2). | Misfires that survived triage: the subtle rule problems, and the tuning tickets that matter most. |
+| **Benign** | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each is a Knowledge Base entry. |
+| **Duplicate** | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
+| **Insufficient Data** | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
+| **Promoted / Confirmed Incident** | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
 
 *   **Purpose:** one distribution answers the questions a SOC asks about its noise: how much of the pipeline is noise, whether it is caught at triage or only after an investigation, how much triage promotes, and how much ends undecided. A high noise share is acceptable only while Detection Precision (§5.2) shows the detection layer is being tuned in response; a stable high noise share with no rising precision means the tuning loop is broken, and Tuning Loop Latency (§5.6) proves it.
 
