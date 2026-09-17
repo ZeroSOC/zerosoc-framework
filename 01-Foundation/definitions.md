@@ -224,7 +224,7 @@ Confidence is the likelihood that the Malicious hypothesis is true. OCSF names t
 | **2 Medium** | 2 | Corroborates its side; not conclusive alone. Medium plus Low, or two Medium, prove a side. | The verdict rests on a Medium finding at best. Sufficient for a verdict; autonomous containment requires human review. | A scheduled task created shortly before the activity; a consent seen for six colleagues the same morning. |
 | **3 High** | 3 | Sufficient on its own to prove its side. On the Benign side, a finding that **explains** the alert. | A High finding carries the verdict. Sufficient for pre-authorized autonomous containment. | Multi-engine hash consensus on a known family; a threat-feed C2 destination; an approved exception or authorized test window in the SOC Knowledge Base. |
 
-A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as a finding. A visibility gap — a required data source unavailable during triage or investigation — caps the Case's confidence at Medium regardless of the findings, because the missing source could have retracted them.
+A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as a finding.
 
 ### Impact (OCSF `impact_id`)
 Impact records the *realized or expected* harm of a confirmed or suspected Incident. The framework assesses it on three effects, after NIST SP 800-61 — **functional** (services and operations), **informational** (confidentiality and integrity of data) and **recoverability** (time and effort to recover) — and binds the top level to the NIS2 significance test. Impact is assessed at triage when already known and otherwise at incident confirmation; until assessed it is recorded as unknown, never guessed.
