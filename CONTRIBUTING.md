@@ -2,7 +2,7 @@
 title: ZeroSOC Framework Contributing Guidelines
 type: policy
 status: development
-last_updated: 2026-09-10
+last_updated: 2026-09-18
 license: Apache-2.0
 ---
 
@@ -71,6 +71,19 @@ git commit -s -m "docs: add the consent-grant check to the identity triage playb
 *   Open the pull request against `main`, describe the change and link the issue it implements.
 *   The pull request template lists the checks a reviewer expects; the repository checks must pass.
 *   Decisions on merging follow [GOVERNANCE.md](GOVERNANCE.md).
+
+### AI-assisted contributions
+
+Contributions drafted with the help of coding assistants and other generative tools are welcome. This project uses them itself, and the commits say so.
+
+The bar does not change, and it is the same bar every contribution meets:
+
+*   **A human validates the substance.** Someone with security operations experience has to have checked that the change is right — that the query answers the question it claims to, that the outcome tags follow from the evidence, that the action is one a SOC would actually take. Generated text is fluent by construction, which makes an unchecked error harder to spot, not easier.
+*   **You are the contributor.** The `Signed-off-by` line of Step 4 certifies your right to submit the work, whatever tools helped you produce it. A tool cannot sign off, and "the assistant wrote it" does not transfer responsibility for a change that turns out to be wrong.
+*   **Verification is not optional.** Step 3 applies unchanged: walk the change through as an executor would. A tabletop run is how a plausible-looking playbook is caught before it reaches someone's bad night.
+*   **Disclosure is welcome, and never a mark against a contribution.** Recording assistance in a commit trailer is good practice and costs nothing.
+
+A pull request that reads as though nobody exercised judgment over it will be asked for that judgment before review, regardless of how it was written.
 
 ## 5. Licensing and trademarks
 
