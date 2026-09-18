@@ -2,7 +2,7 @@
 title: ZeroSOC Project Governance
 type: policy
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-18
 license: Apache-2.0
 ---
 
@@ -18,7 +18,7 @@ This document defines **how decisions are made** in the ZeroSOC Framework projec
 | **Reviewer** | Recognized contributors | Provide the **non-author review** the maturity model requires for promotion to `stable`; triage issues | Sustained quality contributions — as a guideline, ~5 merged substantive PRs and ~3 useful reviews — confirmed by maintainer consensus |
 | **Maintainer** | Project stewards | Merge rights; dispute resolution; release authority | Reviewer + ~3 months of sustained engagement, appointed by consensus of existing maintainers |
 
-**Current roster:** the project is in its **bootstrap phase** with a single maintainer. The rules in §4 exist precisely for this phase and self-repeal as the roster grows.
+**Current roster:** two maintainers. The roster is small, and §4 states plainly what that means in practice rather than describing a review capacity the project does not yet have.
 
 ### Project Sponsor
 
@@ -38,15 +38,17 @@ Decisions scale with the weight of the change:
 
 Per-document maturity (`draft` → `development` → `stable` → `deprecated`) and its promotion rules are defined in the [Framework Manifest](01-Foundation/framework_manifest.md#versioning--document-release-status). Promotion to `stable` is a governance event and requires validation, complete cross-links, and **one review pass by an executor other than the author**. Reviewers and maintainers may provide that pass.
 
-## 4. Bootstrap rules (single-maintainer phase)
+## 4. Rules while the roster is small
 
-Honest governance beats aspirational governance. While the project has one maintainer:
+Honest governance beats aspirational governance. A two-maintainer roster can meet the review requirements in full, and does:
 
-- **Maintainer PRs** with substantive changes stay open for a **72-hour comment window** before merging (editorial changes exempt). CI must be green.
-- **External PRs** require maintainer review, as usual.
-- Where the maturity model requires a *non-author review* and no second Reviewer exists yet, the maintainer may substitute a **publicly logged self-review** (recorded in the pull request) with a **14-day post-hoc objection window**: any substantiated objection raised in that window reopens the promotion.
+- **Every substantive pull request is reviewed by someone other than its author**, including a maintainer's own. CI must be green. No change merges on its author's approval alone.
+- **Maintainer PRs** with substantive changes also stay open for a **72-hour comment window** before merging, so that contributors outside the roster have time to object (editorial changes exempt).
+- **Promotion to `stable`** uses the non-author review of §3. The self-review substitute this section previously allowed no longer applies and is not available.
+- **Appointments** to Reviewer or Maintainer are by consensus of the existing maintainers, which at this size means both must agree.
+- **A deadlock between the two maintainers is not resolved by merging.** Where §2 leaves a dispute undecided, the change does not land, and the disagreement and its reasons are recorded in the issue or pull request. The project would rather carry an open question than a decision one steward does not stand behind.
 
-Each of these exceptions **self-repeals** the moment a second Reviewer or Maintainer joins the roster; §1's normal rules then apply without needing to amend this document.
+These rules describe the current roster. As it grows they are revisited by amendment under §7, not by silent lapse.
 
 ## 5. Releases
 
@@ -65,4 +67,4 @@ The channel set is deliberately minimal; new channels are added only when the co
 
 ## 7. Amendments
 
-This document changes by pull request accompanied by a DD entry (it is a structural document). During the bootstrap phase, amendments follow the §4 comment-window rule.
+This document changes by pull request accompanied by a DD entry (it is a structural document). Amendments follow the review and comment-window rules of §4.
