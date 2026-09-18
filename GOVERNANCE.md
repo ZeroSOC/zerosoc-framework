@@ -18,8 +18,6 @@ This document defines **how decisions are made** in the ZeroSOC Framework projec
 | **Reviewer** | Recognized contributors | Provide the **non-author review** the maturity model requires for promotion to `stable`; triage issues | Sustained quality contributions — as a guideline, ~5 merged substantive PRs and ~3 useful reviews — confirmed by maintainer consensus |
 | **Maintainer** | Project stewards | Merge rights; dispute resolution; release authority | Reviewer + ~3 months of sustained engagement, appointed by consensus of existing maintainers |
 
-**Current roster:** two maintainers. The roster is small, and §4 states plainly what that means in practice rather than describing a review capacity the project does not yet have.
-
 ### Project Sponsor
 
 The **Project Sponsor** acts solely as the **Trademark Steward** described in [TRADEMARKS.md](TRADEMARKS.md), following the steward model of foundations such as the Python Software Foundation and the Rust Foundation. The Sponsor holds the "ZeroSOC" mark; it holds **no special technical veto**. Technical direction lives in the open [design-decision registry](01-Foundation/design_decisions.md) and follows the process below like any other change.
@@ -61,9 +59,7 @@ These rules describe the current roster. As it grows they are revisited by amend
 ## 6. Communication channels
 
 - **GitHub Issues** — defects, proposals, and all actionable work (issue-first rule).
-- **GitHub Discussions** — questions, ideas and open-ended exchange before something becomes an issue, where enabled; otherwise an issue serves.
-
-The channel set is deliberately minimal; new channels are added only when the community's volume demands them.
+- **GitHub Discussions** and **Slack** — questions, ideas and open-ended exchange before something becomes an issue, where enabled; otherwise an issue serves.
 
 ## 7. Amendments
 
