@@ -19,7 +19,7 @@ One row per alert type of this domain; each row is the index into a subsection o
 
 | Alert Type | Log Source | Tactics | Techniques | Candidate Incident Categories |
 |---|---|---|---|---|
-| <alert type> | <log source> | <tactic(s)> | TXXXX (Name) | IC-NN (Name)[, IC-MM (Name)] |
+| <alert type> | <log source> | <tactic(s)> | TXXXX (Name) | IC-NN (Name)\[, IC-MM (Name)\] |
 
 ## Per-Alert Triage
 

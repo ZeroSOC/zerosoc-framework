@@ -10,7 +10,7 @@ license: Apache-2.0
 
 A durable, stable-identifier record of the key strategic and architectural design decisions behind the ZeroSOC Framework, with the rationale and the alternatives that were weighed.
 
-### Entry Schema
+## Entry Schema
 Every entry in this registry follows this structure:
 - **`DD-##: <title>`**: Persistent identifier and concise statement of the decision. When decisions are consolidated, the earliest ID is retained; when decisions are retired, IDs are skipped to maintain immutable cross-references.
 - **Decision:** The normative choice made.
