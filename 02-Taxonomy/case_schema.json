@@ -10,6 +10,7 @@
     "status_id",
     "severity_id",
     "verdict_id",
+    "start_time",
     "finding_info_list",
     "zerosoc"
   ],
@@ -139,11 +140,11 @@
     },
     "start_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. A benign precursor examined and ruled out contributed to the investigation and not to the Case, so this is the earliest confirmed malicious event — what the framework calls T0. A Case that proves no malicious activity carries none."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. It opens at the earliest Alert's own start_time and moves earlier whenever a Malicious Finding cites an earlier event; a benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident this is T0, the earliest confirmed malicious event. On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is not T0 and anchors no metric."
     },
     "end_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case. A Case that proves no malicious activity carries none."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case."
     },
     "vendor_attributes": {
       "type": "object",
@@ -307,19 +308,70 @@
       ],
       "properties": {
         "uid": {
-          "type": "string"
+          "type": "string",
+          "description": "Where the event is in OCSF, its metadata.uid."
         },
         "type_uid": {
-          "type": "integer"
+          "type": "integer",
+          "description": "The event's OCSF class."
         },
         "type_name": {
           "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "Used instead of type_uid where the event is not in OCSF."
+        },
+        "title": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "severity_id": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "x-enum-captions": [
+            "Informational",
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "description": "How many occurrences this one reference stands for."
+        },
+        "observables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_observable"
+          }
+        },
+        "created_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "first_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the event happened. The Case's start_time is the earliest of these across its Malicious Findings."
+        },
+        "last_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
         },
         "product": {
           "$ref": "#/$defs/ocsf_product"
         }
       },
-      "description": "An event grounding a Finding, the Detection Finding where the Finding is an Alert, or — on an action entry — the Remediation Activity it records; type_uid is that event's OCSF class."
+      "description": "An event that is evidence of the Finding: what the Finding rests on, cited rather than copied. It may be any OCSF event — a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -342,6 +394,14 @@
         "created_time": {
           "type": "integer",
           "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "first_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the thing the Finding reports was first observed, which is not when the Finding was made. The Case Timeline orders on this, and the Case's start_time is the earliest of them."
+        },
+        "last_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When it was last observed."
         },
         "attacks": {
           "type": "array",
@@ -728,22 +788,31 @@
       "type": "object",
       "x-ocsf-object": "analytic",
       "additionalProperties": true,
-      "description": "The check or validation query that produced the Finding.",
+      "description": "What produced the Finding: the detection content that raised an Alert, the check that answered a triage question, or the validation query that tested a hypothesis. A Finding and what produced it are never separated.",
       "properties": {
         "uid": {
-          "type": "string"
+          "type": "string",
+          "description": "The identifier of the check or query, where it has one; the event reference the Note cites for it otherwise."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "The question it answers, in the words a reader of the Case understands — never the query language."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "What kind of analytic it is, where `type_id` is Other: `triage check`, `validation query`, `enrichment`."
         },
         "type_id": {
-          "type": "integer"
+          "type": "integer",
+          "description": "OCSF's analytic type, which OCSF requires. A triage check and a validation query are none of OCSF's listed types, so they are Other (99) and `type` names them."
         },
         "desc": {
-          "type": "string"
+          "type": "string",
+          "description": "What was asked, as the executor asked it — the telemetry, the entities and the window — before any tool translated it."
+        },
+        "algorithm": {
+          "type": "string",
+          "description": "The query the tool actually ran, in that tool's own language. It is what makes the Finding reproducible by someone holding neither the Case nor the executor."
         },
         "version": {
           "type": "string"
@@ -751,7 +820,10 @@
         "category": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "type_id"
+      ]
     },
     "ocsf_graph_node": {
       "type": "object",

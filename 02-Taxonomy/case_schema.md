@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-19
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -36,7 +36,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Finding** of the Case: the Alerts first, then the result of every check and validation query (§3) |
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
-| `start_time` / `end_time` | timestamp | 2.a / close | The earliest and the most recent event or finding that **contributed to** the Case. A benign precursor examined and ruled out contributed to the investigation, not to the Case: `start_time` is therefore the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). A Case that proves no malicious activity carries neither |
+| `start_time` / `end_time` | timestamp | 2.a, refined in 2.b | The earliest and the most recent event or finding that **contributed to** the Case. **`start_time` is required**: a Case always has an Alert, so from the moment it opens it has a time it began at. It opens at the earliest Alert's own `start_time` and only ever moves **earlier**, whenever a Malicious Finding cites evidence of an earlier event (§3) — never later, and never to a time of the investigation rather than of the attack. A benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident `start_time` is the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is **not T0** and anchors no metric. `end_time` is set where the Case's span is known |
 | `vendor_attributes` | the source's `severity` and `severity_id` | 2.a, when triage overrides them | What the source reported before triage assessed it ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)); the override is auditable and countable |
 | `is_suspected_breach` | boolean | 2.b | Set when data compromise is suspected; informs the significance test |
 | `tickets` | list of ticket | 2.a / 2.b, on a False Positive close | Tickets the Case raised; the Phase 1 tuning ticket carries `type` `tuning` |
@@ -48,11 +48,22 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | Attribute | Carries |
 |---|---|
 | `title`, `desc` | The Finding, or the action taken, stated in accurate terms |
-| `analytic` | The check or validation query that produced the Finding — a Finding and the question that produced it are never separated |
+| `first_seen_time` | When the thing it reports was observed, which is not when the Finding was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
+| `analytic` | What produced the Finding — the question, what was asked, and the query the tool ran — below |
 | `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
 | `tags` | The side and the confidence, and whether the timeline renders it — below |
-| `related_events` | The events grounding a Finding, the Detection Finding where the Finding is an Alert, and on an `action` entry the Remediation Activity event (§5) |
+| `related_events` | The **evidence**: the events the Finding rests on, cited rather than copied — below |
 | `attack_graph` | Which entity acted on which, below |
+
+**What produced it.** A Finding and what produced it are never separated, and `analytic` carries all three parts of that:
+
+- `name` — the question the check or the query answers, in the words a reader of the Case understands.
+- `desc` — what was asked, as the executor asked it: the telemetry, the entities and the window, before any tool translated it.
+- `algorithm` — the query the tool actually ran, in that tool's own language.
+
+`name` is what makes the Finding legible and `algorithm` is what makes it reproducible: a reader holding neither the Case's executor nor its tool bindings can re-run the query and see what it saw. An executor that records only the question has recorded an assertion, not evidence.
+
+OCSF requires `type_id` on the object. A triage check and a validation query are none of the types OCSF lists — they are not detection content that fires on its own — so they take Other (99) and `type` names the kind: `triage check`, `validation query`, `enrichment`. An Alert keeps whatever analytic its source reported.
 
 **Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
 
@@ -64,6 +75,12 @@ A Finding that bears on no hypothesis carries **neither tag**: absence is how co
 **The timeline.** A third tag, `zerosoc:timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: an entry is flagged because it belongs to the account of what happened, and most Findings do not.
 
 All three tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
+
+**Evidence.** A Finding's evidence is its `related_events`: the events it rests on, each cited by identifier and never copied in. This is the one place evidence is held — there is no second list beside the Findings, and a raw log is never a Finding's body.
+
+An event OCSF carries is cited by its `uid` and its class `type_uid`, and OCSF's classes are not only Alerts and Cases: a Detection Finding where the Finding is an Alert, a Remediation Activity on an `action` entry, the events of the telemetry a validation query returned. An event OCSF does not carry is named by `type` instead, which `related_event` exists to allow.
+
+Each reference carries **when the event happened** — `first_seen_time` — not when the Finding was made. That is what lets the Case's `start_time` move: it is the earliest such time across the Case's Malicious Findings, so an adversary reaching back before the detection that caught them moves it, and a benign precursor does not.
 
 **Directionality.** `attack_graph` SHOULD be populated where the executor can establish which entity acted on which. It is a directed graph (`is_directed` `true`) over the Case's entities, and it borrows its vocabulary rather than inventing one:
 

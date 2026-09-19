@@ -50,7 +50,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ## 4. Speed Metrics
 
-**T0** is the anchor of every speed metric: the timestamp of the *earliest confirmed malicious* event in the Case Timeline, established during Investigation ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record)) and refined in the Post-Incident Review. A Case closed without the Malicious hypothesis proven carries no T0, so T0-anchored metrics exist only for confirmed Incidents. All speed metrics: median and p95, per severity band.
+**T0** is the anchor of every speed metric: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Finding cites an earlier event, through Investigation ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
 
 ### Mean Time To Detect (MTTD)
 *   **KPI candidate.**
