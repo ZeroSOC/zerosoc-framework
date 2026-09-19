@@ -48,6 +48,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | Attribute | Carries |
 |---|---|
 | `title`, `desc` | The Finding, or the action taken, stated in accurate terms |
+| `first_seen_time` | When the thing it reports was observed, which is not when the Finding was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
 | `analytic` | The check or validation query that produced the Finding — a Finding and the question that produced it are never separated |
 | `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
 | `tags` | The side and the confidence, and whether the timeline renders it — below |

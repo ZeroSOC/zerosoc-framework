@@ -343,6 +343,14 @@
           "type": "integer",
           "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
         },
+        "first_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the thing the Finding reports was first observed, which is not when the Finding was made. The Case Timeline orders on this, and the Case's start_time is the earliest of them."
+        },
+        "last_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When it was last observed."
+        },
         "attacks": {
           "type": "array",
           "items": {
