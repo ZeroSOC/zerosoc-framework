@@ -41,6 +41,9 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `is_suspected_breach` | boolean | 2.b | Set when data compromise is suspected; informs the significance test |
 | `tickets` | list of ticket | 2.a / 2.b, on a False Positive close | Tickets the Case raised; the Phase 1 tuning ticket carries `type` `tuning` |
 
+**`start_time` rests on a reading OCSF does not spell out.** Release 1.9.0 reworded the field across every Findings class, from *"the least recent event **included in** the incident"* to *"the earliest event or finding that **contributed to** this incident"*. The framework reads "contributed to" as **causal**, which is what makes the field adversary-dependent: widening a Case with context does not move it, and an event examined and ruled out never moves it. OCSF does not say which reading it intends. Under the older, aggregative reading the field would be the earliest contributing event of any kind, so two conformant producers could emit different times for the same Case and a consumer comparing detection latency across them would mix them without noticing. The question is open upstream; an adopter should know which reading this framework assumes.
+
+
 ## 3. Findings
 
 `finding_info_list` holds one `finding_info` object for every entry in the Case's record: each **Finding** — an Alert, the result of a triage check, the result of a validation query — and each **response action** taken on the Case (§5). One object per entry, so that one set of tags belongs to exactly one of them.
