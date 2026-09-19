@@ -1,7 +1,7 @@
 ---
 title: ZeroSOC Framework Index
 type: index
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -131,7 +131,7 @@ graph TD
 
 The framework is organized into seven foundational modules:
 
-1. **[01-Foundation](01-Foundation/framework_manifest.md)**: The core manifest, roles and responsibilities, design decisions, roadmap, and OCSF-aligned SOC glossary. Standardizes terminology using OCSF `type_id` bands (Scalar primitive types < 20 e.g., Hostname, IP, Hash vs. Full entity objects ≥ 20 e.g., Endpoint, User, File).
+1. **[01-Foundation](01-Foundation/framework_manifest.md)**: The core manifest, roles and responsibilities, design decisions, roadmap, and OCSF-aligned SOC glossary. Standardizes terminology against OCSF's `type_id` values, which name either a full entity object (`20`–`30`: Endpoint, User, File, Process) or a scalar property of one (Hostname, IP, Hash, File Path).
 2. **[02-Taxonomy](02-Taxonomy/incident_categories.md)**: An incident classification system focusing on Business Impact. Includes the telemetry domain-specific [Alert Type Taxonomy](02-Taxonomy/alert_types.md), 15 business-impact Incident Categories (IC-01 to IC-15), and the [Case Schema](02-Taxonomy/case_schema.md) — the single definition of the Case, with a JSON Schema; MITRE ATT&CK/ATLAS technique mappings are carried by the alert types and by each Investigation & Response playbook.
 3. **[03-Processes](03-Processes/00-detection_and_response_lifecycle.md)**: Core operational workflows mapped to NIST CSF 2.0, NIST SP 800-61 Rev. 3, ISO/IEC 27035:2023, and ISO/IEC 27001:2022 (A.5.24 - A.5.28). Outlines the operational phases (Preparation, Detection & Analysis, Response, and Post-Incident).
 4. **[04-Playbooks](04-Playbooks/README.md)**: Hierarchical playbook standard powered by Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign). Divided into domain-specific **Triage Playbooks** (normalizing/enriching alerts at Gate G2) and Incident-Category-specific **Investigation & Response Playbooks** (Gate G3).
@@ -232,7 +232,7 @@ ZeroSOC is designed to interoperate with and build upon the industry's most trus
 *   **Strategic Governance:** [NIST CSF 2.0](https://www.nist.gov/cyberframework) (Cybersecurity Framework)
 *   **Tactical Incident Handling:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (Computer Security Incident Handling Guide)
 *   **Process Governance:** [ISO/IEC 27035:2023](https://www.iso.org/standard/79393.html) & [ISO/IEC 27001:2022](https://www.iso.org/standard/27001)
-*   **Data Schema:** [Open Cybersecurity Schema Framework (OCSF)](https://ocsf.io/) v1.8.0
+*   **Data Schema:** [Open Cybersecurity Schema Framework (OCSF)](https://ocsf.io/) v1.9.0
 *   **Threat Tactics & Techniques:** [MITRE ATT&CK®](https://attack.mitre.org/) v19 & [MITRE ATLAS™](https://atlas.mitre.org/)
 *   **Cost & Billing Normalization:** FinOps Foundation [FOCUS™ v1.2](https://focus.finops.org/) (ratified 2025)
 *   **Regulatory Compliance:** Designed to support EU [NIS2](https://eur-lex.europa.eu/eli/dir/2022/2555/oj) (Directive 2022/2555) and [DORA](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) (Regulation 2022/2554) auditing requirements and notification timelines.

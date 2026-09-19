@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -259,6 +259,6 @@ The bands below are **illustrative**, synthesized from industry practice and the
 
 Foundations this module builds on rather than reinvents; credited here once, per the sourcing rule of the [Design Decisions](../01-Foundation/design_decisions.md).
 
-*   **Standards and schemas:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (lifecycle), [OCSF v1.8.0](https://schema.ocsf.io/1.8.0/categories) (state fields), SOC-CMM (maturity alignment), [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) (token-capture naming, provisional), [FinOps FOCUS 1.2](https://www.finops.org/insights/focus-1-2-available/) (cost data normalization).
+*   **Standards and schemas:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (lifecycle), [OCSF v1.9.0](https://schema.ocsf.io/1.9.0/categories) (state fields), SOC-CMM (maturity alignment), [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) (token-capture naming, provisional), [FinOps FOCUS 1.2](https://www.finops.org/insights/focus-1-2-available/) (cost data normalization).
 *   **Research and practitioner:** [Alahmadi et al., USENIX Security 2022](https://www.usenix.org/system/files/sec22summer_alahmadi.pdf) (false-positive ambiguity; benign triggers), [SpecterOps, Funnel of Fidelity](https://specterops.io/blog/2019/11/20/introducing-the-funnel-of-fidelity/) (stage model), MITRE, *11 Strategies of a World-Class Cybersecurity SOC* (measurement strategy), SANS SOC Surveys (noise burden, adoption data), [Bono et al., arXiv:2511.13860](https://arxiv.org/abs/2511.13860) (randomized controlled trial of AI-assisted phishing triage: human reviewers under-catch the assistant's false negatives — the basis of the oversampling rule), Gartner's evaluation guidance on investigation quality over alert volume.
 *   **Empirical anchors, vendor-published and indicative only:** [RunReveal](https://blog.runreveal.com/ai-soc-investigation-cost-token-pricing/) (per-alert token cost), [Elastic Security Labs](https://www.elastic.co/security-labs/alert-triage-agentic-soc-elastic-workflows) (deterministic-first cost architecture), [SecurityWeek](https://www.securityweek.com/the-ai-token-costs-that-can-break-cybersecurity/) (token tiering), managed-detection per-endpoint pricing aggregates.

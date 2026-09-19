@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -10,7 +10,7 @@ license: Apache-2.0
 
 These definitions establish a clear, standardized vocabulary for Security Operations (SecOps) terminology, based on the most widely adopted industry conventions (e.g., NIST, SANS). Disambiguating these terms is critical for efficient triage, incident response, and tool alignment. Crucially, enforcing a standardized vocabulary is essential for maintaining a vendor-agnostic architecture, ensuring that core operations, taxonomies, and playbooks translate seamlessly across diverse security tools, cloud environments, telemetry sources, and agentic orchestration platforms without proprietary terminology lock-in.
 
-Where applicable, each term is mapped to its corresponding entity in the [Open Cybersecurity Schema Framework (OCSF) v1.8.0](https://schema.ocsf.io/1.8.0/categories).
+Where applicable, each term is mapped to its corresponding entity in the [Open Cybersecurity Schema Framework (OCSF) v1.9.0](https://schema.ocsf.io/1.9.0/categories).
 
 ## 1. Foundational Data & Activity
 
@@ -18,7 +18,7 @@ Where applicable, each term is mapped to its corresponding entity in the [Open C
 The originators, assets, applications, security controls, or infrastructure components that generate logs, measurements, and security-relevant activity records. 
 *   **Context:** Log sources are the origin points of raw telemetry before collection, parsing, forwarding, or normalization. In the ZeroSOC Framework, log sources are categorized across eight core **telemetry domains** (Endpoint, Identity, Network, Cloud, Email, Data, Application, and OT/ICS). Disambiguating the log source from the telemetry it emits is critical: the log source is the generating entity or software system (e.g., a Domain Controller, an EDR sensor, a Kubernetes API server, or a firewall appliance), whereas telemetry is the actual data stream emitted by that source.
 *   **Examples:** the event log service on a domain controller, an EDR sensor on an endpoint, a cloud provider's control-plane audit log, a network security monitor, an identity provider's audit log exporter, or a next-generation firewall.
-*   **OCSF Mapping:** Corresponds to the generating device, agent, or service context, represented in OCSF objects such as [Metadata (`metadata.log_provider`, `metadata.product`, `metadata.version`)](https://schema.ocsf.io/1.8.0/objects/metadata), [Device](https://schema.ocsf.io/1.8.0/objects/device), [Agent](https://schema.ocsf.io/1.8.0/objects/agent), or [Cloud](https://schema.ocsf.io/1.8.0/objects/cloud).
+*   **OCSF Mapping:** Corresponds to the generating device, agent, or service context, represented in OCSF objects such as [Metadata (`metadata.log_provider`, `metadata.product`, `metadata.version`)](https://schema.ocsf.io/1.9.0/objects/metadata), [Device](https://schema.ocsf.io/1.9.0/objects/device), [Agent](https://schema.ocsf.io/1.9.0/objects/agent), or [Cloud](https://schema.ocsf.io/1.9.0/objects/cloud).
 
 ### Telemetry (Raw Data)
 The raw, unprocessed data streams continuously emitted by endpoints, network devices, cloud services, and applications. 
@@ -31,23 +31,25 @@ Records of specific, defined actions or occurrences that happened within the IT 
 *   **Context:** While an event indicates a significant change in state or an activity took place, it does not inherently imply malicious intent. It is just a record of "what happened" and "when."
 *   **Examples:** A user successfully authenticating, a process starting, a file being modified, or a service shutting down.
 *   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) — Defines the foundational difference between an *Event* and a *Cybersecurity Incident*.
-*   **OCSF Mapping:** Maps across OCSF's operational activity categories, primarily: **Category 1 (System Activity)** (e.g., [Process Activity [1007]](https://schema.ocsf.io/1.8.0/classes/process_activity), [File Activity [1001]](https://schema.ocsf.io/1.8.0/classes/file_activity), [Log Activity [1008]](https://schema.ocsf.io/1.8.0/classes/log_activity)), **Category 3 (IAM)** (e.g., [Authentication [3002]](https://schema.ocsf.io/1.8.0/classes/authentication)), **Category 4 (Network Activity)** (e.g., [Network Activity [4001]](https://schema.ocsf.io/1.8.0/classes/network_activity), [HTTP Activity [4002]](https://schema.ocsf.io/1.8.0/classes/http_activity), [DNS Activity [4003]](https://schema.ocsf.io/1.8.0/classes/dns_activity)), and **Category 6 (Application Activity)** (e.g., [API Activity [6003]](https://schema.ocsf.io/1.8.0/classes/api_activity)). Similar to Telemetry, ZeroSOC strictly avoids normalizing general events into OCSF to reduce compute costs, utilizing them only during investigations.
+*   **OCSF Mapping:** Maps across OCSF's operational activity categories, primarily: **Category 1 (System Activity)** (e.g., [Process Activity [1007]](https://schema.ocsf.io/1.9.0/classes/process_activity), [File Activity [1001]](https://schema.ocsf.io/1.9.0/classes/file_activity), [Log Activity [1008]](https://schema.ocsf.io/1.9.0/classes/log_activity)), **Category 3 (IAM)** (e.g., [Authentication [3002]](https://schema.ocsf.io/1.9.0/classes/authentication)), **Category 4 (Network Activity)** (e.g., [Network Activity [4001]](https://schema.ocsf.io/1.9.0/classes/network_activity), [HTTP Activity [4002]](https://schema.ocsf.io/1.9.0/classes/http_activity), [DNS Activity [4003]](https://schema.ocsf.io/1.9.0/classes/dns_activity)), and **Category 6 (Application Activity)** (e.g., [API Activity [6003]](https://schema.ocsf.io/1.9.0/classes/api_activity)). Similar to Telemetry, ZeroSOC strictly avoids normalizing general events into OCSF to reduce compute costs, utilizing them only during investigations.
 
 ### Signals
 Observable occurrences (often derived from events or groups of events) that have security relevance but are not immediately actionable or necessarily malicious on their own.
 *   **Context:** Signals are structurally similar to Security Alerts, representing parsed and filtered security observations. However, they differ in operational intent: a single signal does not require immediate human triage or an active investigation (e.g., they are treated as *Informational*). Instead, they act as telemetry/contextual building blocks. When correlated or when a specific threshold of signals is met, they generate an actionable Security Alert.
 *   **Examples:** An unusual spike in network traffic, a login from a new geographic location, or the execution of a rarely used administrative tool.
-*   **OCSF Mapping:** Maps to [Detection Finding [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding) — the **same class as a Security Alert**, discriminated by **`severity_id`**. A Signal is *always* **Informational (`severity_id = 1`)** and therefore does **not** trigger the triage/investigation workflow; it is a correlation building block. A Detection Finding at `severity_id ≥ Low (2)` is a Security Alert, not a Signal.
+*   **OCSF Mapping:** Maps to [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) — the **same class as a Security Alert**, discriminated by **`severity_id`**. A Signal is *always* **Informational (`severity_id = 1`)** and therefore does **not** trigger the triage/investigation workflow; it is a correlation building block. A Detection Finding at `severity_id ≥ Low (2)` is a Security Alert, not a Signal.
 
 ### Entity
 A discrete actor, asset, or artifact involved in security-relevant activity — the "who" and "what" that Telemetry, Events, and Alerts are *about*. Entities are the **nouns** of Detection & Response: extracted from raw data, normalized to a common schema, and enriched with context during Triage.
 *   **Context:** Entities are the **join keys** of an investigation. Correlating on shared entities — the same user, host, or IP recurring across multiple alerts — is what bounds the scope of a Security Case and drives the domain → Incident Category pivot at the Triage → Investigation phase transition contract. **Entity enrichment** (adding Threat Intelligence, asset/CMDB, and identity context) turns a bare identifier into an actionable picture. Entities are commonly typed as **identity** (user, account, service principal), **asset** (host/device, cloud resource, application), **network** (IP address, domain, URL), and **artifact** (file, hash, process, registry key, email message).
 *   **Examples:** A user `jdoe`, a host `FIN-LAPTOP-07`, the IP `203.0.113.10`, a SHA-256 file hash, a process `powershell.exe`, a sender domain.
 *   **Entity vs. Observable/Indicator:** We define **entity** broadly as any typed, correlatable pivot (user, host, IP, file, process). An entity and its indicators represent the same concept at different granularities: a complex object (e.g., `User`, `File`) is the entity, while a scalar property of it (e.g., username, file hash, IP address) functions as its indicator.
-*   **OCSF Mapping & Type ID Bands:** OCSF maps both entities and indicators to the [Observable](https://schema.ocsf.io/1.8.0/objects/observable) object, differentiating them using a `type_id` enum divided into two bands:
-    *   **Scalar / Primitive Types (IDs < 20):** Represent basic properties or values (the indicator layer), such as `1` = Hostname, `2` = IP Address, `4` = User Name, `6` = URL String, or `8` = Hash.
-    *   **Full Entity Objects (IDs ≥ 20):** Represent complete OCSF entity objects, such as `20` = Endpoint/Device, `21` = User, `24` = File, or `25` = Process.
-    An observable with a `type_id` in the upper band (20+) maps directly to a full entity object, whereas a `type_id` in the lower band maps to a scalar property/indicator belonging to that entity. Every OCSF event surfaces these pivots in a top-level `observables[]` array of `{ name, type_id, value }` structures.
+*   **OCSF Mapping:** OCSF carries both entities and indicators in the [Observable](https://schema.ocsf.io/1.9.0/objects/observable) object, told apart by `type_id`. The values are of three kinds:
+    *   **Full entity objects — `20`–`30` only:** a complete OCSF entity, such as `20` = Endpoint, `21` = User, `24` = File, `25` = Process.
+    *   **Scalar values:** a basic property or indicator standing on its own — `1` = Hostname, `2` = IP Address, `4` = User Name, `6` = URL String, `8` = Hash, and also `36` = Script Content, `45` = File Path, `46` = Registry Key Path.
+    *   **One named attribute of a specific object:** `18` = CVE `uid`, `39` = Process Entity `uid`, `40` = Email `subject`, `47` = Device `uid`, `49` = IAM Role `name`, and others.
+
+    An observable in the entity band maps to a full entity object; every other value maps to a property of one, whether it names the object it belongs to or not. **The enum is not two contiguous bands:** release 1.9.0 added scalar and attribute values above `30`, so a rule that reads `type_id ≥ 20` as "an entity object" is wrong from 1.9.0 on. Every OCSF event surfaces these pivots in a top-level `observables[]` array of `{ name, type_id, value }` structures.
 
 ---
 
@@ -58,10 +60,15 @@ The organization's institutional knowledge about its own environment, maintained
 
 ## 2. Detection & Investigation Entities
 
+### Finding
+A tagged observation about a Case: something the executor asserts, carrying a **side** — Malicious or Benign — and a **confidence**, or carrying neither where it is pure context. The Alerts are the first Findings; every check and every validation query that answers produces one more. Findings are the evidence a verdict rests on: they are scored, they may be **retracted**, and each cites the events it rests on rather than reproducing them ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
+*   **Context:** The word is the most load-bearing term in hypothesis resolution, and **OCSF uses it for something else.** In OCSF a Finding is a class of event: a *Detection Finding* is this framework's **Alert**, and an *Incident Finding* is this framework's **Case**. A Finding here is finer than either — one entry in the Case's record, of which an Alert is one kind.
+*   **OCSF Mapping:** One [`finding_info`](https://schema.ocsf.io/1.9.0/objects/finding_info) object in the Case's `finding_info_list`: `analytic` what produced it, `tags` the side and the confidence, `related_events` the events it rests on ([Case Schema §3](../02-Taxonomy/case_schema.md)). Absence of both tags is how context is expressed.
+
 ### Security Alerts
 A high-priority notification generated by security tools (like SIEM, SOAR, or EDR) indicating a potential security threat that requires human or automated attention. Alerts are generated when events or signals match predefined conditions or correlation rules.
 *   **Context:** This is the primary trigger for a SOC workflow. Alerts represent specific, point-in-time behaviors. 
-*   **OCSF Mapping:** Maps directly to [Detection Finding [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding) in the Findings category. Key attributes include `confidence`, `severity_id`, `risk_level_id`, and `attacks` (for [MITRE ATT&CK®](https://schema.ocsf.io/1.8.0/objects/attack) mapping). An Alert is a Detection Finding with **`severity_id ≥ Low (2)`**; an Informational (`severity_id = 1`) Detection Finding is a **Signal**, not an Alert, and does not enter triage.
+*   **OCSF Mapping:** Maps directly to [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) in the Findings category. Key attributes include `confidence`, `severity_id`, `risk_level_id`, and `attacks` (for [MITRE ATT&CK®](https://schema.ocsf.io/1.9.0/objects/attack) mapping). An Alert is a Detection Finding with **`severity_id ≥ Low (2)`**; an Informational (`severity_id = 1`) Detection Finding is a **Signal**, not an Alert, and does not enter triage.
 *   **Platform Nomenclature: (illustrative)** 
     *   **Splunk:** Often referred to as *Notable Events*. (See: [Splunk Notable Events Documentation](https://docs.splunk.com/Documentation/ES/latest/User/Workwithnotableevents))
     *   **Microsoft Sentinel:** Historically and confusingly referred to as *Incidents* (though standard industry parlance reserves "incident" for a confirmed breach). (See: [Sentinel Incidents Documentation](https://learn.microsoft.com/en-us/azure/sentinel/investigate-incidents))
@@ -71,21 +78,21 @@ A high-priority notification generated by security tools (like SIEM, SOAR, or ED
 A broader, administrative workspace used to manage the investigative workflow. It is the logical container where analysts document activities, gather evidence, and track progress.
 *   **Context:** A case can be opened as soon as an alert fires. A single case may group together multiple related Security Alerts, Signals, and Event Logs. It is the tactical "investigation folder." 
 *   **Outcome:** A closed case will ultimately be dispositioned (e.g., as an Incident, a False Positive, or a Benign Positive).
-*   **OCSF Mapping:** A Case maps to [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding) — the aggregation object that groups the constituent [Detection Findings [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding) (Alerts) and carries the case verdict — in a **pre-confirmation** state: `verdict_id` still open (Unknown `0` / Suspicious `4` / Insufficient Data `7`) and `status_id` New (`1`) / In Progress (`2`). Workflow metadata can additionally be tracked via the [Ticket](https://schema.ocsf.io/1.8.0/objects/ticket) object. A Case becomes a **Security Incident** only when its verdict is confirmed (see below).
+*   **OCSF Mapping:** A Case maps to [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — the aggregation object that groups the constituent [Detection Findings [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) (Alerts) and carries the case verdict — in a **pre-confirmation** state: `verdict_id` still open (Unknown `0` / Suspicious `4` / Insufficient Data `7`) and `status_id` New (`1`) / In Progress (`2`). Workflow metadata can additionally be tracked via the [Ticket](https://schema.ocsf.io/1.9.0/objects/ticket) object. A Case becomes a **Security Incident** only when its verdict is confirmed (see below).
 
 *   **Data model:** the fields a Case carries — OCSF fields and the framework's own — are defined once in the [Case Schema](../02-Taxonomy/case_schema.md).
 
 ### Security Incidents
 An event (or series of events) that has been investigated through a case and **verified as a confirmed security threat** or a serious violation of security policies. 
 *   **Context:** This represents an actual or imminent compromise of confidentiality, integrity, or availability. Escalating a case to an incident fundamentally shifts the workflow from *investigation* to *Incident Response (IR)* (containment, eradication, recovery).
-*   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding) — discriminated by **`verdict_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A closed non-incident Case carries `verdict_id` False Positive (`1`) or Benign (`5`).
+*   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — discriminated by **`verdict_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A closed non-incident Case carries `verdict_id` False Positive (`1`) or Benign (`5`).
 *   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) — Formal definition of a *Computer Security Incident*. See also ISO/IEC 27001 (Information security management).
 
 ### OCSF class-sharing note (Signal vs Alert, Case vs Incident)
 
 Two ZeroSOC concept pairs share a single OCSF class and are told apart by one attribute:
-*   **Signal vs Alert** — both are [Detection Finding [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding); discriminator `severity_id` (Signal = Informational `1`; Alert = `≥ Low 2`). Only Alerts trigger triage.
-*   **Case vs Incident** — both are [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding); discriminator `verdict_id` (Incident = confirmed True Positive `2`). The NIST/ISO "incident" is the confirmed sub-state of a Case, not a separate object. Reference: [OCSF discussion #1375](https://github.com/ocsf/ocsf-schema/discussions/1375).
+*   **Signal vs Alert** — both are [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding); discriminator `severity_id` (Signal = Informational `1`; Alert = `≥ Low 2`). Only Alerts trigger triage.
+*   **Case vs Incident** — both are [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding); discriminator `verdict_id` (Incident = confirmed True Positive `2`). The NIST/ISO "incident" is the confirmed sub-state of a Case, not a separate object. Reference: [OCSF discussion #1375](https://github.com/ocsf/ocsf-schema/discussions/1375).
 
 ---
 
@@ -93,7 +100,7 @@ Two ZeroSOC concept pairs share a single OCSF class and are told apart by one at
 
 When a Security Case is investigated, a final determination or verdict is reached to disposition the case, track detection accuracy, and emit tuning feedback.
 
-In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding).
+In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding).
 
 ### True Positive (TP)
 An alert that correctly identifies actual malicious activity or a genuine policy violation.
@@ -153,6 +160,11 @@ The process of permanently removing the threat actor's access and malicious arti
 ### Recovery
 The steps taken to restore systems and data to their normal, pristine operational state.
 *   **Context:** Examples include restoring data from offline backups, lifting containment controls (like network isolation), and verifying that systems are functioning correctly without reinfection.
+
+### Course of Action (COA)
+The response actions an **executor** takes on a Case — containment, eradication and recovery, and the decisions that select them.
+*   **Context:** A Course of Action is never the adversary's. The term is used this way in security standards and in daily practice, and the framework keeps it strict because a Case Timeline carries both sides: what the adversary did is recorded as Findings, and "actions taken" in a deliverable always means the executor's actions. The adversary's sequence is **the course of the attack**.
+*   **Deliverable:** The Course of Action is not a Note element. A list of remaining actions written at the investigation gate is obsolete an hour into the response; response actions are recorded on the Case as they are taken, including those a tool takes before any executor opens it ([Case Schema §5](../02-Taxonomy/case_schema.md)).
 
 ### Post-Incident Activity (Lessons Learned & Root Cause Analysis)
 The retrospective phase of evaluating confirmed incidents or major false-positive disruptions to identify root causes, extract lessons learned, and convert operational findings into engineering and detection improvements.
@@ -225,6 +237,8 @@ Confidence is the likelihood that the Malicious hypothesis is true. OCSF names t
 | **3 High** | 3 | Sufficient on its own to prove its side. On the Benign side, a finding that **explains** the alert. | A High finding carries the verdict. Sufficient for pre-authorized autonomous containment. | Multi-engine hash consensus on a known family; a threat-feed C2 destination; an approved exception or authorized test window in the SOC Knowledge Base. |
 
 A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as a finding.
+
+**OCSF `likelihood_id` is not used.** Release 1.9.0 added `likelihood_id`, `likelihood` and `likelihood_score` to Detection Finding — Unknown 0 · Very Low 1 · Low 2 · Moderate 3 · High 4 · Very High 5 · Other 99. The framework keeps `confidence_id`. The new field is on Detection Finding only and not on Incident Finding, so it cannot carry a Case's confidence; adopting it for Alerts alone would put two confidence scales of different lengths in one Case, which is what the single scale above exists to prevent.
 
 ### Impact (OCSF `impact_id`)
 Impact records the *realized or expected* harm of a confirmed or suspected Incident. The framework assesses it on three effects, after NIST SP 800-61 — **functional** (services and operations), **informational** (confidentiality and integrity of data) and **recoverability** (time and effort to recover) — and binds the top level to the NIS2 significance test. Impact is assessed at triage when already known and otherwise at incident confirmation; until assessed it is recorded as unknown, never guessed.

@@ -1,7 +1,7 @@
 ---
 title: Triage Note Template
 type: template
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 status: draft
 ---
@@ -9,6 +9,8 @@ status: draft
 # Triage Note
 
 Fill-in template and worked example for the **Triage Note**, the decision record every triage — human, automation or agent — produces. The canonical element list is [Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note); this page is the practitioner-facing form. Naming convention: `triage_note_<case-id>_<YYYYMMDD-HHMM>`.
+
+> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree.
 
 ## Template
 
