@@ -2,7 +2,7 @@
 title: ZeroSOC Project Governance
 type: policy
 status: draft
-last_updated: 2026-09-18
+last_updated: 2026-09-19
 license: Apache-2.0
 ---
 
@@ -32,9 +32,22 @@ Decisions scale with the weight of the change:
 
 **Disputes** are resolved by maintainer decision after the discussion has had a fair hearing; the outcome and its rationale are recorded in the issue or pull request that decided it.
 
-## 3. Document maturity and promotion
+## 3. Document maturity
 
-Per-document maturity (`draft` → `development` → `stable` → `deprecated`) and its promotion rules are defined in the [Framework Manifest](01-Foundation/framework_manifest.md#versioning--document-release-status). Promotion to `stable` is a governance event and requires validation, complete cross-links, and **one review pass by an executor other than the author**. Reviewers and maintainers may provide that pass.
+Every framework document declares a `status` field in its YAML frontmatter, alongside `title`, `type`, `last_updated` and `license`. Documents of `type: index` and `type: log` are exempt: navigational and ledger artifacts have no release maturity. `last_updated` is the per-document **revision** identifier — the version recorded in Note provenance — while `status` states **maturity**, not revision.
+
+| Status | Meaning | Guarantees |
+|---|---|---|
+| `draft` | Exploratory: an initial proposal, a placeholder, or a first pass that has not been verified in detail. Shape, scope and existence may change without notice, and parts of it may simply be wrong. | None. MUST NOT be cited as a conformance target; RFC-2119 keywords carry no obligation. |
+| `development` | Content-complete candidate undergoing validation (flow-tests, tabletop exercises, adopter feedback). The default state for new normative content. | Structure and intent are settled; details may change between MINOR releases. Feedback is explicitly invited. |
+| `stable` | Normative. Validated, cross-linked, part of the conformance surface. | RFC-2119 keywords are binding. Identifiers, section anchors and normative requirements change only at a MAJOR release. |
+| `deprecated` | Superseded or withdrawn; retained for the record. | The frontmatter MUST name the successor document, or state that none exists. New content never cites a deprecated document. |
+
+### Promotion and demotion
+
+- **Transitions are governance events.** Every status change is recorded in [CHANGELOG.md](CHANGELOG.md) with its rationale; a promotion that settles a contested design choice also warrants a [design decision](01-Foundation/design_decisions.md) entry.
+- **Promotion to `stable` requires, at minimum:** (a) validation by a flow-test, tabletop exercise or equivalent check against real material; (b) complete cross-links with no dangling references; (c) one review pass by an executor other than the author — human or agent, per Executor Neutrality, and Reviewers or Maintainers may provide it; (d) all normative dependencies declared at `stable` status.
+- **Demotion is legitimate.** A `stable` document invalidated by new insight returns to `development` with a changelog entry. Honesty over face-saving.
 
 ## 4. Rules while the roster is small
 
@@ -50,11 +63,14 @@ These rules describe the current roster. As it grows they are revisited by amend
 
 ## 5. Releases
 
-- The framework versions as **tagged MAJOR.MINOR snapshots** (`v0.x`, `v1.0`, …) per the manifest; adopters conform to a tagged release, never the live repository.
-- [CHANGELOG.md](CHANGELOG.md) follows Keep a Changelog; every release gets an entry summarizing what changed and **crediting the contributors** whose work landed in it.
+- The framework is released as tagged **Semantic Versioning (MAJOR.MINOR.PATCH)** snapshots (`v0.1.0`, `v1.0.0`, …). A release tag is the citable conformance target: adopters conform to "ZeroSOC vX.Y", or to an exact snapshot `vX.Y.Z`, never to the live repository.
+- **MAJOR (`X.0.0`):** breaking changes to `stable` content — renumbered identifiers, removed sections, changed normative schemas or lifecycle requirements.
+- **MINOR (`X.Y.0`):** additive, backwards-compatible extensions — new domain triage playbooks, additional Incident Categories, expanded metrics.
+- **PATCH (`X.Y.Z`):** non-normative errata, typo corrections, link fixes and editorial clarifications.
+- Until `v1.0.0` the framework is in the `0.x` series: stability guarantees are best-effort, and `development` is the default status for active normative content.
+- [CHANGELOG.md](CHANGELOG.md) follows Keep a Changelog; every release entry summarizes what changed since the previous tag and **credits the contributors** whose work landed in it.
 - **Cadence:** a MINOR release is cut when a meaningful batch of work lands — as an ambition, roughly quarterly. Releases are content-driven, never date-driven.
 - **Release checklist:** milestone issues resolved → promotions completed per §3 → CHANGELOG.md release entry → annotated git tag → GitHub release.
-- Breaking changes to `stable` content ship only in MAJOR releases.
 
 ## 6. Communication channels
 

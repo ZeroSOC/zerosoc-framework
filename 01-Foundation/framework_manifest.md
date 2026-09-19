@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 ---
 
@@ -54,33 +54,9 @@ Coverage is built in deliberate order. Today the normative modules concentrate o
 
 ## Versioning & Document Release Status
 
-Adopters cannot claim conformance against a moving repository, and readers cannot tell a settled standard from a working candidate unless the document says so. ZeroSOC therefore versions at two levels — a pattern common to mature open standards (OWASP ASVS, OCSF, OpenTelemetry semantic conventions): **framework releases** for the standard as a whole, and a **release status** on every document.
+Adopters cannot claim conformance against a moving repository, and readers cannot tell a settled standard from a working candidate unless the document says so. ZeroSOC therefore versions at two levels: **framework releases** for the standard as a whole, and a **release status** on every document.
 
-### Framework Releases
-
-*   The framework is released as tagged **Semantic Versioning (MAJOR.MINOR.PATCH)** snapshots (e.g. `v0.1.0`, `v1.0.0`). A release tag is the citable conformance target: adopters conform to "ZeroSOC vX.Y" (or an exact snapshot `vX.Y.Z`), never to the live repository.
-*   **MAJOR (`X.0.0`)**: Breaking changes to `stable` content — renumbered identifiers, removed sections, changed normative schemas or lifecycle requirements.
-*   **MINOR (`X.Y.0`)**: Additive, backwards-compatible extensions — new domain triage playbooks, additional Incident Categories, or expanded metrics.
-*   **PATCH (`X.Y.Z`)**: Non-normative errata, typo corrections, link fixes, and editorial clarifications.
-*   [CHANGELOG.md](../CHANGELOG.md) records every release, following Keep a Changelog; each release entry summarizes the changes since the previous tag and credits the contributors.
-*   Until `v1.0.0` the framework is in the `0.x` series: stability guarantees are best-effort, and `development` is the default status for active normative content.
-
-### Document Release Status
-
-Every framework document declares a `status` field in its YAML frontmatter, alongside `title`, `type`, `last_updated`, and `license` (per [Design Decisions](design_decisions.md)). Exceptions: documents of `type: index` or `type: log`, and everything under `raw/` — navigational and ledger artifacts have no release maturity. `last_updated` remains the per-document **revision** identifier (it is the version recorded in Note provenance); `status` states **maturity**, not revision.
-
-| Status | Meaning | Guarantees |
-|---|---|---|
-| `draft` | Exploratory. Shape, scope, or existence may change without notice. | None. MUST NOT be cited as a conformance target; RFC-2119 keywords carry no obligation. |
-| `development` | Content-complete candidate undergoing validation (flow-tests, tabletop exercises, adopter feedback). The default state for new normative content. | Structure and intent are settled; details may change between MINOR releases. Feedback is explicitly invited. |
-| `stable` | Normative. Validated, cross-linked, part of the conformance surface. | RFC-2119 keywords are binding. Identifiers, section anchors, and normative requirements change only at a MAJOR release. |
-| `deprecated` | Superseded or withdrawn; retained for the record. | The frontmatter MUST name the successor document (or state that none exists). New content never cites a deprecated document. |
-
-### Promotion & Demotion
-
-*   **Transitions are governance events.** Every status change is recorded in [CHANGELOG.md](../CHANGELOG.md) with its rationale; a promotion that settles a contested design choice also warrants a [design decision](design_decisions.md) entry.
-*   **Promotion to `stable` requires, at minimum:** (a) validation by a flow-test, tabletop exercise, or equivalent check against real material; (b) complete cross-links with no dangling references; (c) one review pass by an executor other than the author — human or agent, per Executor Neutrality; (d) all normative dependencies declared at `stable` status.
-*   **Demotion is legitimate.** A `stable` document invalidated by new insight returns to `development` with a changelog entry. Honesty over face-saving.
+Both are project process rather than framework content, and are defined in [GOVERNANCE.md](../GOVERNANCE.md) — [§3 Document maturity](../GOVERNANCE.md#3-document-maturity) for the `draft` / `development` / `stable` / `deprecated` statuses and their promotion rules, and [§5 Releases](../GOVERNANCE.md#5-releases) for the Semantic Versioning scheme and the release process.
 
 ## Standard Alignment
 

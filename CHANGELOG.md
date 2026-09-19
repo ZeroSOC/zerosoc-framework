@@ -7,7 +7,7 @@ license: Apache-2.0
 
 # Changelog
 
-All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in the [Framework Manifest](01-Foundation/framework_manifest.md#versioning--document-release-status). Each release entry credits the contributors whose work landed in it.
+All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in [GOVERNANCE.md](GOVERNANCE.md#5-releases). Each release entry credits the contributors whose work landed in it.
 
 ## [Unreleased]
 
