@@ -36,22 +36,22 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Finding** of the Case: the Alerts first, then the result of every check and validation query (§3) |
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
-| `start_time` / `end_time` | timestamp | 2.a / close | The earliest and the most recent event or finding that contributed to the Case, whatever its side. The speed metrics anchor on T0, which §5 derives |
+| `start_time` / `end_time` | timestamp | 2.a / close | The earliest and the most recent event or finding that **contributed to** the Case. A benign precursor examined and ruled out contributed to the investigation, not to the Case: `start_time` is therefore the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). A Case that proves no malicious activity carries neither |
 | `vendor_attributes` | the source's `severity` and `severity_id` | 2.a, when triage overrides them | What the source reported before triage assessed it ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)); the override is auditable and countable |
 | `is_suspected_breach` | boolean | 2.b | Set when data compromise is suspected; informs the significance test |
 | `tickets` | list of ticket | 2.a / 2.b, on a False Positive close | Tickets the Case raised; the Phase 1 tuning ticket carries `type` `tuning` |
 
 ## 3. Findings
 
-Every **Finding** — an Alert, the result of a triage check, the result of a validation query — is one `finding_info` object in `finding_info_list`. One object per Finding, so that one set of tags belongs to exactly one Finding.
+`finding_info_list` holds one `finding_info` object for every entry in the Case's record: each **Finding** — an Alert, the result of a triage check, the result of a validation query — and each **response action** taken on the Case (§5). One object per entry, so that one set of tags belongs to exactly one of them.
 
 | Attribute | Carries |
 |---|---|
-| `title`, `desc` | The Finding, stated in accurate terms |
-| `analytic` | The check or validation query that produced it — a Finding and the question that produced it are never separated |
-| `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query |
-| `tags` | The side and the confidence, below |
-| `related_events` | The events grounding the Finding, the Detection Finding when the Finding is an Alert, and the response actions the Finding motivated (§5) |
+| `title`, `desc` | The Finding, or the action taken, stated in accurate terms |
+| `analytic` | The check or validation query that produced the Finding — a Finding and the question that produced it are never separated |
+| `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
+| `tags` | The side and the confidence, and whether the timeline renders it — below |
+| `related_events` | The events grounding a Finding, the Detection Finding where the Finding is an Alert, and on an `action` entry the Remediation Activity event (§5) |
 | `attack_graph` | Which entity acted on which, below |
 
 **Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
@@ -59,7 +59,11 @@ Every **Finding** — an Alert, the result of a triage check, the result of a va
 - `zerosoc:side` — `Malicious` or `Benign`
 - `zerosoc:confidence_id` — `1`, `2` or `3`
 
-A Finding that bears on no hypothesis carries **neither tag**: absence is how context is expressed, and context carries no weight in hypothesis resolution. Both tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
+A Finding that bears on no hypothesis carries **neither tag**: absence is how context is expressed, and context carries no weight in hypothesis resolution. An `action` entry carries neither either, since an action is not evidence for a hypothesis.
+
+**The timeline.** A third tag, `zerosoc:timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: an entry is flagged because it belongs to the account of what happened, and most Findings do not.
+
+All three tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
 
 **Directionality.** `attack_graph` SHOULD be populated where the executor can establish which entity acted on which. It is a directed graph (`is_directed` `true`) over the Case's entities, and it borrows its vocabulary rather than inventing one:
 
@@ -93,9 +97,9 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 The Case is the current state; what happened to it is a sequence of events it references, never an array it stores.
 
-*   **Response actions** — a containment, eradication or recovery action is an OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event, referenced from the `related_events` of the Finding that motivated it, by that event's `uid` and its class `type_uid`. A tool-initiated action that fires before any executor opens the Case is referenced from the Alert that triggered it, so that triage sees what has already been done. OCSF holds no reference in the other direction.
+*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events` by that event's `uid` and its class `type_uid`. An action is recorded against the Case and not against the Finding that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done. OCSF holds no reference in the other direction.
 *   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
-*   **The Case Timeline** is therefore a view, not a field: the events referenced across the Case's Findings, in time order, with the response actions among them. The earliest event whose Finding is tagged `Malicious` is the anchor the speed metrics call T0.
+*   **The Case Timeline** is the entries tagged `zerosoc:timeline`, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
 
 ## 6. Where the Fields Are Populated
 
