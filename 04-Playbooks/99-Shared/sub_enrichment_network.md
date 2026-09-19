@@ -1,12 +1,14 @@
 ---
 title: Network Entity Enrichment
 type: reference
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 status: draft
 ---
 
 # Network Entity Enrichment
+
+> **Draft.** This enrichment reference has not been verified in detail. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
 Enrichment content for **network** entities — the IP address, domain, and URL **observables** (the scalar/primitive band of the OCSF [Observable](https://schema.ocsf.io/1.8.0/objects/observable) object, `type_id` < 20) that pivot an investigation. This is one of the phase-neutral per-entity enrichment sub-playbooks consumed by both the Triage and Investigation methods ([Detection & Analysis](../../03-Processes/02-detection_and_analysis.md)); the entity-vs-observable distinction is defined in the [Entity definitions](../../01-Foundation/definitions.md). Governance policy on egress is canonical in [Data-Handling & OSINT Egress Boundaries §4](../../07-Governance/agentic_guardrails.md); the operative rules are restated inline in [§3](#3-egress-rules-what-may-leave-the-environment) for immediate use at the point of work.
 

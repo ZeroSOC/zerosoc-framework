@@ -1,7 +1,7 @@
 ---
 title: Email Triage Playbook
 type: playbook
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 domain: Email
 required_data_sources:
@@ -13,6 +13,8 @@ status: draft
 ---
 
 # Email Triage Playbook
+
+> **Draft.** This playbook has not been verified in detail: its checks, outcome tags and actions have not been walked through against real material. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
 Triage knowledge for **Email** alerts. The object of triage is the **Alert**; alert types are defined in the [Alert Type taxonomy](../../02-Taxonomy/alert_types.md). The method — enrichment, scope, the coverage rule that closes or promotes a Case — is [Detection & Analysis §1](../../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization); this playbook says what to look at for each alert type and what each observation is evidence of. Checks and conditions are indicative, not exhaustive.
 

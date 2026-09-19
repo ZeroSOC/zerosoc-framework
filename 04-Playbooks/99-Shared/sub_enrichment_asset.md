@@ -1,12 +1,14 @@
 ---
 title: Asset Entity Enrichment
 type: reference
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 status: draft
 ---
 
 # Asset Entity Enrichment
+
+> **Draft.** This enrichment reference has not been verified in detail. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
 Enrichment content for **asset** entities: host or device, cloud resource, application. This is one of the phase-neutral per-entity enrichment sub-playbooks consumed by both Triage and Investigation ([Detection & Analysis](../../03-Processes/02-detection_and_analysis.md)); the entity concept and its OCSF mapping are defined in the [Entity definitions](../../01-Foundation/definitions.md). What may leave the environment during enrichment is governed by [Data-Handling & OSINT Egress Boundaries](../../07-Governance/agentic_guardrails.md#4-data-handling--osint-egress-boundaries).
 

@@ -2,11 +2,13 @@
 title: Phase 4 - Post-Incident Activity
 type: process
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 ---
 
 # Phase 4: Post-Incident Activity
+
+> **Draft.** This document has not been verified in detail. Treat it as a proposal open to review rather than as settled process, and expect it to change.
 
 The Post-Incident Review is the improvement loop of the framework. It converts what an Incident, or a damaging False Positive, revealed about the organization's telemetry, detections, playbooks and controls into engineering work and institutional knowledge. It is aligned to NIST SP 800-61 Rev. 3 (Table 2, Lessons Learned) and ISO/IEC 27035 (Learn Lessons).
 
