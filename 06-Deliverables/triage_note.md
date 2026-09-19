@@ -3,7 +3,7 @@ title: Triage Note Template
 type: template
 last_updated: 2026-09-10
 license: Apache-2.0
-status: development
+status: draft
 ---
 
 # Triage Note
