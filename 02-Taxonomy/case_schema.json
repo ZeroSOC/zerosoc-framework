@@ -139,11 +139,11 @@
     },
     "start_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. A benign precursor examined and ruled out contributed to the investigation and not to the Case, so this is the earliest confirmed malicious event — what the framework calls T0. A Case that proves no malicious activity carries none."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. It opens at the earliest Alert's own start_time and moves earlier whenever a Malicious Finding cites an earlier event; a benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident this is T0, the earliest confirmed malicious event."
     },
     "end_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case. A Case that proves no malicious activity carries none."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case."
     },
     "vendor_attributes": {
       "type": "object",
