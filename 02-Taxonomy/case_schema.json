@@ -122,7 +122,7 @@
       "items": {
         "$ref": "#/$defs/ocsf_finding_info"
       },
-      "description": "Every Finding of the Case: the Alerts first, then the result of every check and validation query."
+      "description": "Every entry of the Case's record: the Alerts first, then the result of every check and validation query, and the response actions taken on the Case."
     },
     "attacks": {
       "type": "array",
@@ -139,11 +139,11 @@
     },
     "start_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case, whatever its side. The speed metrics anchor on T0: the earliest referenced event whose Finding is tagged Malicious."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. A benign precursor examined and ruled out contributed to the investigation and not to the Case, so this is the earliest confirmed malicious event — what the framework calls T0. A Case that proves no malicious activity carries none."
     },
     "end_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case. A Case that proves no malicious activity carries none."
     },
     "vendor_attributes": {
       "type": "object",
@@ -319,7 +319,7 @@
           "$ref": "#/$defs/ocsf_product"
         }
       },
-      "description": "An event grounding the Finding, the Detection Finding when the Finding is an Alert, or a Remediation Activity the Finding motivated; type_uid is that event's OCSF class."
+      "description": "An event grounding a Finding, the Detection Finding where the Finding is an Alert, or — on an action entry — the Remediation Activity it records; type_uid is that event's OCSF class."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -364,17 +364,18 @@
             "type": "string",
             "enum": [
               "alert",
-              "finding"
+              "finding",
+              "action"
             ]
           },
-          "description": "alert for an aggregated Alert, finding for the result of a check or query."
+          "description": "alert for an aggregated Alert, finding for the result of a check or query, action for a response action."
         },
         "analytic": {
           "$ref": "#/$defs/ocsf_analytic"
         },
         "tags": {
           "type": "array",
-          "description": "The side and the confidence of the Finding. A Finding that bears on no hypothesis carries neither tag.",
+          "description": "The side and the confidence of a Finding, and whether the Case Timeline renders the entry. A Finding that bears on no hypothesis, and every action entry, carries neither side nor confidence.",
           "items": {
             "allOf": [
               {
@@ -430,6 +431,30 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "const": "zerosoc:timeline"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "enum": [
+                        "true"
+                      ]
+                    }
+                  }
+                }
               }
             ]
           }
@@ -438,7 +463,7 @@
           "$ref": "#/$defs/ocsf_graph"
         }
       },
-      "description": "One Finding: an Alert, or the result of a check or validation query."
+      "description": "One entry of the Case's record: a Finding — an Alert, or the result of a check or validation query — or a response action taken on the Case."
     },
     "ocsf_ticket": {
       "type": "object",
