@@ -55,7 +55,7 @@ Playbooks therefore contain no handover conditions, no autonomy boundaries and n
 
 ### 4.1 Triage playbook (`01-Triage/`, see [_TEMPLATE](01-Triage/_TEMPLATE.md))
 
-Front matter MUST include `title`, `type: playbook`, `last_updated`, `license`, `domain`, `required_data_sources` and `status` (release status per the [Framework Manifest](../01-Foundation/framework_manifest.md#versioning--document-release-status); a playbook copied from the template starts as `draft`). Body MUST contain, in order:
+Front matter MUST include `title`, `type: playbook`, `last_updated`, `license`, `domain`, `required_data_sources` and `status` (release status per [GOVERNANCE.md](../GOVERNANCE.md#3-document-maturity); a playbook copied from the template starts as `draft`). Body MUST contain, in order:
 
 1. **Alert Catalog** (MUST) — the domain's alert types drawn from the [Alert Type taxonomy](../02-Taxonomy/alert_types.md), as a table `Alert Type | Log Source | Tactics | Techniques | Candidate Incident Categories`, indexing the Per-Alert Triage subsections. Tactics and techniques are the candidates an alert type *may* map to, from which the executor selects those matching the observation; they are not a conjunction and not exhaustive.
 2. **Per-Alert Triage** (MUST) — one `###` subsection per catalog row, with exactly these labeled elements:
