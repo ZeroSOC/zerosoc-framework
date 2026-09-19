@@ -1,7 +1,7 @@
 ---
 title: 00-Generic Investigation & Response
 type: playbook
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 incident_category: ANY
 mitre_ttps: []   # catch-all: selected when no category playbook applies
@@ -12,6 +12,8 @@ status: draft
 ---
 
 # 00-Generic Investigation & Response
+
+> **Draft.** This playbook has not been verified in detail: its checks, outcome tags and actions have not been walked through against real material. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
 Investigation and Incident Response knowledge for Cases whose candidate category maps to no specialized playbook (catch-all, `incident_category: ANY`) — activity that is suspicious but has not yet clustered into one of the [Incident Categories](../../02-Taxonomy/incident_categories.md). Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage findings, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 

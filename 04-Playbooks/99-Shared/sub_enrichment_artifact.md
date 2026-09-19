@@ -1,12 +1,14 @@
 ---
 title: Artifact Entity Enrichment
 type: reference
-last_updated: 2026-09-17
+last_updated: 2026-09-19
 license: Apache-2.0
 status: draft
 ---
 
 # Artifact Entity Enrichment
+
+> **Draft.** This enrichment reference has not been verified in detail. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
 Enrichment content for **artifact** entities (file, hash, process, registry key; the **email message** artifact has its own [sub-playbook](sub_enrichment_email_message.md)). This is one of the phase-neutral per-entity enrichment sub-playbooks consumed by both the Triage and Investigation methods ([Detection & Analysis](../../03-Processes/02-detection_and_analysis.md)); the entity concept and its OCSF mapping are defined in the [Entity definitions](../../01-Foundation/definitions.md). Data-handling and OSINT egress constraints on *how* enrichment is performed are canonical in [Data-Handling & OSINT Egress Boundaries §4](../../07-Governance/agentic_guardrails.md).
 
