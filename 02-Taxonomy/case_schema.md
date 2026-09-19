@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-19
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -49,11 +49,21 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 |---|---|
 | `title`, `desc` | The Finding, or the action taken, stated in accurate terms |
 | `first_seen_time` | When the thing it reports was observed, which is not when the Finding was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
-| `analytic` | The check or validation query that produced the Finding — a Finding and the question that produced it are never separated |
+| `analytic` | What produced the Finding — the question, what was asked, and the query the tool ran — below |
 | `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
 | `tags` | The side and the confidence, and whether the timeline renders it — below |
 | `related_events` | The **evidence**: the events the Finding rests on, cited rather than copied — below |
 | `attack_graph` | Which entity acted on which, below |
+
+**What produced it.** A Finding and what produced it are never separated, and `analytic` carries all three parts of that:
+
+- `name` — the question the check or the query answers, in the words a reader of the Case understands.
+- `desc` — what was asked, as the executor asked it: the telemetry, the entities and the window, before any tool translated it.
+- `algorithm` — the query the tool actually ran, in that tool's own language.
+
+`name` is what makes the Finding legible and `algorithm` is what makes it reproducible: a reader holding neither the Case's executor nor its tool bindings can re-run the query and see what it saw. An executor that records only the question has recorded an assertion, not evidence.
+
+OCSF requires `type_id` on the object. A triage check and a validation query are none of the types OCSF lists — they are not detection content that fires on its own — so they take Other (99) and `type` names the kind: `triage check`, `validation query`, `enrichment`. An Alert keeps whatever analytic its source reported.
 
 **Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
 

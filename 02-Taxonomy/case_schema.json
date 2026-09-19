@@ -787,22 +787,31 @@
       "type": "object",
       "x-ocsf-object": "analytic",
       "additionalProperties": true,
-      "description": "The check or validation query that produced the Finding.",
+      "description": "What produced the Finding: the detection content that raised an Alert, the check that answered a triage question, or the validation query that tested a hypothesis. A Finding and what produced it are never separated.",
       "properties": {
         "uid": {
-          "type": "string"
+          "type": "string",
+          "description": "The identifier of the check or query, where it has one; the event reference the Note cites for it otherwise."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "The question it answers, in the words a reader of the Case understands — never the query language."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "What kind of analytic it is, where `type_id` is Other: `triage check`, `validation query`, `enrichment`."
         },
         "type_id": {
-          "type": "integer"
+          "type": "integer",
+          "description": "OCSF's analytic type, which OCSF requires. A triage check and a validation query are none of OCSF's listed types, so they are Other (99) and `type` names them."
         },
         "desc": {
-          "type": "string"
+          "type": "string",
+          "description": "What was asked, as the executor asked it — the telemetry, the entities and the window — before any tool translated it."
+        },
+        "algorithm": {
+          "type": "string",
+          "description": "The query the tool actually ran, in that tool's own language. It is what makes the Finding reproducible by someone holding neither the Case nor the executor."
         },
         "version": {
           "type": "string"
@@ -810,7 +819,10 @@
         "category": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "type_id"
+      ]
     },
     "ocsf_graph_node": {
       "type": "object",
