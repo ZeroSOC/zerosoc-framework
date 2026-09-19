@@ -2,17 +2,23 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-19
 license: Apache-2.0
 ---
 
 # Case Schema
 
-The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§5). The [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) are subsets of this model.
+The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§7).
 
 ## 1. Object Mapping
 
-A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/classes/incident_finding) object; its Alerts are [Detection Finding [2004]](https://schema.ocsf.io/1.8.0/classes/detection_finding) objects referenced from it. Case and Incident are one object: the transition is `verdict_id` → True Positive (`2`) (see [Definitions — Security Cases](../01-Foundation/definitions.md#security-cases)). A platform that cannot carry one of the framework's own fields (§3) as an extension attribute records it in the Case's notes or ticket; the field still exists, and the Triage Note and Investigation Note always carry it.
+A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) object; the Alerts it aggregates are [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) objects it references. Case and Incident are one object: the transition is `verdict_id` → True Positive (`2`) (see [Definitions — Security Cases](../01-Foundation/definitions.md#security-cases)).
+
+**One object crosses every phase.** A phase does not copy the Case forward and does not carry a subset of it: the [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) state which of these fields MUST be populated at each boundary, and nothing more. Values are refined as the Case advances; the object is the same one throughout.
+
+**The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They hold no state of their own, so whatever a platform cannot carry here is not recoverable from them either. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — is the exception, and lives in the rendering.
+
+**Where OCSF carries a concept, the framework maps to it** and adds no field of its own. The fields in §4 are the concepts looked for in the current OCSF release and not found, or found in a form that loses what the framework needs.
 
 ## 2. OCSF Fields Used by the Framework
 
@@ -21,42 +27,83 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.8.0/c
 | `uid` | string | 2.a | Case identifier, cited by the Notes, tuning tickets and metrics |
 | `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment |
 | `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification |
-| `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) |
+| `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). A source's own `confidence_id` and `likelihood_id` are inputs triage validates, never accepted at face value |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
 | `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
 | `assignee` | user | 2.a; changes at handover | The Case **assignee**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-assignment)) |
-| `finding_info_list` | list of finding_info | 2.a; appended while open | The aggregated Alerts |
+| `desc` | string | 2.a; refreshed at each gate and while the response runs | The Case **Summary**: what happened and when, the entities involved and which acted on which, and — once established — the root cause, with the Findings that establish it |
+| `notes` | list of note | 2.a / 2.b | The Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |
+| `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Finding** of the Case: the Alerts first, then the result of every check and validation query (§3) |
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
-| `start_time` / `end_time` | timestamp | 2.a / close | Case lifetime; measurement anchors together with T0 |
+| `start_time` / `end_time` | timestamp | 2.a / close | The earliest and the most recent event or finding that contributed to the Case, whatever its side. The speed metrics anchor on T0, which §5 derives |
+| `vendor_attributes` | the source's `severity` and `severity_id` | 2.a, when triage overrides them | What the source reported before triage assessed it ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)); the override is auditable and countable |
 | `is_suspected_breach` | boolean | 2.b | Set when data compromise is suspected; informs the significance test |
+| `tickets` | list of ticket | 2.a / 2.b, on a False Positive close | Tickets the Case raised; the Phase 1 tuning ticket carries `type` `tuning` |
 
-## 3. Framework Fields
+## 3. Findings
+
+Every **Finding** — an Alert, the result of a triage check, the result of a validation query — is one `finding_info` object in `finding_info_list`. One object per Finding, so that one set of tags belongs to exactly one Finding.
+
+| Attribute | Carries |
+|---|---|
+| `title`, `desc` | The Finding, stated in accurate terms |
+| `analytic` | The check or validation query that produced it — a Finding and the question that produced it are never separated |
+| `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query |
+| `tags` | The side and the confidence, below |
+| `related_events` | The events grounding the Finding, the Detection Finding when the Finding is an Alert, and the response actions the Finding motivated (§5) |
+| `attack_graph` | Which entity acted on which, below |
+
+**Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
+
+- `zerosoc:side` — `Malicious` or `Benign`
+- `zerosoc:confidence_id` — `1`, `2` or `3`
+
+A Finding that bears on no hypothesis carries **neither tag**: absence is how context is expressed, and context carries no weight in hypothesis resolution. Both tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
+
+**Directionality.** `attack_graph` SHOULD be populated where the executor can establish which entity acted on which. It is a directed graph (`is_directed` `true`) over the Case's entities, and it borrows its vocabulary rather than inventing one:
+
+- `node.uid` is the entity's value as it appears in `observables`, and `node.type` is that observable's OCSF `type_id` — a node is an [Entity](../01-Foundation/definitions.md#entity), not a parallel concept.
+- `edge.source` is the acting entity and `edge.target` the entity acted on.
+- `edge.relation` is the ATT&CK technique identifier where the edge is an observed technique, and otherwise a STIX 2.1 relationship type.
+- `edge.data` cites the events grounding the edge, on the same terms as a Finding.
+
+OCSF constrains none of this and no published convention exists, so an implementation that populates the graph is stating one; the framework states this one so that two implementations agree.
+
+## 4. Framework Fields
+
+Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` extension object and validated in the [JSON Schema](case_schema.json).
 
 | Field | Values | Set in | Meaning |
 |---|---|---|---|
 | `candidate_incident_categories` | list of `IC-##` | 2.a | Candidate categories proposed by the [alert types](alert_types.md) |
 | `incident_category` | `IC-##` | 2.b | Confirmed category (provisional until `verdict_id = 2`) |
+| `reclassification_pivots` | list of {from, to, reason, event_refs} | 2.b | Every change of candidate category, with the evidence that triggered it. OCSF records the new state of a finding but never what it was before, so a Case's classification history has no native form |
 | `entry_path` | `alert` · `hunt` · `out-of-band` | 2.a | How the Case entered the loop; hunt and out-of-band Cases are detection false negatives by construction |
-| `t0` | timestamp | 2.b | Earliest confirmed malicious event; anchor for MTTD / MTTC / MTTR |
-| `timeline` | ordered entries with event references | 2.b → 3 | The Case Timeline of the Investigation Note, extended with response actions |
-| `visibility_gaps` | list of required data sources unavailable | 2.a / 2.b | Recorded in the Note with the check each prevented ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution)); counted by the Visibility-Gap Rate |
+| `visibility_gaps` | list of required data sources unavailable | 2.a / 2.b | Recorded with the check each prevented ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution)); counted by the Visibility-Gap Rate |
 | `provenance` | playbooks used (path and version), executor classes, capability classes | every phase | Glass Box audit trail |
 | `significant` | boolean | 2.b | NIS2 Article 23(3) significance test: severe operational disruption or financial loss, or considerable damage to other persons |
 | `cross_border` | boolean | 2.b | Cross-border effect, required in the NIS2 early warning |
 | `notifications` | list of {recipient, deadline, sent_at} | 3 | Stakeholder and regulatory notifications and their deadlines |
-| `tuning_ticket` | reference | 2.a / 2.b, on a False Positive close | The Phase 1 ticket that closes the tuning loop |
 | `handover_reason` | `crown-jewel` · `privileged-identity` · `manual` | any | Why the assignee became a human |
 | `watch_until` | timestamp | 2.a / 2.b close | Monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close |
 | `master_case_uid` | Case `uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
 
-## 4. Where the Fields Are Populated
+## 5. Events the Case References
 
-*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
-*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): confidence and verdict (§2.4); timeline and T0 (§2.5); confirmed category, impact, significance and cross-border effect (§3.1); handover reason (§2.3).
-*   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; containment actions appended to the timeline.
+The Case is the current state; what happened to it is a sequence of events it references, never an array it stores.
+
+*   **Response actions** — a containment, eradication or recovery action is an OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event, referenced from the `related_events` of the Finding that motivated it, by that event's `uid` and its class `type_uid`. A tool-initiated action that fires before any executor opens the Case is referenced from the Alert that triggered it, so that triage sees what has already been done. OCSF holds no reference in the other direction.
+*   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
+*   **The Case Timeline** is therefore a view, not a field: the events referenced across the Case's Findings, in time order, with the response actions among them. The earliest event whose Finding is tagged `Malicious` is the anchor the speed metrics call T0.
+
+## 6. Where the Fields Are Populated
+
+*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); Findings, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
+*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Findings from the validation queries, confidence and verdict (§2.4); confirmed category, impact, significance and cross-border effect (§3.1); handover reason (§2.3).
+*   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; Remediation Activity events referenced from the Findings that motivated them.
 *   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by `uid`.
 
-## 5. JSON Schema
+## 7. JSON Schema
 
-[`case_schema.json`](case_schema.json) is the formal, machine-readable version of this document (JSON Schema 2020-12). It declares the OCSF Incident Finding fields of §2 with their enum values, and the framework fields of §3 under a single `zerosoc` extension object, following OCSF's extension convention of adding attributes rather than redefining classes. Where a framework field has a natural OCSF type it reuses it: timeline entries carry OCSF `finding_info` and `related_event` objects, provenance carries OCSF `product` objects, the tuning ticket is an OCSF `ticket`. Object shapes borrowed from OCSF are marked `x-ocsf-object` and are intentionally open (`additionalProperties: true`) so that a platform's full OCSF object validates unchanged.
+[`case_schema.json`](case_schema.json) is the formal, machine-readable version of this document (JSON Schema 2020-12). It declares the OCSF Incident Finding fields of §2 with their enum values, the Finding mapping of §3 including the tag names the framework reserves, and the framework fields of §4 under a single `zerosoc` extension object, following OCSF's extension convention of adding attributes rather than redefining classes. Where a framework field has a natural OCSF type it reuses it: provenance carries OCSF `product` objects, a ticket is an OCSF `ticket`. Object shapes borrowed from OCSF are marked `x-ocsf-object` and are intentionally open (`additionalProperties: true`) so that a platform's full OCSF object validates unchanged.

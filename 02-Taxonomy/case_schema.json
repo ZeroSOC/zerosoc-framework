@@ -105,13 +105,24 @@
       "$ref": "#/$defs/ocsf_user",
       "description": "The Case assignee: the executor responsible for advancing the Case and for its verdict."
     },
+    "desc": {
+      "type": "string",
+      "description": "The Case Summary: what happened and when, the entities involved and which acted on which, and the root cause once established."
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ocsf_note"
+      },
+      "description": "The Triage Note and the Investigation Note: renderings of the Case at their gate."
+    },
     "finding_info_list": {
       "type": "array",
       "minItems": 1,
       "items": {
         "$ref": "#/$defs/ocsf_finding_info"
       },
-      "description": "The aggregated Alerts (Detection Findings)."
+      "description": "Every Finding of the Case: the Alerts first, then the result of every check and validation query."
     },
     "attacks": {
       "type": "array",
@@ -128,14 +139,49 @@
     },
     "start_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case, whatever its side. The speed metrics anchor on T0: the earliest referenced event whose Finding is tagged Malicious."
     },
     "end_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case."
+    },
+    "vendor_attributes": {
+      "type": "object",
+      "x-ocsf-object": "vendor_attributes",
+      "additionalProperties": true,
+      "description": "What the source reported before triage assessed it.",
+      "properties": {
+        "severity": {
+          "type": "string"
+        },
+        "severity_id": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "x-enum-captions": {
+            "1": "Informational",
+            "2": "Low",
+            "3": "Medium",
+            "4": "High",
+            "5": "Critical"
+          }
+        }
+      }
     },
     "is_suspected_breach": {
       "type": "boolean"
+    },
+    "tickets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ocsf_ticket"
+      },
+      "description": "Tickets the Case raised; the Phase 1 tuning ticket carries type tuning."
     },
     "zerosoc": {
       "$ref": "#/$defs/zerosoc_extension"
@@ -272,7 +318,8 @@
         "product": {
           "$ref": "#/$defs/ocsf_product"
         }
-      }
+      },
+      "description": "An event grounding the Finding, the Detection Finding when the Finding is an Alert, or a Remediation Activity the Finding motivated; type_uid is that event's OCSF class."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -310,8 +357,88 @@
         },
         "product": {
           "$ref": "#/$defs/ocsf_product"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "alert",
+              "finding"
+            ]
+          },
+          "description": "alert for an aggregated Alert, finding for the result of a check or query."
+        },
+        "analytic": {
+          "$ref": "#/$defs/ocsf_analytic"
+        },
+        "tags": {
+          "type": "array",
+          "description": "The side and the confidence of the Finding. A Finding that bears on no hypothesis carries neither tag.",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ocsf_key_value_object"
+              },
+              {
+                "if": {
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "const": "zerosoc:side"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "enum": [
+                        "Malicious",
+                        "Benign"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "const": "zerosoc:confidence_id"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "enum": [
+                        "1",
+                        "2",
+                        "3"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "attack_graph": {
+          "$ref": "#/$defs/ocsf_graph"
         }
-      }
+      },
+      "description": "One Finding: an Alert, or the result of a check or validation query."
     },
     "ocsf_ticket": {
       "type": "object",
@@ -345,58 +472,6 @@
         "agent"
       ]
     },
-    "timeline_entry": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "time",
-        "kind",
-        "desc"
-      ],
-      "description": "One entry of the Case Timeline. Attacker actions cite the finding or events that ground them; detection, response, handover and notification entries record what the SOC did.",
-      "properties": {
-        "time": {
-          "type": "integer",
-          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
-        },
-        "kind": {
-          "type": "string",
-          "enum": [
-            "attacker-action",
-            "detection",
-            "triage",
-            "investigation",
-            "handover",
-            "containment",
-            "eradication",
-            "recovery",
-            "notification",
-            "closure"
-          ]
-        },
-        "desc": {
-          "type": "string"
-        },
-        "executor": {
-          "$ref": "#/$defs/executor_class"
-        },
-        "finding": {
-          "$ref": "#/$defs/ocsf_finding_info",
-          "description": "The Detection Finding this entry is grounded on, when one exists."
-        },
-        "related_events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ocsf_related_event"
-          },
-          "description": "Event references grounding the entry (never raw log dumps)."
-        },
-        "is_t0": {
-          "type": "boolean",
-          "description": "True on the earliest confirmed malicious event."
-        }
-      }
-    },
     "zerosoc_extension": {
       "type": "object",
       "additionalProperties": false,
@@ -414,6 +489,36 @@
         "incident_category": {
           "$ref": "#/$defs/incident_category"
         },
+        "reclassification_pivots": {
+          "type": "array",
+          "description": "Every change of candidate Incident Category, with the evidence that triggered it.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "reason"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "#/$defs/incident_category"
+              },
+              "to": {
+                "$ref": "#/$defs/incident_category"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "event_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
         "entry_path": {
           "type": "string",
           "enum": [
@@ -421,16 +526,6 @@
             "hunt",
             "out-of-band"
           ]
-        },
-        "t0": {
-          "type": "integer",
-          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
-        },
-        "timeline": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/timeline_entry"
-          }
         },
         "visibility_gaps": {
           "type": "array",
@@ -552,9 +647,6 @@
             }
           }
         },
-        "tuning_ticket": {
-          "$ref": "#/$defs/ocsf_ticket"
-        },
         "handover_reason": {
           "type": "string",
           "enum": [
@@ -563,13 +655,204 @@
             "manual"
           ]
         },
-        "master_case_uid": {
-          "type": "string",
-          "description": "Set on a Duplicate close: the open master Case that handles the activity."
-        },
         "watch_until": {
           "type": "integer",
           "description": "OCSF timestamp_t: monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close."
+        },
+        "master_case_uid": {
+          "type": "string",
+          "description": "Set on a Duplicate close: the open master Case that handles the activity."
+        }
+      }
+    },
+    "ocsf_key_value_object": {
+      "type": "object",
+      "x-ocsf-object": "key_value_object",
+      "additionalProperties": true,
+      "required": [
+        "name"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "value"
+          ]
+        },
+        {
+          "required": [
+            "values"
+          ]
+        }
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ocsf_analytic": {
+      "type": "object",
+      "x-ocsf-object": "analytic",
+      "additionalProperties": true,
+      "description": "The check or validation query that produced the Finding.",
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "integer"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "ocsf_graph_node": {
+      "type": "object",
+      "x-ocsf-object": "node",
+      "additionalProperties": true,
+      "required": [
+        "uid"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The entity's value as it appears in observables."
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "The entity's OCSF observable type_id."
+        },
+        "desc": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "ocsf_graph_edge": {
+      "type": "object",
+      "x-ocsf-object": "edge",
+      "additionalProperties": true,
+      "required": [
+        "source",
+        "target"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The acting entity's node uid."
+        },
+        "target": {
+          "type": "string",
+          "description": "The node uid of the entity acted on."
+        },
+        "relation": {
+          "type": "string",
+          "description": "An ATT&CK technique identifier where the edge is an observed technique, otherwise a STIX 2.1 relationship type."
+        },
+        "name": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "is_directed": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "ocsf_graph": {
+      "type": "object",
+      "x-ocsf-object": "graph",
+      "additionalProperties": true,
+      "required": [
+        "nodes"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "is_directed": {
+          "type": "boolean"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_graph_node"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_graph_edge"
+          }
+        }
+      }
+    },
+    "ocsf_note": {
+      "type": "object",
+      "x-ocsf-object": "note",
+      "additionalProperties": true,
+      "required": [
+        "comment"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "The deliverable's name, per the naming convention."
+        },
+        "comment": {
+          "type": "string",
+          "description": "The rendering of the Case at this gate."
+        },
+        "owner": {
+          "$ref": "#/$defs/ocsf_user"
+        },
+        "created_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "modified_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
         }
       }
     }
