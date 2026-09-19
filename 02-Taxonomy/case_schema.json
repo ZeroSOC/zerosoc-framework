@@ -307,19 +307,70 @@
       ],
       "properties": {
         "uid": {
-          "type": "string"
+          "type": "string",
+          "description": "Where the event is in OCSF, its metadata.uid."
         },
         "type_uid": {
-          "type": "integer"
+          "type": "integer",
+          "description": "The event's OCSF class."
         },
         "type_name": {
           "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "Used instead of type_uid where the event is not in OCSF."
+        },
+        "title": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "severity_id": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "x-enum-captions": [
+            "Informational",
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "description": "How many occurrences this one reference stands for."
+        },
+        "observables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ocsf_observable"
+          }
+        },
+        "created_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
+        },
+        "first_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the event happened. The Case's start_time is the earliest of these across its Malicious Findings."
+        },
+        "last_seen_time": {
+          "type": "integer",
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
         },
         "product": {
           "$ref": "#/$defs/ocsf_product"
         }
       },
-      "description": "An event grounding a Finding, the Detection Finding where the Finding is an Alert, or — on an action entry — the Remediation Activity it records; type_uid is that event's OCSF class."
+      "description": "An event that is evidence of the Finding: what the Finding rests on, cited rather than copied. It may be any OCSF event — a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`."
     },
     "ocsf_finding_info": {
       "type": "object",
