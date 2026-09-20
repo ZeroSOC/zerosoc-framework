@@ -561,7 +561,7 @@
     },
     "ocsf_evidence_artifacts": {
       "type": "object",
-      "x-ocsf-object": "evidences",
+      "x-ocsf-object": "evidence_artifacts",
       "additionalProperties": true,
       "description": "An artifact of a cited event, in the OCSF object that carries it. The object is intentionally open: a producer's full evidence_artifacts validates unchanged, and any OCSF object it names — process, file, user, device, src_endpoint, and the rest — is an attribute here. It holds what a Finding reasoned from and never a raw event: no bulk telemetry, no result sets, no message bodies, no file content.",
       "properties": {
