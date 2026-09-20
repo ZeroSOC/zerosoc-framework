@@ -55,7 +55,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `analytic` | What produced the Finding — the question, what was asked, and the query the tool ran — below |
 | `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
 | `tags` | The side and the confidence, and whether the timeline renders it — below |
-| `related_events` | The **evidence**: the events the Finding rests on, cited rather than copied — below |
+| `related_events` | The **evidence**: the events the Finding rests on, kept with the Case and cited — below |
 | `attack_graph` | Which entity acted on which, below |
 
 **What produced it.** A Finding and what produced it are never separated, and `analytic` carries all three parts of that:
@@ -90,11 +90,17 @@ A Finding that bears on no hypothesis carries **neither tag**: absence is how co
 
 All three tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
 
-**Evidence.** A Finding's evidence is its `related_events`: the events it rests on, each cited by identifier and never copied in. This is the one place evidence is held — there is no second list beside the Findings, and a raw log is never a Finding's body.
+**Evidence.** A Finding's evidence is its `related_events`: the events it rests on, each **kept with the Case** and cited by identifier. This is the one place evidence is held — there is no second list beside the Findings, and a raw log is never a Finding's body.
 
 An event OCSF carries is cited by its `uid` and its class `type_uid`, and OCSF's classes are not only Alerts and Cases: a Detection Finding where the Finding is an Alert, a Remediation Activity on an `action` entry, the events of the telemetry a validation query returned. An event OCSF does not carry is named by `type` instead, which `related_event` exists to allow.
 
 Each reference carries **when the event happened** — `first_seen_time` — not when the Finding was made. That is what lets the Case's `start_time` move: it is the earliest such time across the Case's Malicious Findings, so an adversary reaching back before the detection that caught them moves it, and a benign precursor does not.
+
+**Kept, and not only cited.** A citation is evidence only for as long as the source still holds the event, and detection telemetry is commonly retained for weeks while the regulatory report, the Post-Incident Review and the quality sample come later: a Case whose references have expired asserts a verdict it can no longer show. So a reference carries what its Finding reasoned from — the event's `observables`, and `evidences`, the artifacts in the OCSF objects that carry them (`process`, `file`, `user`, `device`, `src_endpoint`, and the rest), with `data` for what no object carries. Where the producer already emits `evidences` on the cited Detection Finding, it is the same object and carries across unchanged.
+
+**Relevance is the bound, and size is not.** A query that returned four hundred rows contributes the rows its Finding rests on; `count` says how many occurrences the reference stands for, and `analytic.algorithm` is what re-reads the remainder while the source still has it. What a Case excludes is not copies but irrelevance: bulk telemetry, result sets nobody reasoned from, message bodies, file content. The Note still summarizes rather than pastes — a dump is not an argument — and what a Finding rests on is the executor's judgment, stated on the record and reviewable as such.
+
+This is not the incident-grade record of [Detection & Analysis §3.3](../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody), and the difference is scope rather than kind: the Case keeps the evidence its Findings rest on, and that record adds custody, integrity and tamper-proofing once an Incident is declared.
 
 **Directionality.** `attack_graph` SHOULD be populated where the executor can establish which entity acted on which. It is a directed graph (`is_directed` `true`) over the Case's entities, and it borrows its vocabulary rather than inventing one:
 
