@@ -68,6 +68,17 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 OCSF requires `type_id` on the object. A triage check and a validation query are none of the types OCSF lists — they are not detection content that fires on its own — so they take Other (99) and `type` names the kind: `triage check`, `validation query`, `enrichment`. An Alert keeps whatever analytic its source reported.
 
+**What the detection asserts.** An Alert carries the source's own statements about the threat, which triage reads before it enriches anything ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)). Each has a home on the Case:
+
+| What the detection asserts | Where the Case carries it |
+|---|---|
+| The **technique identifiers** | `attacks` on the Alert's `finding_info`, and on the Case (§2) once they are the Case's |
+| **What detected it**, and which detector | the Alert's `analytic`: `type_id` for the kind of detection — Rule, Behavioral, Statistical, Learning (ML/DL), Fingerprinting are the values a detection source maps onto — with `uid` and `name` for the detector itself. This is the one place `type_id` is not Other (99): an Alert keeps the analytic its source reported |
+| The source's **description** of the detection | `desc` of the Alert's `finding_info` |
+| The **threat name and family** | a `trait` on the Alert's `finding_info`: `category` `malware`, `name` the family, `values` the threat names the source assigned — and `name` the threat name itself where the source gives no family. OCSF carries a `malware` object on the [Detection Finding](https://schema.ocsf.io/1.9.0/classes/detection_finding) the Alert cites, and `finding_info` has no such attribute: the object stays on the cited event and the trait is what makes the name legible on the Case |
+| The **recommended actions** | `remediation` on the cited Detection Finding, `desc` and `references`. What the Case carries is their **disposition**: one followed is the check that produced a Finding, and that Finding names the recommendation it came from; one set aside is a Finding whose `desc` states the recommendation and the reason it was set aside |
+| The **remediation state** of an entity | an `action` entry (§5). The source's own remediation is a [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event that fired before any executor opened the Case: the entry cites it, `status_id` says whether it succeeded and `activity_id` what it did — Isolate, Evict, Restore. An entry typed `action` carries no side and no confidence, which is what the framework means by a remediation being recorded rather than weighed |
+
 **Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
 
 - `zerosoc:side` — `Malicious` or `Benign`
@@ -117,7 +128,7 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 The Case is the current state; what happened to it is a sequence of events it references, never an array it stores.
 
-*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events` by that event's `uid` and its class `type_uid`. An action is recorded against the Case and not against the Finding that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done. OCSF holds no reference in the other direction.
+*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events` by that event's `uid` and its class `type_uid`. An action is recorded against the Case and not against the Finding that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done — this is where the remediation state the source reports per entity is carried, one entry per remediation, and an entity the source left active has none. OCSF holds no reference in the other direction.
 *   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
 *   **The Case Timeline** is the entries tagged `zerosoc:timeline`, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
 

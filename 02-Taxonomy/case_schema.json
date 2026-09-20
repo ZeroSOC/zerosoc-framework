@@ -433,6 +433,13 @@
         "analytic": {
           "$ref": "#/$defs/ocsf_analytic"
         },
+        "traits": {
+          "type": "array",
+          "description": "Characteristics of the entity the Finding is about, surfaced from the event. On an Alert this is where the threat name and family the detection assigned are carried: category 'malware', name the family, values the threat names the source assigned.",
+          "items": {
+            "$ref": "#/$defs/ocsf_trait"
+          }
+        },
         "tags": {
           "type": "array",
           "description": "The side and the confidence of a Finding, and whether the Case Timeline renders the entry. A Finding that bears on no hypothesis, and every action entry, carries neither side nor confidence.",
@@ -542,6 +549,38 @@
         "src_url": {
           "type": "string",
           "format": "uri"
+        }
+      }
+    },
+    "ocsf_trait": {
+      "type": "object",
+      "x-ocsf-object": "trait",
+      "additionalProperties": true,
+      "description": "A characteristic of the entity a Finding is about, as the source stated it. The framework uses category 'malware' for the threat name and family a detection assigns; the malware object itself stays on the cited Detection Finding, which finding_info has no attribute for.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The family the detection assigned, or the threat name itself where it assigned no family."
+        },
+        "category": {
+          "type": "string",
+          "description": "The grouping the trait belongs to; 'malware' for a threat name or family."
+        },
+        "uid": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The threat names the source assigned."
         }
       }
     },

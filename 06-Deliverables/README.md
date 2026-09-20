@@ -1,7 +1,7 @@
 ---
 title: Deliverables Module
 type: index
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -22,5 +22,6 @@ The Notes are the records the framework reviews: QA sampling ([Agentic Supervisi
 - **Every finding carries its side and confidence** — `Malicious (Low|Medium|High)`, `Benign (Low|Medium|High)` — or is marked context ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). The alerts are the first findings.
 - **Provenance is mandatory** in every deliverable: the playbook(s) used (path plus `last_updated` as version), the executor (human / automation / agent, all classes that contributed), the capability classes invoked, and the Case identifier — the audit trail the [Agentic Guardrails](../07-Governance/agentic_guardrails.md) require.
 - **Event references are mandatory:** every finding cites the specific supporting event(s) — an OCSF finding or event identifier, or a platform event link — never a raw-log dump.
+- **The Alerts carry what their detection asserted** ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)): the technique identifiers, the threat name and family, the detection source and detector, and the remediation state of each entity the Alert names. The disposition of the source's **recommended actions** — each followed, with the Finding it produced, or set aside, with the reason — renders with the Findings. An assertion the source did not supply is a Visibility Gap like any other.
 - **Technique notation:** ATT&CK and ATLAS codes are written as `ID (Name)` (e.g. `T1567 (Exfiltration Over Web Service)`), never bare codes.
 - Notes are specific and concise: findings in accurate terms, evidence summarized.

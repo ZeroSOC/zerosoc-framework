@@ -10,7 +10,7 @@ status: draft
 
 Fill-in template and worked example for the **Triage Note**, the decision record every triage — human, automation or agent — produces. The canonical element list is [Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note); this page is the practitioner-facing form. Naming convention: `triage_note_<case-id>_<YYYYMMDD-HHMM>`.
 
-> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree.
+> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree, and note that the Alerts now render what their detection asserted — techniques, threat name and family, detection source and per-entity remediation state — with the disposition of the source's recommended actions, which the template below does not yet show.
 
 ## Template
 
