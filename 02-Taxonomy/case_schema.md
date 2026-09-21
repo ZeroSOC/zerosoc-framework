@@ -134,7 +134,7 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 A detection source states more than the framework has a home for — its own classification and determination, its tags, its links, the identifiers it uses for entities. Discarding them loses what an analyst opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
 
-**One object per source, under the source's own key, declared where that source is described.** The key is the source's identifier (`microsoft`, `crowdstrike`, `splunk`); its shape is declared by that source's own description — the profile or mapping document a deployment maintains for it — and validated against that declaration. An implementation may not invent a key that nothing declares, and a reader who has the declaration can read the object without the implementation that wrote it.
+**One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. An implementation may not invent a key that nothing declares, and a reader who has the declaration can read the object without the implementation that wrote it.
 
 What belongs there is **what the source states and the framework carries nowhere**. What does not:
 
