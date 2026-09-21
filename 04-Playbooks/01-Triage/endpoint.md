@@ -1,7 +1,7 @@
 ---
 title: Endpoint Triage Playbook
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-21
 license: Apache-2.0
 domain: Endpoint
 required_data_sources:
@@ -26,6 +26,7 @@ One row per alert type of this domain; each row is the index into a subsection o
 | Malware / loader execution | EDR / AV | Execution | T1204 (User Execution), T1059 (Command and Scripting Interpreter) | IC-05 (Commodity Malware / Loader), IC-03 (Ransomware & Digital Extortion) |
 | Suspicious script / interpreter execution | EDR | Execution | T1059 (Command and Scripting Interpreter), T1218 (System Binary Proxy Execution) | IC-05 (Commodity Malware / Loader) |
 | Credential dumping | EDR | Credential Access | T1003 (OS Credential Dumping) | IC-06 (Identity & Credential Attack) |
+| Remote execution / lateral movement | EDR | Lateral Movement | T1021 (Remote Services), T1021.002 (SMB/Windows Admin Shares), T1047 (Windows Management Instrumentation), T1550 (Use Alternate Authentication Material), T1569.002 (Service Execution) | IC-06 (Identity & Credential Attack), IC-08 (Infrastructure Compromise), IC-03 (Ransomware & Digital Extortion) |
 | Ransomware mass-encryption | EDR / file-integrity monitoring | Impact | T1486 (Data Encrypted for Impact), T1490 (Inhibit System Recovery) | IC-03 (Ransomware & Digital Extortion) |
 | Security-tool / AMSI tampering | EDR | Defense Impairment | T1685 (Disable or Modify Tools) | IC-05 (Commodity Malware / Loader), IC-03 (Ransomware & Digital Extortion) |
 | Persistence mechanism created | EDR | Persistence | T1543 (Create or Modify System Process), T1053 (Scheduled Task/Job), T1547 (Boot or Logon Autostart Execution) | IC-05 (Commodity Malware / Loader) |
@@ -72,6 +73,20 @@ One row per alert type of this domain; each row is the index into a subsection o
 - **False Positive conditions:** a detection that fires on every handle to LSASS, including the EDR's own; a signed security product not yet on the detection's allowlist.
 - **Benign conditions:** sanctioned forensic or incident-response tooling reading LSASS during an authorized engagement; a credential-manager operation by the platform itself.
 - **Candidate Incident Category(ies):** IC-06 (Identity & Credential Attack).
+
+### Remote execution / lateral movement
+
+- **Enrich entities:** [Device](../99-Shared/sub_enrichment_asset.md) (source and target hosts), [User](../99-Shared/sub_enrichment_identity.md) (the account used), [Process](../99-Shared/sub_enrichment_artifact.md).
+- **Checks:**
+  1. **Mechanism.** How was access or execution achieved on the target — a service registered and started, a management interface invoked remotely, a write to an administrative share, a task created on the target? → context that sets the severity, not the side — the mechanism is what fired and is not counted again. A service or task left behind on the target raises the persistence question separately, under that alert type.
+  2. **Account and authentication.** Which account was used, and how did it authenticate? → `Malicious (High)` when the account is one a credential-access alert in this Case already names, or when authentication presented a hash or a ticket rather than the account's own credential; `Malicious (Medium)` when the account has no administrative relationship to the target; `Benign (Low)` when it is the target's recorded administrator or a service account whose normal work this is.
+  3. **Source role.** Does the source host reach others by design — a management server, a deployment point, a jump server? → `Benign (High)` when the source is a recorded management host and the target falls in its scope; `Malicious (Medium)` when the source is a workstation, or a server with no administrative role over the target.
+  4. **Fan-out.** How many distinct targets did the source reach in the window, and how quickly? → `Malicious (High)` when one source reached many targets in a short window, or reached hosts of unrelated function; `Benign (Low)` for a single pair that the source's role explains.
+  5. **What ran on the target.** What did the remote execution launch there? → `Malicious (High)` when it launched discovery commands, a credential-access utility, a recovery-sabotage command, or a further transfer; `Benign (Medium)` when the children are those the recorded deployment or administrative job is known to run; context when it launched nothing. A child process that fired its own Alert in the Case is assessed under that alert type and not counted again here.
+  6. **Change or agent record.** Is the activity recorded — an approved change naming the source, the targets and the window, a job the deployment or remote-management platform logged, or a detection test recorded for these hosts? → `Benign (High)` when the record names the account and the targets — the movement is explained; `Benign (Medium)` when a change window covers the hosts and the time but names neither the account nor the targets; context when nothing is recorded.
+- **False Positive conditions:** a deployment, patch-management or inventory tool that reaches hosts by the same mechanisms an attacker would; a monitoring or backup agent authenticating to its targets on a schedule; a detection counting one administrative session as movement.
+- **Benign conditions:** authorized remote administration in an approved change window; a software deployment or patch run from a recorded management host; an authorized penetration test whose scope names the source host and the window.
+- **Candidate Incident Category(ies):** IC-06 (Identity & Credential Attack) when the movement rides on stolen credential material; IC-08 (Infrastructure Compromise) when it reaches servers or domain infrastructure; IC-03 (Ransomware & Digital Extortion) when it precedes or accompanies encryption.
 
 ### Ransomware mass-encryption
 
