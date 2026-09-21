@@ -132,14 +132,14 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 ### One source's own record: the per-source extension
 
-A detection source states more than the framework has a home for — its own classification and determination, its tags, its links, the identifiers it uses for entities. Discarding them loses what an analyst opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
+A detection source states more than the framework has a home for — its own classification and determination, its tags, its links, the identifiers it uses for entities. Discarding them loses what an executor opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
 
-**One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. An implementation may not invent a key that nothing declares, and a reader who has the declaration can read the object without the implementation that wrote it.
+**One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. A platform may not add a key that nothing declares, and a reader who has the declaration can read the object without the platform that wrote it.
 
 What belongs there is **what the source states and the framework carries nowhere**. What does not:
 
 - Anything the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one triage assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
-- Anything an executor produced. The extension is the source's own record; what a run produced is the Case's own, below.
+- Anything an executor produced. The extension is the source's own record; what the work on the Case produced is the Case's own, below.
 - Raw telemetry, message bodies, file content. The extension is not a loophole for the evidence rule of §3: relevance bounds what a Case holds, wherever it is held.
 
 A framework field is what the **framework** needs and OCSF does not carry ([§4](#4-framework-fields), under `zerosoc`). A source extension is what **one source** states and nothing else has a home for. The two are not interchangeable: a concept every source has belongs in neither — it belongs in OCSF, or in a framework field once the search of §4 has been made.
@@ -154,11 +154,11 @@ The Case is the current state; what happened to it is a sequence of events it re
 
 ## 6. Where the Fields Are Populated
 
-The Notes render the Case and are a field of it rather than a record beside it ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note)): a fact that has a field of its own is recorded in the field and not only in a Note's prose. Reasoning has no field, and the Case carries it as prose — the Summary, each Finding's own `desc`, the Note's rendering. What a run must not do is end with its reasoning in the executor's memory alone: a verdict nobody can read back is a verdict nobody can audit.
+The Notes render the Case and are a field of it rather than a record beside it ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note)): a fact that has a field of its own is recorded in the field and not only in a Note's prose. Reasoning has no field, and the Case carries it as prose — the Summary, each Finding's own `desc`, the Note's rendering. What a phase must not do is end with its reasoning unwritten: a verdict nobody can read back is a verdict nobody can audit, whichever executor reached it.
 
 **What was asked, and what came back, is reconstructable from the Case alone.** At the end of a phase the Case carries:
 
-| What the run produced | What the Case holds |
+| What the phase produced | What the Case holds |
 |---|---|
 | Every check and every validation query | a Finding, with its `analytic` carrying the question, the request as the executor made it and the query the tool ran (§3) — or, where it could not be answered, a **visibility gap** naming the check it prevented (§4) |
 | The evidence each Finding rests on | the events it rests on, kept with the Case and cited (§3) |
