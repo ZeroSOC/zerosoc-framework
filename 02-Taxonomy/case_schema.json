@@ -2,9 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
   "title": "ZeroSOC Case",
-  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md.",
+  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is one source's own record, under that source's key.",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": {
+    "type": "object",
+    "description": "A per-source extension: one object per source, under the source's own key, its shape declared by that source's own description and validated against it. Anything the framework already carries is a mapping and not an extension, and a scalar added at this level is neither."
+  },
   "required": [
     "uid",
     "status_id",

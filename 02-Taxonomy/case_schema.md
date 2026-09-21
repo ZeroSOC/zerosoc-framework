@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-20
+last_updated: 2026-09-21
 license: Apache-2.0
 ---
 
@@ -16,7 +16,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 **One object crosses every phase.** A phase does not copy the Case forward and does not carry a subset of it: the [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) state which of these fields MUST be populated at each boundary, and nothing more. Values are refined as the Case advances; the object is the same one throughout.
 
-**The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They hold no state of their own, so whatever a platform cannot carry here is not recoverable from them either. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — is the exception, and lives in the rendering.
+**The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They are a field of the Case and not a record beside it: a fact that has a field of its own is recorded in the field, and a Note is never the only place it is kept. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — lives in the rendering, and is on the Case because the rendering is.
 
 **Where OCSF carries a concept, the framework maps to it** and adds no field of its own. The fields in §4 are the concepts looked for in the current OCSF release and not found, or found in a form that loses what the framework needs.
 
@@ -130,6 +130,20 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 | `watch_until` | timestamp | 2.a / 2.b close | Monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close |
 | `master_case_uid` | Case `uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
 
+### One source's own record: the per-source extension
+
+A detection source states more than the framework has a home for — its own classification and determination, its tags, its links, the identifiers it uses for entities. Discarding them loses what an executor opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
+
+**One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. A platform may not add a key that nothing declares, and a reader who has the declaration can read the object without the platform that wrote it.
+
+What belongs there is **what the source states and the framework carries nowhere**. What does not:
+
+- Anything the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one triage assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
+- Anything an executor produced. The extension is the source's own record; what the work on the Case produced is the Case's own, below.
+- Raw telemetry, message bodies, file content. The extension is not a loophole for the evidence rule of §3: relevance bounds what a Case holds, wherever it is held.
+
+A framework field is what the **framework** needs and OCSF does not carry ([§4](#4-framework-fields), under `zerosoc`). A source extension is what **one source** states and nothing else has a home for. The two are not interchangeable: a concept every source has belongs in neither — it belongs in OCSF, or in a framework field once the search of §4 has been made.
+
 ## 5. Events the Case References
 
 The Case is the current state; what happened to it is a sequence of events it references, never an array it stores.
@@ -139,6 +153,25 @@ The Case is the current state; what happened to it is a sequence of events it re
 *   **The Case Timeline** is the entries tagged `zerosoc:timeline`, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
 
 ## 6. Where the Fields Are Populated
+
+The Notes render the Case and are a field of it rather than a record beside it ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note)): a fact that has a field of its own is recorded in the field and not only in a Note's prose. Reasoning has no field, and the Case carries it as prose — the Summary, each Finding's own `desc`, the Note's rendering. What a phase must not do is end with its reasoning unwritten: a verdict nobody can read back is a verdict nobody can audit, whichever executor reached it.
+
+**What was asked, and what came back, is reconstructable from the Case alone.** At the end of a phase the Case carries:
+
+| What the phase produced | What the Case holds |
+|---|---|
+| Every check and every validation query | a Finding, with its `analytic` carrying the question, the request as the executor made it and the query the tool ran (§3) — or, where it could not be answered, a **visibility gap** naming the check it prevented (§4) |
+| The evidence each Finding rests on | the events it rests on, kept with the Case and cited (§3) |
+| Every action taken | an `action` entry with the Course of Action that selected it (§5) |
+| Every entity the Case is about | an observable (§2) |
+| What executed it | the provenance: the playbooks and their versions, the executor classes, the capability classes (§4) |
+| Why the executor concluded what it did | prose, which the Case carries: the Summary (`desc`), each Finding's own `desc`, and the Note's rendering in `notes` (§2). An alternative weighed and set aside is a Finding with no side where evidence bears on it, and the rationale of the Note where only judgment does |
+
+A question that was asked and that nobody answered is on the Case: as a visibility gap where it prevented a check, and otherwise as a Finding that carries the question and no side, because silence about it reads exactly like a clean result.
+
+**What must not be on the Case**: bulk telemetry, message bodies, file content, the result set a query returned beyond what its Finding rests on. The bound is relevance (§3), and it does not move because the data arrived under a source's key or in a provenance block rather than as a Finding.
+
+**Per phase**, the fields each one sets:
 
 *   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); Findings, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
 *   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Findings from the validation queries, confidence and verdict (§2.4); confirmed category, impact, significance and cross-border effect (§3.1); handover reason (§2.3).
