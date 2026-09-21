@@ -16,7 +16,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 **One object crosses every phase.** A phase does not copy the Case forward and does not carry a subset of it: the [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) state which of these fields MUST be populated at each boundary, and nothing more. Values are refined as the Case advances; the object is the same one throughout.
 
-**The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They hold no state of their own, so whatever a platform cannot carry here is not recoverable from them either. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — is the exception, and lives in the rendering.
+**The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They are a field of the Case and not a record beside it: a fact that has a field of its own is recorded in the field, and a Note is never the only place it is kept. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — lives in the rendering, and is on the Case because the rendering is.
 
 **Where OCSF carries a concept, the framework maps to it** and adds no field of its own. The fields in §4 are the concepts looked for in the current OCSF release and not found, or found in a form that loses what the framework needs.
 
@@ -154,17 +154,18 @@ The Case is the current state; what happened to it is a sequence of events it re
 
 ## 6. Where the Fields Are Populated
 
-The Notes render the Case and hold no state of their own ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note)), so whatever the Case cannot carry is not recoverable from them either. A run that ends leaving its reasoning in the executor's memory has produced a verdict nobody can audit.
+The Notes render the Case and are a field of it rather than a record beside it ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note)): a fact that has a field of its own is recorded in the field and not only in a Note's prose. Reasoning has no field, and the Case carries it as prose — the Summary, each Finding's own `desc`, the Note's rendering. What a run must not do is end with its reasoning in the executor's memory alone: a verdict nobody can read back is a verdict nobody can audit.
 
 **What was asked, and what came back, is reconstructable from the Case alone.** At the end of a phase the Case carries:
 
-| What ran | What the Case holds |
+| What the run produced | What the Case holds |
 |---|---|
 | Every check and every validation query | a Finding, with its `analytic` carrying the question, the request as the executor made it and the query the tool ran (§3) — or, where it could not be answered, a **visibility gap** naming the check it prevented (§4) |
 | The evidence each Finding rests on | the events it rests on, kept with the Case and cited (§3) |
 | Every action taken | an `action` entry with the Course of Action that selected it (§5) |
 | Every entity the Case is about | an observable (§2) |
 | What executed it | the provenance: the playbooks and their versions, the executor classes, the capability classes (§4) |
+| Why the executor concluded what it did | prose, which the Case carries: the Summary (`desc`), each Finding's own `desc`, and the Note's rendering in `notes` (§2). An alternative weighed and set aside is a Finding with no side where evidence bears on it, and the rationale of the Note where only judgment does |
 
 A question that was asked and that nobody answered is on the Case: as a visibility gap where it prevented a check, and otherwise as a Finding that carries the question and no side, because silence about it reads exactly like a clean result.
 

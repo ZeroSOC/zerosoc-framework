@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-09-20
+last_updated: 2026-09-21
 license: Apache-2.0
 ---
 
@@ -170,7 +170,7 @@ Do **not** close as Duplicate when the identical alert fires on a *different* ho
 
 Every triage — whether performed by a human, automation, or an agent — produces a **Triage Note**, the decision record that travels with the Case and its phase transition contract. It is distinct from, and lighter than, the forensic **Evidence Preservation & Chain of Custody** record (§3.3), which is incident-grade and tamper-proof.
 
-**The Note holds no state of its own.** Everything it shows is already on the Case, sampled at this gate: the Note is one `note` on the Case — `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors ([Case Schema](../02-Taxonomy/case_schema.md)). What follows is therefore what the rendering MUST contain, and in what order; it is not a second place the same facts are kept. Whatever the Case cannot carry is not recoverable from the Note either.
+**The Note holds no state of its own.** Everything it shows is already on the Case, sampled at this gate: the Note is one `note` on the Case — `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors ([Case Schema](../02-Taxonomy/case_schema.md)). What follows is therefore what the rendering MUST contain, and in what order; it is not a second place the same facts are kept. What has no field of its own — the reasoning — is what the rendering carries, and it is on the Case because the Note is.
 
 A conformant Triage Note renders, in this order:
 
