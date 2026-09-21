@@ -13,6 +13,7 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **02-Taxonomy:** the Case Schema states the **per-source extension convention** — one object per source, under the source's own key, its shape declared where that source is described and validated against it; anything the framework already carries is a mapping and not an extension — and **what a run must leave on the Case**: every check and query as a Finding with its question, request and query, or as a visibility gap naming the check it prevented; the evidence each Finding rests on; every action with its Course of Action; every entity as an observable; the provenance. A question nobody answered is on the Case rather than in silence, and bulk telemetry, message bodies and result sets are on it in no form, under no key (DD-26).
 - **02-Taxonomy, 03-Processes, 06-Deliverables:** what a detection asserts — techniques, threat name and family, detection source and detector, description, recommended actions, per-entity remediation state — is a required input of triage, mapped to native OCSF carriers and recorded on the Case (DD-24). A Finding's evidence is **kept with the Case** and cited by identifier rather than cited alone, with relevance as the bound: bulk telemetry, result sets, message bodies and file content stay out, and a citation whose referent has expired no longer leaves a Case that cannot show what its verdict rests on (DD-25).
 
 ### Added

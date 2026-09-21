@@ -2,9 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
   "title": "ZeroSOC Case",
-  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md.",
+  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is one source's own record, under that source's key.",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": {
+    "type": "object",
+    "description": "A per-source extension: one object per source, under the source's own key, its shape declared by that source's own description and validated against it. Anything the framework already carries is a mapping and not an extension, and a scalar added at this level is neither."
+  },
   "required": [
     "uid",
     "status_id",
@@ -136,7 +139,7 @@
       "items": {
         "$ref": "#/$defs/ocsf_observable"
       },
-      "description": "Normalized entities — the join keys of the investigation."
+      "description": "Normalized entities \u2014 the join keys of the investigation."
     },
     "start_time": {
       "type": "integer",
@@ -378,7 +381,7 @@
           "description": "What the Finding reasoned from in this event, kept with the Case so the Finding can still be shown once the source's retention window has closed. OCSF carries this object on the Detection Finding and on no object the Case holds, so the attribute is the framework's placement of an OCSF object, under the name OCSF uses for it."
         }
       },
-      "description": "An event that is evidence of the Finding: what the Finding rests on, kept with the Case and cited by identifier. It may be any OCSF event — a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Finding did not rest on: bulk telemetry, result sets, message bodies, file content."
+      "description": "An event that is evidence of the Finding: what the Finding rests on, kept with the Case and cited by identifier. It may be any OCSF event \u2014 a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned \u2014 or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Finding did not rest on: bulk telemetry, result sets, message bodies, file content."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -537,7 +540,7 @@
           "$ref": "#/$defs/ocsf_graph"
         }
       },
-      "description": "One entry of the Case's record: a Finding — an Alert, or the result of a check or validation query — or a response action taken on the Case."
+      "description": "One entry of the Case's record: a Finding \u2014 an Alert, or the result of a check or validation query \u2014 or a response action taken on the Case."
     },
     "ocsf_ticket": {
       "type": "object",
@@ -563,7 +566,7 @@
       "type": "object",
       "x-ocsf-object": "evidence_artifacts",
       "additionalProperties": true,
-      "description": "An artifact of a cited event, in the OCSF object that carries it. The object is intentionally open: a producer's full evidence_artifacts validates unchanged, and any OCSF object it names — process, file, user, device, src_endpoint, and the rest — is an attribute here. It holds what a Finding reasoned from and never a raw event: no bulk telemetry, no result sets, no message bodies, no file content.",
+      "description": "An artifact of a cited event, in the OCSF object that carries it. The object is intentionally open: a producer's full evidence_artifacts validates unchanged, and any OCSF object it names \u2014 process, file, user, device, src_endpoint, and the rest \u2014 is an attribute here. It holds what a Finding reasoned from and never a raw event: no bulk telemetry, no result sets, no message bodies, no file content.",
       "properties": {
         "name": {
           "type": "string",
@@ -865,7 +868,7 @@
         },
         "name": {
           "type": "string",
-          "description": "The question it answers, in the words a reader of the Case understands — never the query language."
+          "description": "The question it answers, in the words a reader of the Case understands \u2014 never the query language."
         },
         "type": {
           "type": "string",
@@ -877,7 +880,7 @@
         },
         "desc": {
           "type": "string",
-          "description": "What was asked, as the executor asked it — the telemetry, the entities and the window — before any tool translated it."
+          "description": "What was asked, as the executor asked it \u2014 the telemetry, the entities and the window \u2014 before any tool translated it."
         },
         "algorithm": {
           "type": "string",
