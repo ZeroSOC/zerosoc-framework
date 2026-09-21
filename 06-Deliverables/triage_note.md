@@ -10,7 +10,7 @@ status: draft
 
 Fill-in template and worked example for the **Triage Note**, the decision record every triage — human, automation or agent — produces. The canonical element list is [Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note); this page is the practitioner-facing form. Naming convention: `triage_note_<case-id>_<YYYYMMDD-HHMM>`.
 
-> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree.
+> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree. The Alerts' own elements — what their detection asserted, and the disposition of its recommended actions — are in the Findings section below and survive the rebuild.
 
 ## Template
 
@@ -24,12 +24,16 @@ Fill-in template and worked example for the **Triage Note**, the decision record
 
 ### Findings
 
-*The alerts first, each tagged `Malicious (Low|Medium|High)` at the confidence the tool reports (or derived from its severity). Then every enrichment, scope and correlation result, each tagged with its side and confidence or marked context. Each finding cites its event reference.*
+*The alerts first, each tagged `Malicious (Low|Medium|High)` at the confidence the tool reports (or derived from its severity), and each rendering **what its detection asserted** ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)): the technique identifiers as `ID (Name)`, the threat name and family where one was assigned, the detection source and the detector, and the remediation state of each entity it names — blocked, quarantined, removed or active. Then every enrichment, scope and correlation result, each tagged with its side and confidence or marked context. Each finding cites its event reference.*
+
+*The **disposition of the source's recommended actions** renders here too: one followed is the Finding it produced, naming the recommendation it came from and tagged on the evidence it returned; one set aside states the reason it was set aside. A recommendation left unread is not a disposition, and the Case is not decided while one stands.*
 
 | # | Finding | Tag | Event ref |
 |---|---|---|---|
-| 1 | `<alert>` | `Malicious (<confidence>)` | `<finding UID>` |
+| 1 | `<alert>` — `<T#### (Name), ...>`; threat `<name (family)>`; detected by `<detection source>`; `<entity>` `<remediation state>` | `Malicious (<confidence>)` | `<finding UID>` |
 | 2 | `<enrichment or correlation result>` | `<Malicious/Benign (confidence)>` or context | `<event ref>` |
+| 3 | Recommended action followed: `<the action>` — `<what it returned>` | `<tag>` or context | `<event ref>` |
+| 4 | Recommended action set aside: `<the action>` — `<the reason>` | context | `<alert id>` |
 
 ### Decision & Justification
 

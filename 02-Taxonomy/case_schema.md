@@ -55,7 +55,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `analytic` | What produced the Finding — the question, what was asked, and the query the tool ran — below |
 | `types` | `alert` for an aggregated Alert, `finding` for the result of a check or query, `action` for a response action |
 | `tags` | The side and the confidence, and whether the timeline renders it — below |
-| `related_events` | The **evidence**: the events the Finding rests on, cited rather than copied — below |
+| `related_events` | The **evidence**: the events the Finding rests on, kept with the Case and cited — below |
 | `attack_graph` | Which entity acted on which, below |
 
 **What produced it.** A Finding and what produced it are never separated, and `analytic` carries all three parts of that:
@@ -68,6 +68,17 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 OCSF requires `type_id` on the object. A triage check and a validation query are none of the types OCSF lists — they are not detection content that fires on its own — so they take Other (99) and `type` names the kind: `triage check`, `validation query`, `enrichment`. An Alert keeps whatever analytic its source reported.
 
+**What the detection asserts.** An Alert carries the source's own statements about the threat, which triage reads before it enriches anything ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)). Each has a home on the Case:
+
+| What the detection asserts | Where the Case carries it |
+|---|---|
+| The **technique identifiers** | `attacks` on the Alert's `finding_info`, and on the Case (§2) once they are the Case's |
+| **What detected it**, and which detector | the Alert's `analytic`: `type_id` for the kind of detection — Rule, Behavioral, Statistical, Learning (ML/DL), Fingerprinting are the values a detection source maps onto — with `uid` and `name` for the detector itself. This is the one place `type_id` is not Other (99): an Alert keeps the analytic its source reported |
+| The source's **description** of the detection | `desc` of the Alert's `finding_info` |
+| The **threat name and family** | a `trait` on the Alert's `finding_info`: `category` `malware`, `name` the family, `values` the threat names the source assigned — and `name` the threat name itself where the source gives no family. OCSF carries a `malware` object on the [Detection Finding](https://schema.ocsf.io/1.9.0/classes/detection_finding) the Alert cites, and `finding_info` has no such attribute: the object stays on the cited event and the trait is what makes the name legible on the Case |
+| The **recommended actions** | `remediation` on the cited Detection Finding, `desc` and `references`. What the Case carries is their **disposition**: one followed is the check that produced a Finding, and that Finding names the recommendation it came from; one set aside is a Finding whose `desc` states the recommendation and the reason it was set aside |
+| The **remediation state** of an entity | an `action` entry (§5). The source's own remediation is a [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event that fired before any executor opened the Case: the entry cites it, `status_id` says whether it succeeded and `activity_id` what it did — Isolate, Evict, Restore. An entry typed `action` carries no side and no confidence, which is what the framework means by a remediation being recorded rather than weighed |
+
 **Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
 
 - `zerosoc:side` — `Malicious` or `Benign`
@@ -79,11 +90,17 @@ A Finding that bears on no hypothesis carries **neither tag**: absence is how co
 
 All three tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
 
-**Evidence.** A Finding's evidence is its `related_events`: the events it rests on, each cited by identifier and never copied in. This is the one place evidence is held — there is no second list beside the Findings, and a raw log is never a Finding's body.
+**Evidence.** A Finding's evidence is its `related_events`: the events it rests on, each **kept with the Case** and cited by identifier. This is the one place evidence is held — there is no second list beside the Findings, and a raw log is never a Finding's body.
 
 An event OCSF carries is cited by its `uid` and its class `type_uid`, and OCSF's classes are not only Alerts and Cases: a Detection Finding where the Finding is an Alert, a Remediation Activity on an `action` entry, the events of the telemetry a validation query returned. An event OCSF does not carry is named by `type` instead, which `related_event` exists to allow.
 
 Each reference carries **when the event happened** — `first_seen_time` — not when the Finding was made. That is what lets the Case's `start_time` move: it is the earliest such time across the Case's Malicious Findings, so an adversary reaching back before the detection that caught them moves it, and a benign precursor does not.
+
+**Kept, and not only cited.** A citation is evidence only for as long as the source still holds the event, and detection telemetry is commonly retained for weeks while the regulatory report, the Post-Incident Review and the quality sample come later: a Case whose references have expired asserts a verdict it can no longer show. So a reference carries what its Finding reasoned from — the event's `observables`, and `evidences`, the artifacts in the OCSF objects that carry them (`process`, `file`, `user`, `device`, `src_endpoint`, and the rest), with `data` for what no object carries. Where the producer already emits `evidences` on the cited Detection Finding, it is the same object and carries across unchanged.
+
+**Relevance is the bound, and size is not.** A query that returned four hundred rows contributes the rows its Finding rests on; `count` says how many occurrences the reference stands for, and `analytic.algorithm` is what re-reads the remainder while the source still has it. What a Case excludes is not copies but irrelevance: bulk telemetry, result sets nobody reasoned from, message bodies, file content. The Note still summarizes rather than pastes — a dump is not an argument — and what a Finding rests on is the executor's judgment, stated on the record and reviewable as such. An executor may hold a limit against an answer that is a result set rather than evidence; where it applies, the reference keeps the whole answer's `count` and the query that re-reads it, and never an arbitrary part of the answer — a limit that selected the evidence would decide by accident which of the events a verdict rests on survives.
+
+This is not the incident-grade record of [Detection & Analysis §3.3](../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody), and the difference is scope rather than kind: the Case keeps the evidence its Findings rest on, and that record adds custody, integrity and tamper-proofing once an Incident is declared.
 
 **Directionality.** `attack_graph` SHOULD be populated where the executor can establish which entity acted on which. It is a directed graph (`is_directed` `true`) over the Case's entities, and it borrows its vocabulary rather than inventing one:
 
@@ -117,7 +134,7 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 The Case is the current state; what happened to it is a sequence of events it references, never an array it stores.
 
-*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events` by that event's `uid` and its class `type_uid`. An action is recorded against the Case and not against the Finding that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done. OCSF holds no reference in the other direction.
+*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events` by that event's `uid` and its class `type_uid`. The entry carries **what was done and what selected it**: the executor's [Course of Action](../01-Foundation/definitions.md#course-of-action-coa) is the actions taken *and the decisions that select them*, so `analytic` names the selector as it names the check that produced a Finding — the playbook action and its step, the source's recommendation, or the automatic remediation of the product — and `desc` states the decision, including whether the action was pre-authorized or approved and by whom ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)). An action with no selector recorded is an action nobody can account for. An action is recorded against the Case and not against the Finding that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done — this is where the remediation state the source reports per entity is carried, one entry per remediation, and an entity the source left active has none. OCSF holds no reference in the other direction.
 *   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
 *   **The Case Timeline** is the entries tagged `zerosoc:timeline`, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
 

@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -10,6 +10,10 @@ license: Apache-2.0
 All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in [GOVERNANCE.md](GOVERNANCE.md#5-releases). Each release entry credits the contributors whose work landed in it.
 
 ## [Unreleased]
+
+### Changed
+
+- **02-Taxonomy, 03-Processes, 06-Deliverables:** what a detection asserts — techniques, threat name and family, detection source and detector, description, recommended actions, per-entity remediation state — is a required input of triage, mapped to native OCSF carriers and recorded on the Case (DD-24). A Finding's evidence is **kept with the Case** and cited by identifier rather than cited alone, with relevance as the bound: bulk telemetry, result sets, message bodies and file content stay out, and a citation whose referent has expired no longer leaves a Case that cannot show what its verdict rests on (DD-25).
 
 ### Added
 

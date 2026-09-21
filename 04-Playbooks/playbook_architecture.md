@@ -2,7 +2,7 @@
 title: Playbook Architecture
 type: concept
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 license: Apache-2.0
 ---
 
@@ -58,9 +58,9 @@ Playbooks therefore contain no handover conditions, no autonomy boundaries and n
 Front matter MUST include `title`, `type: playbook`, `last_updated`, `license`, `domain`, `required_data_sources` and `status` (release status per [GOVERNANCE.md](../GOVERNANCE.md#3-document-maturity); a playbook copied from the template starts as `draft`). Body MUST contain, in order:
 
 1. **Alert Catalog** (MUST) — the domain's alert types drawn from the [Alert Type taxonomy](../02-Taxonomy/alert_types.md), as a table `Alert Type | Log Source | Tactics | Techniques | Candidate Incident Categories`, indexing the Per-Alert Triage subsections. Tactics and techniques are the candidates an alert type *may* map to, from which the executor selects those matching the observation; they are not a conjunction and not exhaustive.
-2. **Per-Alert Triage** (MUST) — one `###` subsection per catalog row, with exactly these labeled elements:
+2. **Per-Alert Triage** (MUST) — one `###` subsection per catalog row, with exactly these labeled elements. Every subsection is entered with what the detection asserted already read ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) — its techniques, threat name, detection source, per-entity remediation state, description and recommended actions — so the elements below refine, test or contradict those assertions and never re-derive them:
    - **Enrich entities:** the entities in scope, each linked to its enrichment sub-playbook in [`99-Shared/`](99-Shared/).
-   - **Checks:** the observations specific to this alert type, numbered. Each check states the question and **what its result is evidence of**, in the tags of Detection & Analysis §2.4: `Malicious (Low|Medium|High)` when ..., `Benign (Low|Medium|High)` when .... A result that bears on neither hypothesis is context. The levels follow the confidence table of Definitions §7: High when the observation alone establishes the side, Medium when it is a strong signal that needs a second, Low when it is consistent with the side but common in normal operation.
+   - **Checks:** the observations specific to this alert type, numbered. Each check states the question and **what its result is evidence of**, in the tags of Detection & Analysis §2.4: `Malicious (Low|Medium|High)` when ..., `Benign (Low|Medium|High)` when .... A result that bears on neither hypothesis is context. The levels follow the confidence table of Definitions §7: High when the observation alone establishes the side, Medium when it is a strong signal that needs a second, Low when it is consistent with the side but common in normal operation. A check whose answer the detection already supplies is recorded with the detection as its source rather than run again, and is re-asked only where the decision turns on it and the answer can be checked independently; a check on an entity the source has already remediated is still run — the block answers what was stopped, not how it arrived.
    - **False Positive conditions:** activity that is *not* what the detection looks for, yet triggers it — a heuristic misfire, a parser artifact, a stale rule. When such a condition explains the alert, the Case closes as **False Positive** (`verdict_id` 1) and emits a tuning ticket to Phase 1.
    - **Benign conditions:** authorized activity that *legitimately* matches the detection — an approved change, a sanctioned tool, a documented exception. When such a condition explains the alert, the Case closes as **Benign** (`verdict_id` 5) and, if the exception was not recorded, emits a Knowledge Base entry. The two lists are kept apart because their remediation differs: a False Positive fixes the detection, a Benign fixes the organization's knowledge of itself.
    - **Candidate Incident Category(ies):** the categories this alert type promotes to.

@@ -10,7 +10,7 @@ status: draft
 
 Fill-in template and worked example for the **Investigation Note**, the verdict evidence record produced when Investigation closes a Case or confirms an Incident. The canonical element list is [Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record); this page is the practitioner-facing form. Naming convention: `investigation_note_<case-id>_<YYYYMMDD-HHMM>`.
 
-> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree.
+> **Being rebuilt.** The canonical element list was revised — one structure for both Notes, Classification first and carrying the decision, Rationale separate, and *Actions Taken*, *Executed Queries* and the reference lists dissolved into Findings and Provenance. This template still shows the previous structure. Follow the canonical section above where the two disagree. The Alerts' own elements — what their detection asserted, and the disposition of its recommended actions — are in the Findings section below and survive the rebuild.
 
 ## Template
 
@@ -21,6 +21,8 @@ Fill-in template and worked example for the **Investigation Note**, the verdict 
 ### Executed Queries
 
 *The validation queries run, each with its outcome and the tag of the finding it produced — `Malicious (Low|Medium|High)`, `Benign (Low|Medium|High)`, or context — and its event reference. Triage findings verified or retracted are listed with their new state.*
+
+*The Alerts render **what their detection asserted** ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)), as in the Triage Note — the technique identifiers as `ID (Name)`, the threat name and family, the detection source and the detector — with the **remediation state of each entity as it stands at this gate**, and the disposition of the source's recommended actions: one followed with the Finding it produced, one set aside with the reason. A remediation the source performed is an action the Case records and never a Benign finding.*
 
 | # | Query | Outcome | Tag | Event ref |
 |---|---|---|---|---|
