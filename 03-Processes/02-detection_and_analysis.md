@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-09-21
+last_updated: 2026-09-22
 license: Apache-2.0
 ---
 
@@ -185,7 +185,7 @@ A conformant Triage Note renders, in this order:
 
 **Two former elements are gone, not lost.** *Actions Taken* was a prose restatement of work each Finding already accounts for: the check that produced a Finding is that Finding's `analytic`, rendered beside it. *References* was a second list of the same event identifiers the Findings cite; per-Finding evidence stays with the Finding, and the preserved-evidence pointer belongs with Provenance, where it appears only once preservation has happened (§3.3).
 
-Notes must be specific and concise: state findings in accurate terms rather than vague language, and summarize evidence rather than pasting raw logs — what the Note summarizes, the Case keeps, and neither holds what no Finding rested on. Whenever ATT&CK/ATLAS technique codes appear in a Note, they are written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`), never bare codes.
+Notes must be specific and concise: state findings in accurate terms rather than vague language, and summarize evidence rather than pasting raw logs — what the Note summarizes, the Case keeps, and neither holds what no Finding rested on. Whenever ATT&CK/ATLAS technique codes appear in a Note, they SHOULD be written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`).
 
 ---
 
@@ -267,7 +267,7 @@ A conformant Investigation Note renders, in this order:
 
 **Two former elements are gone, not lost.** *Executed Queries* named a table that never held only queries: a query that produced a Finding is that Finding's `analytic`, and the triage Findings carried forward are Findings, so both belong in the Findings element. *Evidence References* was the same second list of identifiers §1.6 dropped, with the preserved-evidence pointer moved to Provenance.
 
-The Investigation Note is the machine-reviewable record consumed by QA sampling ([Agentic Supervision](../07-Governance/agentic_supervision.md)) and by post-incident review (Phase 4). As in the Triage Note, ATT&CK/ATLAS technique codes are always written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`), never bare codes.
+The Investigation Note is the machine-reviewable record consumed by QA sampling ([Agentic Supervision](../07-Governance/agentic_supervision.md)) and by post-incident review (Phase 4). As in the Triage Note, ATT&CK/ATLAS technique codes SHOULD be written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`).
 
 ---
 
