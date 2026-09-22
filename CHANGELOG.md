@@ -13,6 +13,30 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes, 02-Taxonomy:** a source's **recommended actions are indicative**, as the
+  playbook's own checks (§1.2), its queries (§2.2) and the hypotheses (§2.1) already were. The rule
+  required each to be "followed, or set aside with a stated reason", and said that an unread
+  recommendation is an unexamined step. That sentence is gone. A procedure written for an alert
+  type, before anything was known about the Case, does not get to decide what an executor that
+  knows the Case spends its attention on. What the executor **ran** is recorded, as the Finding it
+  produced; what it did not run is recorded nowhere, because an entry saying a recommendation was
+  considered and found irrelevant is not evidence. Measured on a 59-alert Case: 684 published
+  actions, 107 distinct instructions, and a three-alert Case whose Note carried 67 findings of
+  which six decided it.
+
+- **03-Processes:** §1.2 and §1.3 say what they always meant — the enrichment and the scope
+  analysis are **indicative**, what is usually worth knowing rather than a list to be discharged,
+  and an executor that queries every capability on every Case spends its budget proving that a
+  printer is a printer. In their place, a short floor: what triage does not decide without is what
+  the detection asserted, the role of every entity the decision rests on, and the prior Cases on
+  the same entities or alert type. A question the executor **chose not to ask** is not a visibility
+  gap; a gap is one it needed answered and could not get.
+
+- **03-Processes:** before a gate decision the executor **checks whether the Case changed while it
+  was being worked on**. It previously re-read "at each step and before the decision", which asked
+  for both more often and more than the point required: a source may append alerts after a Case was
+  opened, and a decision must be taken on what the Case holds when it is taken.
+
 - **03-Processes:** a Note renders **the account before the measures**. The element order of §1.6
   and §2.5 becomes Summary, Classification, Rationale, Findings (then Re-classification Pivots in
   §2.5), Case Timeline, Visibility Gaps, Provenance — what happened, what was decided, why, then
