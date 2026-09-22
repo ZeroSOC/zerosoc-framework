@@ -2,13 +2,15 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-21
+last_updated: 2026-09-22
 license: Apache-2.0
 ---
 
 # Case Schema
 
 The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§7).
+
+The release this mapping follows is declared on the schema itself, as `ocsf_version`: a consumer handed a Case out of band — written into another system's record, exported, archived — reads which OCSF release it was written against without being told.
 
 ## 1. Object Mapping
 

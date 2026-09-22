@@ -3,6 +3,7 @@
   "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
   "title": "ZeroSOC Case",
   "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under the 'zerosoc' extension object. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is one source's own record, under that source's key.",
+  "ocsf_version": "1.9.0",
   "type": "object",
   "additionalProperties": {
     "type": "object",
