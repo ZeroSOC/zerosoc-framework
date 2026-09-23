@@ -1,7 +1,7 @@
 ---
 title: Asset Entity Enrichment
 type: reference
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 status: draft
 ---
@@ -16,7 +16,7 @@ Sibling references: [Identity](sub_enrichment_identity.md) · [Asset](sub_enrich
 
 ## 1. What the asset is
 
-- Resolve the asset in the CMDB or cloud inventory: type, operating system or platform, owner, business service it belongs to. An asset **without an inventory record** is a finding in itself: an unmanaged or shadow asset.
+- Resolve the asset in the CMDB or cloud inventory: type, operating system or platform, owner, business service it belongs to. An asset **without an inventory record** is an observation in itself: an unmanaged or shadow asset.
 - Resolve **criticality**: is the asset a **Crown Jewel**, or does it host or serve one ([SOC Knowledge Base](../../01-Foundation/definitions.md#soc-knowledge-base-soc-kb))? A Crown Jewel in the Case scope triggers the human assignee condition of [Agentic Guardrails §3](../../07-Governance/agentic_guardrails.md#3-human-assignee-conditions) and decides which containment actions require approval ([Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)).
 - Resolve the network zone, exposure (internet-facing or internal) and the data classification of what it stores or processes.
 

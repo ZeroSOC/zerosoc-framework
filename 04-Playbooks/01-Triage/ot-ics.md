@@ -1,7 +1,7 @@
 ---
 title: OT/ICS Triage Playbook
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 domain: OT/ICS
 required_data_sources:
@@ -36,7 +36,7 @@ One row per alert type of this domain; each row is the index into a subsection o
   1. **Change authorization.** Does the command or logic change tie to an approved maintenance or commissioning window and a change ticket naming the controller? → `Benign (High)` when a recorded ticket covers the controller, the engineer and the time; `Malicious (Medium)` when no change record exists — an untracked change to controller logic.
   2. **Command origin.** Where did the command come from? → `Benign (Medium)` when it came from the authorized engineering workstation through the engineering software on its normal path; `Malicious (High)` when it came from a host outside the engineering asset set, from an IT-network address, or over an unexpected protocol path — a direct write from a non-engineering source; `Malicious (Medium)` when it came from an engineering workstation outside its normal hours under an account not assigned to that controller.
   3. **Change content.** What changed — a logic download, a setpoint write, a mode change (run, stop, program), a firmware push? → `Malicious (High)` when the downloaded logic differs from the approved program baseline in the engineering repository, or firmware was pushed outside a documented update; `Malicious (Medium)` on a mode change to stop or program outside a window; `Benign (Medium)` when the downloaded logic matches the approved version in the repository.
-  4. **Process-safety relevance.** Does the change touch a safety-critical setpoint, an interlock or a safety-instrumented function (per the asset inventory's safety criticality and network level)? → `Malicious (Medium)` when a setpoint was moved outside the process's engineered operating range; otherwise context — a safety-relevant change sets the Case severity per [Definitions §7](../../01-Foundation/definitions.md#7-classification-levels) regardless of the authorization finding.
+  4. **Process-safety relevance.** Does the change touch a safety-critical setpoint, an interlock or a safety-instrumented function (per the asset inventory's safety criticality and network level)? → `Malicious (Medium)` when a setpoint was moved outside the process's engineered operating range; otherwise context — a safety-relevant change sets the Case severity per [Definitions §7](../../01-Foundation/definitions.md#7-classification-levels) regardless of the authorization observation.
   5. **Historian corroboration.** Did process variables deviate or alarms fire at the time of the write? → `Malicious (Medium)` when the process responded in a way no operator intended; context when no effect is visible.
   6. **Scope.** Is the same command reaching several controllers within minutes? → `Malicious (High)` — a scripted manipulation; context when confined to one controller.
 - **False Positive conditions:** a baseline learned before a plant change flagging a periodic write the supervisory system performs by design; a parser reading a read request as a write; a diagnostic or keepalive message classified as a command; the passive monitoring tool's own inventory queries.

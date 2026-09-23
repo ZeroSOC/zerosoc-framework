@@ -1,7 +1,7 @@
 ---
 title: Identity Triage Playbook
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 domain: Identity
 required_data_sources:
@@ -76,7 +76,7 @@ One row per alert type of this domain; each row is the index into a subsection o
   3. **Source of the sign-in.** Where did it originate? → `Benign (High)` when it comes from the inventoried legacy device's own address on the internal network under a recorded exception — the sign-in is explained; `Malicious (Medium)` when it comes from an external address the device never uses.
   4. **Correlated risk.** Does the sign-in coincide with an impossible-travel, brute-force or MFA alert on the same account? → `Malicious (High)` when it does — legacy authentication is the MFA-bypass path attackers pivot to after credential theft; context when isolated.
   5. **Credential validity on a blocked attempt.** When the identity provider rejected the attempt on protocol grounds, was the password correct? → `Malicious (Medium)` when the password was accepted and only the protocol block stopped the session — whoever tried holds a valid credential; context when the password was wrong.
-- **False Positive conditions:** a parser classifying a modern client as a legacy protocol on a malformed user-agent; a rule that flags a protocol the identity provider already blocks, so the "sign-in" is a rejected attempt with no session — provided the password was wrong; a correct password stopped only by the protocol block is a Malicious finding (check 5), not a False Positive.
+- **False Positive conditions:** a parser classifying a modern client as a legacy protocol on a malformed user-agent; a rule that flags a protocol the identity provider already blocks, so the "sign-in" is a rejected attempt with no session — provided the password was wrong; a correct password stopped only by the protocol block is a Malicious observation (check 5), not a False Positive.
 - **Benign conditions:** an old client (a legacy printer or scanner, an old mail client) that only speaks basic authentication and has done so consistently, with a recorded exception.
 - **Candidate Incident Category(ies):** IC-06 (Identity & Credential Attack); IC-02 (Business Email Compromise) when the legacy protocol is a mail protocol.
 

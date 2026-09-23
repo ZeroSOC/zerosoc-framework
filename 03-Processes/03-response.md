@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -75,15 +75,15 @@ The matrix decides, for each containment action, whether the executor applies it
 
 **Confidence and severity adjust the matrix:**
 
-*   At **Low** confidence every containment action requires approval, including the pre-authorized ones: the Incident is confirmed, but on evidence that a single retracted finding could overturn ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
+*   At **Low** confidence every containment action requires approval, including the pre-authorized ones: the Incident is confirmed, but on evidence that a single retracted observation could overturn ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
 *   At **High** and **Critical** severity the pre-authorized actions are applied immediately, before the internal notification of [Detection & Analysis §3.2](02-detection_and_analysis.md#32-stakeholder--regulatory-notification) completes: a threat with a credible path to material harm is stopped first; the notified stakeholders confirm the action afterwards or request its rollback.
 *   At **Low** and **Medium** severity the pre-authorized actions may be scheduled with the affected asset owner when applying them at once would disrupt work; the schedule is recorded in the Case timeline.
 
-**Approval** is requested with the presentation payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) — context, evidence, blast radius, rollback — whoever the executor is: a human analyst requesting approval from the SOC Manager submits the same payload an agent does. Who grants approval is an organization policy knob; the SOC Manager is the default approver. The time spent waiting for approval is measured as dwell time, not as containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies the pre-authorized actions the Incident allows and continues the investigation of the residual findings.
+**Approval** is requested with the presentation payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) — context, evidence, blast radius, rollback — whoever the executor is: a human analyst requesting approval from the SOC Manager submits the same payload an agent does. Who grants approval is an organization policy knob; the SOC Manager is the default approver. The time spent waiting for approval is measured as dwell time, not as containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies the pre-authorized actions the Incident allows and continues the investigation of the residual observations.
 
 > **Example — pre-authorized action on a Crown Jewel.** A confirmed credential-theft Incident at High confidence, High severity: an administrator's account authenticated to a domain controller from a host it never used. Disabling the administrator's account and revoking its sessions is pre-authorized, although the domain controller is a Crown Jewel: the account is a personal identity, no service runs under it, and the domain controller keeps serving. Isolating the domain controller itself is not pre-authorized; if the timeline shows the attacker executed code on it, the executor requests approval for the isolation while the account is already disabled.
 >
-> **Example — Low confidence changes the matrix.** A confirmed Incident at Low confidence: a new cloud access key created outside change windows and used from an unfamiliar region, with no finding above Low. Revoking the key is a pre-authorized action at Medium or High confidence; at Low confidence it requires approval, requested with the Guardrails payload and, in the meantime, the executor runs the remaining playbook queries: a single additional finding — the key downloading a storage bucket — raises the confidence to Medium and the revocation proceeds without approval.
+> **Example — Low confidence changes the matrix.** A confirmed Incident at Low confidence: a new cloud access key created outside change windows and used from an unfamiliar region, with no observation above Low. Revoking the key is a pre-authorized action at Medium or High confidence; at Low confidence it requires approval, requested with the Guardrails payload and, in the meantime, the executor runs the remaining playbook queries: a single additional observation — the key downloading a storage bucket — raises the confidence to Medium and the revocation proceeds without approval.
 
 ---
 

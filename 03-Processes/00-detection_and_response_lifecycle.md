@@ -2,7 +2,7 @@
 title: Detection & Response Lifecycle
 type: process
 status: development
-last_updated: 2026-09-09
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -83,7 +83,7 @@ Because different international frameworks define their incident lifecycles with
 *   **Detailed Process:** [03-response.md](03-response.md)
 
 ## Phase 4: Post-Incident Activity
-*   **Objective:** Feeding tuning data back into Phase 1 based on True Positive or critical False Positive findings.
+*   **Objective:** Feeding tuning data back into Phase 1 based on True Positive or critical False Positive observations.
 *   **Functions:** [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions), [Detection Engineer](../01-Foundation/definitions.md#6-executors-and-functions) and the [Security Analyst](../01-Foundation/definitions.md#6-executors-and-functions) who was assigned the Incident.
 *   **Process Flow:** Conducting blameless post-mortems and generating actionable tickets for continuous improvement.
 *   **Detailed Process:** [04-post_incident_activity.md](04-post_incident_activity.md)

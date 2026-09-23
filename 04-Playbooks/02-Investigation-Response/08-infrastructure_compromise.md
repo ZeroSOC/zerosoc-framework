@@ -1,7 +1,7 @@
 ---
 title: 08-Infrastructure Compromise Investigation & Response
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 incident_category: IC-08
 mitre_ttps:
@@ -30,7 +30,7 @@ status: draft
 
 > **Draft.** This playbook has not been verified in detail: its checks, outcome tags and actions have not been walked through against real material. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
-Investigation and Incident Response knowledge for Cases whose candidate category is `IC-08 Infrastructure Compromise` — compromise of a system other systems depend on: an edge device (router, firewall, VPN concentrator, load balancer), a server or hypervisor, or identity and backup infrastructure such as a domain controller — used as a foothold, a pivot or relay infrastructure before a business-impact objective is established, as distinct from `IC-07 (Web App Exploitation)`, which targets application logic rather than the device or host itself. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage findings, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
+Investigation and Incident Response knowledge for Cases whose candidate category is `IC-08 Infrastructure Compromise` — compromise of a system other systems depend on: an edge device (router, firewall, VPN concentrator, load balancer), a server or hypervisor, or identity and backup infrastructure such as a domain controller — used as a foothold, a pivot or relay infrastructure before a business-impact objective is established, as distinct from `IC-07 (Web App Exploitation)`, which targets application logic rather than the device or host itself. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage observations, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 
 Infrastructure carries trust the adversary wants to inherit. Edge devices are both a persistence beachhead and relay infrastructure (operational relay box (ORB) network or botnet enrollment), and are often the environment's blind spot — most carry no EDR, so device-native and network-side evidence substitute for host telemetry. Core infrastructure — domain controllers, hypervisors, identity and backup servers — holds the credentials, images and copies of everything else: its compromise exposes every system that trusts it, and the investigation scopes that exposure, not only the host.
 

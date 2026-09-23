@@ -1,7 +1,7 @@
 ---
 title: Network Entity Enrichment
 type: reference
-last_updated: 2026-09-20
+last_updated: 2026-09-24
 license: Apache-2.0
 status: draft
 ---
@@ -77,5 +77,5 @@ These are the operative, immediately-actionable constraints; the governing polic
 
 - **Observable classification verdict** — internal / external / ambiguous determination per [§1](#1-classify-the-observable-first-internal--external--ambiguous), which fixes the enrichment route and egress path taken.
 - **Ownership and identity resolution** — for internal observables, the resolved host, asset, owner, and zone ([§2.1](#21-internal-observables--resolve-ownership-and-identity-from-internal-systems)).
-- **Reputation and registration findings** — for external observables, multi-source reputation, ASN/hosting/geolocation, passive DNS, and WHOIS/registration-age findings ([§2.2](#22-external-observables-indicators--threat-intelligence-registration-safe-content-inspection)).
+- **Reputation and registration observations** — for external observables, multi-source reputation, ASN/hosting/geolocation, passive DNS, and WHOIS/registration-age observations ([§2.2](#22-external-observables-indicators--threat-intelligence-registration-safe-content-inspection)).
 - **Risk elevators** — any matched signals (newly-registered domain, DGA-like name, lookalike/typosquat, fast-flux, shared-hosting reputation hit, unmanaged internal host) from [§5](#5-risk-elevators-quick-reference).

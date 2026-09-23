@@ -144,11 +144,11 @@
     },
     "start_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or finding that contributed to the Case. It opens at the earliest Alert's own start_time and moves earlier whenever a Malicious Finding cites an earlier event; a benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident this is T0, the earliest confirmed malicious event. On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is not T0 and anchors no metric."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The earliest event or observation that contributed to the Case. It opens at the earliest Alert's own start_time and moves earlier whenever a Malicious Observation cites an earlier event; a benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident this is T0, the earliest confirmed malicious event. On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is not T0 and anchors no metric."
     },
     "end_time": {
       "type": "integer",
-      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or finding that contributed to the Case."
+      "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). The most recent event or observation that contributed to the Case."
     },
     "vendor_attributes": {
       "type": "object",
@@ -365,7 +365,7 @@
         },
         "first_seen_time": {
           "type": "integer",
-          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the event happened. The Case's start_time is the earliest of these across its Malicious Findings."
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the event happened. The Case's start_time is the earliest of these across its Malicious Observations."
         },
         "last_seen_time": {
           "type": "integer",
@@ -375,7 +375,7 @@
           "$ref": "#/$defs/ocsf_product"
         }
       },
-      "description": "An event that is evidence of the Finding: what the Finding rests on, kept with the Case and cited by identifier. It may be any OCSF event — a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Finding did not rest on: bulk telemetry, result sets, message bodies, file content."
+      "description": "An event that is evidence of the Observation: what the Observation rests on, kept with the Case and cited by identifier. It may be any OCSF event — a Detection Finding where the Observation is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Observation did not rest on: bulk telemetry, result sets, message bodies, file content."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -401,7 +401,7 @@
         },
         "first_seen_time": {
           "type": "integer",
-          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the thing the Finding reports was first observed, which is not when the Finding was made. The Case Timeline orders on this, and the Case's start_time is the earliest of them."
+          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC). When the thing the Observation reports was first observed, which is not when the Observation was made. The Case Timeline orders on this, and the Case's start_time is the earliest of them."
         },
         "last_seen_time": {
           "type": "integer",
@@ -428,25 +428,25 @@
             "type": "string",
             "enum": [
               "alert",
-              "finding",
+              "observation",
               "action"
             ]
           },
-          "description": "alert for an aggregated Alert, finding for the result of a check or query, action for a response action."
+          "description": "alert for an aggregated Alert, observation for the result of a check or query, action for a response action."
         },
         "analytic": {
           "$ref": "#/$defs/ocsf_analytic"
         },
         "traits": {
           "type": "array",
-          "description": "Characteristics of the entity the Finding is about, surfaced from the event. On an Alert this is where the threat name and family the detection assigned are carried: category 'malware', name the family, values the threat names the source assigned.",
+          "description": "Characteristics of the entity the Observation is about, surfaced from the event. On an Alert this is where the threat name and family the detection assigned are carried: category 'malware', name the family, values the threat names the source assigned.",
           "items": {
             "$ref": "#/$defs/ocsf_trait"
           }
         },
         "tags": {
           "type": "array",
-          "description": "The side and the confidence of a Finding, and whether the Case Timeline renders the entry. A Finding that bears on no hypothesis, and every action entry, carries neither side nor confidence.",
+          "description": "The side and the confidence of an Observation, and whether the Case Timeline renders the entry. An Observation that bears on no hypothesis, and every action entry, carries neither side nor confidence.",
           "items": {
             "allOf": [
               {
@@ -534,7 +534,7 @@
           "$ref": "#/$defs/ocsf_graph"
         }
       },
-      "description": "One entry of the Case's record: a Finding — an Alert, or the result of a check or validation query — or a response action taken on the Case."
+      "description": "One entry of the Case's record: an Observation — an Alert, or the result of a check or validation query — or a response action taken on the Case."
     },
     "ocsf_ticket": {
       "type": "object",
@@ -592,7 +592,7 @@
       "type": "object",
       "x-ocsf-object": "trait",
       "additionalProperties": true,
-      "description": "The list of key traits or characteristics extracted from the finding, as the source stated them. What a trait holds depends on the finding it came from; the framework reserves no category and no name.",
+      "description": "The list of key traits or characteristics extracted from the observation, as the source stated them. What a trait holds depends on the observation it came from; the framework reserves no category and no name.",
       "required": [
         "name"
       ],
@@ -863,7 +863,7 @@
       "type": "object",
       "x-ocsf-object": "analytic",
       "additionalProperties": true,
-      "description": "What produced the Finding: the detection content that raised an Alert, the check that answered a triage question, or the validation query that tested a hypothesis. A Finding and what produced it are never separated.",
+      "description": "What produced the Observation: the detection content that raised an Alert, the check that answered a triage question, or the validation query that tested a hypothesis. An Observation and what produced it are never separated.",
       "properties": {
         "uid": {
           "type": "string",
@@ -887,7 +887,7 @@
         },
         "algorithm": {
           "type": "string",
-          "description": "The query the tool actually ran, in that tool's own language. It is what makes the Finding reproducible by someone holding neither the Case nor the executor."
+          "description": "The query the tool actually ran, in that tool's own language. It is what makes the Observation reproducible by someone holding neither the Case nor the executor."
         },
         "version": {
           "type": "string"

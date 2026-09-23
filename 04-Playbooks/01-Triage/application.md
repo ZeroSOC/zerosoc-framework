@@ -1,7 +1,7 @@
 ---
 title: Application Triage Playbook
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 domain: Application
 required_data_sources:
@@ -87,7 +87,7 @@ One row per alert type of this domain; each row is the index into a subsection o
 - **Enrich entities:** [File](../99-Shared/sub_enrichment_artifact.md) (the package, artifact or container image, by hash), [Device](../99-Shared/sub_enrichment_asset.md) (the build runner or developer host), [User](../99-Shared/sub_enrichment_identity.md) (the committer, pipeline identity or token), [Network observable](../99-Shared/sub_enrichment_network.md) (destinations contacted during install or build).
 - **Checks:**
   1. **Dependency provenance.** Does the flagged package exist in the package registry under the expected name, publisher and version history? → `Malicious (High)` when the name is a lookalike of a package the project uses, or a public package shadows an internal package of the same name — dependency confusion; `Malicious (Medium)` when the package or the version was published minutes to days ago by a publisher with no history; `Benign (Medium)` when it is the long-standing package and the version matches the upstream release and its signed provenance attestation.
-  2. **Advisory match.** Is the exact name and version listed in a malicious-package advisory or the registry's takedown list? → `Malicious (High)` when it is; context when only a vulnerability advisory matches — a vulnerable dependency is a vulnerability-management finding, not a supply-chain attack.
+  2. **Advisory match.** Is the exact name and version listed in a malicious-package advisory or the registry's takedown list? → `Malicious (High)` when it is; context when only a vulnerability advisory matches — a vulnerable dependency is a vulnerability-management observation, not a supply-chain attack.
   3. **Install-time and build-time behaviour.** Did the dependency's install hooks or the build step run code that reaches the network, reads environment variables or credential files, spawns shells, or writes outside the build workspace? → `Malicious (High)` when install scripts read tokens or environment variables and send them out, or fetch and execute remote content; `Malicious (Medium)` when the build contacts a destination that is not the sanctioned registry or artifact store; `Benign (Low)` when every contact is to the sanctioned registry and artifact store.
   4. **Pipeline change authorization.** Was the pipeline definition, build script or runner configuration changed — by whom, and through which path? → `Benign (High)` when the change is a reviewed and merged change by a maintainer under a recorded change; `Malicious (High)` when the definition was modified outside review — a direct push, a change by a token rather than a person, a pull request from a fork altering the base branch's workflow; `Malicious (Medium)` when the change adds access to a new secret, adds an external action or plugin pinned to a mutable tag, or disables a signing or verification step.
   5. **Artifact integrity.** Do the lockfile and the built artifact match what was declared? → `Malicious (High)` when the lockfile hash changed for an unchanged version, or the artifact or image digest differs from its provenance attestation or reproducible build; `Benign (Medium)` when digests and attestations match.

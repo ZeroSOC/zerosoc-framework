@@ -1,7 +1,7 @@
 ---
 title: 13-Destructive / Wiper Attack Investigation & Response
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 incident_category: IC-13
 mitre_ttps:
@@ -24,7 +24,7 @@ status: draft
 
 > **Draft.** This playbook has not been verified in detail: its checks, outcome tags and actions have not been walked through against real material. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
-Investigation and Incident Response knowledge for Cases whose candidate category is `IC-13 Destructive / Wiper Attack` — intent to destroy, corrupt or render systems and data permanently unavailable, so that recovery requires rebuild or restore. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage findings, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
+Investigation and Incident Response knowledge for Cases whose candidate category is `IC-13 Destructive / Wiper Attack` — intent to destroy, corrupt or render systems and data permanently unavailable, so that recovery requires rebuild or restore. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage observations, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 
 Wipers often masquerade as ransomware; the discriminator matters because communications, negotiation and recovery differ. Recovery is the dominant phase, and the playbook protects the backups first: a destructive actor who reaches them leaves nothing to restore from.
 

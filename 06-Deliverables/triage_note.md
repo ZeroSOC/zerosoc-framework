@@ -1,7 +1,7 @@
 ---
 title: Triage Note Template
 type: template
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 license: Apache-2.0
 status: draft
 ---
@@ -24,25 +24,25 @@ The Note renders the account first, then what was decided, then why, then what i
 
 ### Rationale
 
-*One to two sentences, citing the Findings, saying why the decision follows: which alerts the Benign findings cover, or which Malicious finding stands beyond them.*
+*One to two sentences, citing the Observations, saying why the decision follows: which alerts the Benign observations cover, or which Malicious observation stands beyond them.*
 
-### Findings
+### Observations
 
-*Every Finding the Case holds: the Alerts first, then the result of each check run — entity context, entity and process analysis, threat-intelligence results, and the historical baseline. Each renders with its **side and confidence** — `Malicious (High)`, `Benign (Medium)`, … — or with neither where it is pure context; with **what produced it**, the check being the Finding's `analytic`; and with **the events it rests on**, cited by OCSF identifier or platform event link. A Finding without a traceable event reference is not conformant, and a raw-log dump is not an event reference.*
+*Every Observation the Case holds: the Alerts first, then the result of each check run — entity context, entity and process analysis, threat-intelligence results, and the historical baseline. Each renders with its **side and confidence** — `Malicious (High)`, `Benign (Medium)`, … — or with neither where it is pure context; with **what produced it**, the check being the Observation's `analytic`; and with **the events it rests on**, cited by OCSF identifier or platform event link. An Observation without a traceable event reference is not conformant, and a raw-log dump is not an event reference.*
 
 *Each **Alert** also renders what its detection asserted ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)): the technique identifiers as `ID (Name)`, the threat name and family where one was assigned, the detection source and the detector, and the remediation state of each entity it names — blocked, quarantined, removed or active.*
 
-*The source's **recommended actions** are indicative ([§1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)). One you ran renders as the Finding it produced, naming the recommendation it came from; one you did not run renders nowhere.*
+*The source's **recommended actions** are indicative ([§1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)). One you ran renders as the Observation it produced, naming the recommendation it came from; one you did not run renders nowhere.*
 
-| # | Finding | Tag | Produced by | Event ref |
+| # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| 1 | `<alert>` — `<T#### (Name), ...>`; threat `<name (family)>`; detected by `<detection source>`; `<entity>` `<remediation state>` | `Malicious (<confidence>)` | `<detector>` | `<finding UID>` |
+| 1 | `<alert>` — `<T#### (Name), ...>`; threat `<name (family)>`; detected by `<detection source>`; `<entity>` `<remediation state>` | `Malicious (<confidence>)` | `<detector>` | `<observation UID>` |
 | 2 | `<enrichment, scope or correlation result>` | `<Malicious/Benign (confidence)>` or context | `<the check that produced it>` | `<event ref>` |
 | 3 | `<result of a recommended action you ran>` | `<tag>` or context | `<the recommendation it came from>` | `<event ref>` |
 
 ### Case Timeline
 
-*The Findings the Case flags for the narrative, in `first_seen_time` order. Early in a Case usually nothing is flagged; write "None." then.*
+*The Observations the Case flags for the narrative, in `first_seen_time` order. Early in a Case usually nothing is flagged; write "None." then.*
 
 ### Visibility Gaps
 
@@ -64,15 +64,15 @@ At 14:58 UTC on 2026-09-14 the SaaS discovery control recorded `j.doe` — a sta
 
 ### Classification
 
-`severity_id`: **2 (Low)**. `confidence_id`: **1 (Low)** — the alert's own confidence; the Benign finding exists but does not close the Case. `impact_id`: **0 (Unknown)** — not assessable at triage. Candidate Incident Categories: **IC-09** (Insider Threat & Privilege Misuse), **IC-11** (Data Breach / Exfiltration). Decision: **Promote** to Investigation.
+`severity_id`: **2 (Low)**. `confidence_id`: **1 (Low)** — the alert's own confidence; the Benign observation exists but does not close the Case. `impact_id`: **0 (Unknown)** — not assessable at triage. Candidate Incident Categories: **IC-09** (Insider Threat & Privilege Misuse), **IC-11** (Data Breach / Exfiltration). Decision: **Promote** to Investigation.
 
 ### Rationale
 
-The one Benign finding (3) weighs 1 and does not exceed the alert's own weight of 1, so the alert is not covered: whether sensitive content was posted cannot be verified at triage, and the alert stands unexplained. If content exposure is confirmed, the behavior maps to `T1567 (Exfiltration Over Web Service)`.
+The one Benign observation (3) weighs 1 and does not exceed the alert's own weight of 1, so the alert is not covered: whether sensitive content was posted cannot be verified at triage, and the alert stands unexplained. If content exposure is confirmed, the behavior maps to `T1567 (Exfiltration Over Web Service)`.
 
-### Findings
+### Observations
 
-| # | Finding | Tag | Produced by | Event ref |
+| # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
 | 1 | Unsanctioned SaaS app usage: `j.doe` → AI assistant, content posted over the corporate network path. No technique asserted; no threat name; no entity remediated — the session was recorded, not blocked. Tool reports no confidence; severity Low → Low. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
 | 2 | `j.doe` is a standard-privilege user in Marketing, within normal working hours; the endpoint is a managed laptop, not a Crown Jewel. | context | CMDB and identity directory lookup | `EVT-4711-003`, `EVT-4711-004` |
@@ -82,7 +82,7 @@ The one Benign finding (3) weighs 1 and does not exceed the alert's own weight o
 
 ### Case Timeline
 
-None. No Finding is flagged for the narrative at this gate.
+None. No Observation is flagged for the narrative at this gate.
 
 ### Visibility Gaps
 

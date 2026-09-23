@@ -1,7 +1,7 @@
 ---
 title: Investigation Note Template
 type: template
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 license: Apache-2.0
 status: draft
 ---
@@ -10,7 +10,7 @@ status: draft
 
 Fill-in template and worked example for the **Investigation Note**, the verdict evidence record produced when Investigation closes a Case or confirms an Incident. The canonical element list is [Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record); this page is the practitioner-facing form. Naming convention: `investigation_note_<case-id>_<YYYYMMDD-HHMM>`.
 
-It has the **same element structure as the [Triage Note](triage_note.md)**, with one element more, and the same rendering contract: it holds no state of its own, and renders the Case at this gate. It **extends and updates** the Triage Note rather than mirroring it — the same Case further along, with the Findings triage made now verified or retracted.
+It has the **same element structure as the [Triage Note](triage_note.md)**, with one element more, and the same rendering contract: it holds no state of its own, and renders the Case at this gate. It **extends and updates** the Triage Note rather than mirroring it — the same Case further along, with the Observations triage made now verified or retracted.
 
 ## Template
 
@@ -24,17 +24,17 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 ### Rationale
 
-*The [§2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) resolution applied: the score of each side, the side proven and the Findings that carry it, and the Findings retracted and why. The confidence is in Classification; the Rationale says **how it was reached**, not what it is. What the close *emitted* is an action of the Case, not reasoning: it is a ticket the Case raised and renders in the Case Timeline.*
+*The [§2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) resolution applied: the score of each side, the side proven and the Observations that carry it, and the Observations retracted and why. The confidence is in Classification; the Rationale says **how it was reached**, not what it is. What the close *emitted* is an action of the Case, not reasoning: it is a ticket the Case raised and renders in the Case Timeline.*
 
-### Findings
+### Observations
 
-*Every Finding the Case holds: the Alerts; the Findings triage made, each now **verified or retracted** with the reason; and the result of each validation query run. Each renders with its side and confidence or with neither, with **what produced it** — the validation query being the Finding's `analytic` — and with the events it rests on, cited by identifier.*
+*Every Observation the Case holds: the Alerts; the Observations triage made, each now **verified or retracted** with the reason; and the result of each validation query run. Each renders with its side and confidence or with neither, with **what produced it** — the validation query being the Observation's `analytic` — and with the events it rests on, cited by identifier.*
 
-*The Alerts render what their detection asserted ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)), as in the Triage Note, with the **remediation state of each entity as it stands at this gate**. A remediation the source performed is an action the Case records and never a Benign finding. Any recommended action run at this gate renders as the Finding it produced.*
+*The Alerts render what their detection asserted ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)), as in the Triage Note, with the **remediation state of each entity as it stands at this gate**. A remediation the source performed is an action the Case records and never a Benign observation. Any recommended action run at this gate renders as the Observation it produced.*
 
-| # | Finding | Tag | Produced by | Event ref |
+| # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| T`<n>` | `<the triage Finding>` — **verified** or **retracted**, with the reason | `<tag>` or removed on a retraction | `<the query that settled it>` | `<event ref>` |
+| T`<n>` | `<the triage Observation>` — **verified** or **retracted**, with the reason | `<tag>` or removed on a retraction | `<the query that settled it>` | `<event ref>` |
 | `<n>` | `<what the validation query established>` | `<Malicious/Benign (confidence)>` or context | `<the question the query asked>` | `<event ref>` |
 
 ### Re-classification Pivots
@@ -47,7 +47,7 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 | UTC timestamp | Actor / executor | Action / observation | Event ref |
 |---|---|---|---|
-| `<timestamp>` | `<actor/executor>` | `<action/observation — T0 if earliest confirmed malicious event>` | `<OCSF finding UID / event link>` |
+| `<timestamp>` | `<actor/executor>` | `<action/observation — T0 if earliest confirmed malicious event>` | `<OCSF observation UID / event link>` |
 
 ### Visibility Gaps
 
@@ -73,11 +73,11 @@ Last candidate Incident Category: **IC-09** (Insider Threat & Privilege Misuse).
 
 ### Rationale
 
-Malicious side: the alert alone, `Malicious (Low)`, weight 1; no Finding stands beyond it. Benign side: T3, 1, 2 and 5 at Low (1 each) and Finding 4 at High (3), weight 7. The **Benign hypothesis is proven**: Finding 4 explains the alert, so the only Malicious Finding is accounted for and leaves no residual observation, and there is no Medium or High Malicious Finding to cover. No Finding was retracted.
+Malicious side: the alert alone, `Malicious (Low)`, weight 1; no Observation stands beyond it. Benign side: T3, 1, 2 and 5 at Low (1 each) and Observation 4 at High (3), weight 7. The **Benign hypothesis is proven**: Observation 4 explains the alert, so the only Malicious Observation is accounted for and leaves no residual observation, and there is no Medium or High Malicious Observation to cover. No Observation was retracted.
 
-### Findings
+### Observations
 
-| # | Finding | Tag | Produced by | Event ref |
+| # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
 | T1 | The alert, **verified** — unchanged at this gate; no entity was remediated, the session having been recorded rather than blocked. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
 | T3 | Access over the normal corporate network path, **verified** — unchanged. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
