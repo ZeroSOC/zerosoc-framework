@@ -315,6 +315,8 @@ All data collected during triage and investigation must be preserved to support 
 *   Preserve volatile evidence (e.g., memory captures, active network sessions, process lists) using non-destructive gathering scripts.
 *   Store all evidence, screenshots, and logs in a secure, write-once, tamper-proof incident ledger.
 
+**A Case must be able to show what its verdict rests on.** This holds for **every Case, not only a declared Incident**: a citation is evidence only for as long as the source still holds the event, and detection telemetry is commonly retained for weeks while the regulatory report, the Post-Incident Review and the quality sample come later. A Case whose references have expired asserts a verdict it can no longer show. What a deployment does to meet this — preserving what each Finding reasoned from, archiving it, or holding a durable reference of its own — is its own to choose; that the Case can still answer is not.
+
 ---
 
 ## 4. Threat Hunting

@@ -373,13 +373,6 @@
         },
         "product": {
           "$ref": "#/$defs/ocsf_product"
-        },
-        "evidences": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ocsf_evidence_artifacts"
-          },
-          "description": "What the Finding reasoned from in this event, kept with the Case so the Finding can still be shown once the source's retention window has closed. OCSF carries this object on the Detection Finding and on no object the Case holds, so the attribute is the framework's placement of an OCSF object, under the name OCSF uses for it."
         }
       },
       "description": "An event that is evidence of the Finding: what the Finding rests on, kept with the Case and cited by identifier. It may be any OCSF event — a Detection Finding where the Finding is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Finding did not rest on: bulk telemetry, result sets, message bodies, file content."
@@ -563,45 +556,22 @@
         }
       }
     },
-    "ocsf_evidence_artifacts": {
-      "type": "object",
-      "x-ocsf-object": "evidence_artifacts",
-      "additionalProperties": true,
-      "description": "An artifact of a cited event, in the OCSF object that carries it. The object is intentionally open: a producer's full evidence_artifacts validates unchanged, and any OCSF object it names — process, file, user, device, src_endpoint, and the rest — is an attribute here. It holds what a Finding reasoned from and never a raw event: no bulk telemetry, no result sets, no message bodies, no file content.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "What kind of artifact this is, in the producer's terms."
-        },
-        "uid": {
-          "type": "string",
-          "description": "The artifact's identifier where the source gives it one."
-        },
-        "data": {
-          "description": "The fields the Finding reasoned from that no OCSF object on this artifact carries. Used where an object is absent, never instead of one."
-        },
-        "verdict_id": {
-          "type": "integer",
-          "description": "The source's own verdict on this artifact, where it stated one."
-        }
-      }
-    },
     "ocsf_trait": {
       "type": "object",
       "x-ocsf-object": "trait",
       "additionalProperties": true,
-      "description": "A characteristic of the entity a Finding is about, as the source stated it. The framework uses category 'malware' for the threat name and family a detection assigns; the malware object itself stays on the cited Detection Finding, which finding_info has no attribute for.",
+      "description": "The list of key traits or characteristics extracted from the finding, as the source stated them. What a trait holds depends on the finding it came from; the framework reserves no category and no name.",
       "required": [
         "name"
       ],
       "properties": {
         "name": {
           "type": "string",
-          "description": "The family the detection assigned, or the threat name itself where it assigned no family."
+          "description": "The trait's name, as the source stated it."
         },
         "category": {
           "type": "string",
-          "description": "The grouping the trait belongs to; 'malware' for a threat name or family."
+          "description": "The grouping the trait belongs to, where the source gives one."
         },
         "uid": {
           "type": "string"
