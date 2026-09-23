@@ -428,11 +428,11 @@
             "type": "string",
             "enum": [
               "alert",
-              "observation",
+              "event",
               "action"
             ]
           },
-          "description": "alert for an aggregated Alert, observation for the result of a check or query, action for a response action."
+          "description": "What the entry rests on: alert for an aggregated Alert, event for the result of a check or query, action for a response action."
         },
         "analytic": {
           "$ref": "#/$defs/ocsf_analytic"
