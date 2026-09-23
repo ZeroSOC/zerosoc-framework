@@ -1,7 +1,7 @@
 ---
 title: 04-Denial of Service Investigation & Response
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-24
 license: Apache-2.0
 incident_category: IC-04
 mitre_ttps:
@@ -21,7 +21,7 @@ status: draft
 
 > **Draft.** This playbook has not been verified in detail: its checks, outcome tags and actions have not been walked through against real material. Treat it as a proposal open to review rather than as guidance to follow, and expect it to change.
 
-Investigation and Incident Response knowledge for Cases whose candidate category is `IC-04 Denial of Service` — deliberate degradation of the availability of a service, network or application by exhausting its resources or flooding it, while systems and data remain intact. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage findings, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
+Investigation and Incident Response knowledge for Cases whose candidate category is `IC-04 Denial of Service` — deliberate degradation of the availability of a service, network or application by exhausting its resources or flooding it, while systems and data remain intact. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage observations, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 
 IC-04 is the one Incident Category where the Containment, Eradication and Recovery semantics shift: there is no host, payload or account to remediate. **Containment means mitigation** (absorb or shed the traffic), **Eradication means attrition and hardening** (outlast the attacker and close the abused vector), and **Recovery** has no artifact cleanup step at all — only staged de-mitigation and a capacity postmortem.
 

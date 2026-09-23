@@ -2,7 +2,7 @@
 title: ZeroSOC Framework Contributing Guidelines
 type: policy
 status: development
-last_updated: 2026-09-18
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -21,7 +21,7 @@ The [Framework Manifest](01-Foundation/framework_manifest.md) states the princip
 ## 2. What the framework builds on
 
 *   **Schema.** Cases, Alerts and their fields are the OCSF classes and attributes recorded in the [Case Schema](02-Taxonomy/case_schema.md); new fields are proposed there, never defined in a process or playbook.
-*   **Vocabulary.** Terms are defined once in [Definitions](01-Foundation/definitions.md). Alerts are organized by **Alert Type** and telemetry domain; Incidents by **Incident Category** (`IC-##`). Findings carry a side and a confidence — `Malicious (Low|Medium|High)` or `Benign (Low|Medium|High)` — as defined in [Detection & Analysis §2.4](03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
+*   **Vocabulary.** Terms are defined once in [Definitions](01-Foundation/definitions.md). Alerts are organized by **Alert Type** and telemetry domain; Incidents by **Incident Category** (`IC-##`). Observations carry a side and a confidence — `Malicious (Low|Medium|High)` or `Benign (Low|Medium|High)` — as defined in [Detection & Analysis §2.4](03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
 *   **Techniques.** ATT&CK and ATLAS techniques are written `ID (Name)`, e.g. `T1566.001 (Spearphishing Attachment)`, and are indicative: an Incident Category is decided by the adversary's objective, not by technique lookup.
 *   **Evidence.** Like ATT&CK, the framework documents behaviors observed in the wild. A new Alert Type, Incident Category or playbook cites public reporting that shows the behavior.
 *   **Standards.** The exact versions of the standards the framework aligns to are registered in the [README](README.md#standard-alignment).
@@ -30,7 +30,7 @@ The [Framework Manifest](01-Foundation/framework_manifest.md) states the princip
 
 1. **Playbooks** ([Playbook Architecture](04-Playbooks/playbook_architecture.md) is the normative structure):
    *   **Triage playbooks** (`04-Playbooks/01-Triage/`), by telemetry domain: per alert type, the entities to enrich, the **checks** and what each result is evidence of (tagged), the **False Positive conditions** (the detection misfires) kept apart from the **Benign conditions** (authorized activity), and the candidate categories.
-   *   **Investigation & Response playbooks** (`04-Playbooks/02-Investigation-Response/`), by Incident Category: the Malicious and Benign hypotheses; validation queries that state **both outcomes** in the finding tags, including at least one query that yields the `Benign (High)` finding explaining the alerts; containment, eradication and recovery with approval-tier actions marked per [Incident Response §2.1](03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); completion criteria and critical failures.
+   *   **Investigation & Response playbooks** (`04-Playbooks/02-Investigation-Response/`), by Incident Category: the Malicious and Benign hypotheses; validation queries that state **both outcomes** in the observation tags, including at least one query that yields the `Benign (High)` observation explaining the alerts; containment, eradication and recovery with approval-tier actions marked per [Incident Response §2.1](03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); completion criteria and critical failures.
    *   **Shared enrichment** (`04-Playbooks/99-Shared/`): per-entity enrichment content with a Produces block.
 2. **Taxonomies and vocabulary:** new Alert Types, refinements to Incident Categories, terms in Definitions.
 3. **Processes and metrics:** the lifecycle phases, the evidence model, the [Operational Metrics](05-Metrics/operational_metrics.md).

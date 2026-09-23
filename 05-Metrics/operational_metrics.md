@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -50,7 +50,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ## 4. Speed Metrics
 
-**T0** is the anchor of every speed metric: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Finding cites an earlier event, through Investigation ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
+**T0** is the anchor of every speed metric: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Observation cites an earlier event, through Investigation ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
 
 ### Mean Time To Detect (MTTD)
 *   **KPI candidate.**
@@ -114,13 +114,13 @@ An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing
 ### 5.3 Triage Precision
 *   **KPI candidate.**
 *   **Definition:** promoted Cases confirmed as Incidents ÷ promoted Cases. Of what triage flagged, how much was real.
-*   **A band, not a maximum:** triage promotes a Case whenever the Benign findings do not cover its alerts ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), so promoting an unexplained Case is correct triage. A value near 100% signals over-closing at triage, a false-negative risk; a very low value signals promotion out of fear. Its recall side is Observed Triage Recall (§5.5).
+*   **A band, not a maximum:** triage promotes a Case whenever the Benign observations do not cover its alerts ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), so promoting an unexplained Case is correct triage. A value near 100% signals over-closing at triage, a false-negative risk; a very low value signals promotion out of fear. Its recall side is Observed Triage Recall (§5.5).
 
 ### 5.4 Verdict Precision
 *   **KPI candidate.**
 *   **Definition:** confirmed Incidents that stand at review ÷ all confirmed Incidents, in the window. A confirmed Incident is **overturned** when the review at G5 finds it was noise: an approval rejected on its evidence, a containment rolled back, a Post-Incident re-classification to False Positive or Benign. Of what the verdict flagged, how much was real.
-*   **Purpose:** an efficiency and trust finding: every wrongly confirmed Incident mobilizes asset owners and leadership and may start a regulatory deadline. Every confirmed Incident is examined by the Response phase and the Post-Incident Review, so the figure needs no sampling.
-*   **Slices:** by executor, and by the Case **confidence** at the verdict. Low-confidence Incidents are expected to be overturned more often than High ones; a High-confidence Incident overturned is a finding against the playbook, and equal rates across confidence levels mean the evidence model is not calibrated.
+*   **Purpose:** an efficiency and trust measure: every wrongly confirmed Incident mobilizes asset owners and leadership and may start a regulatory deadline. Every confirmed Incident is examined by the Response phase and the Post-Incident Review, so the figure needs no sampling.
+*   **Slices:** by executor, and by the Case **confidence** at the verdict. Low-confidence Incidents are expected to be overturned more often than High ones; a High-confidence Incident overturned is an observation against the playbook, and equal rates across confidence levels mean the evidence model is not calibrated.
 
 ### 5.5 False Negatives & Recall
 
@@ -147,12 +147,12 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 #### Observed Triage Recall
 *   **KPI candidate.**
 *   **Definition:** confirmed Incidents that triage promoted ÷ (confirmed Incidents that triage promoted + triage misses surfaced), in the window. A **triage miss** is a Case closed at G2 that review finds was a threat, surfaced through three channels: a triage close overturned in the QA sample, extrapolated to the closes of the window with its confidence interval; a prior triage close flagged by the retrospective entity sweep and confirmed; a reopened triage close confirmed as an Incident. Cases that entered at Investigation (hunt-found) are outside both terms.
-*   **Slices:** by executor, by alert type and by the confidence of the wrong close. Every miss is a critical finding; per executor and alert type, this is the number the autonomy grant for triage is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
+*   **Slices:** by executor, by alert type and by the confidence of the wrong close. Every miss is critical; per executor and alert type, this is the number the autonomy grant for triage is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
 
 #### Observed Verdict Recall
 *   **KPI candidate.**
 *   **Definition:** confirmed Incidents ÷ (confirmed Incidents + investigation misses surfaced), in the window. An **investigation miss** is a Case closed at G3 — False Positive, Benign, Duplicate or Insufficient Data — that review finds was a threat, surfaced through the same three channels: the QA sample (extrapolated with its confidence interval), the retrospective entity sweep, a reopen confirmed as an Incident.
-*   **Slices:** by executor, by Incident Category and by the confidence of the wrong close. Every miss is a critical finding; per executor and Incident Category, this is the number the autonomy grant for verdicts is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
+*   **Slices:** by executor, by Incident Category and by the confidence of the wrong close. Every miss is critical; per executor and Incident Category, this is the number the autonomy grant for verdicts is withdrawn on ([Agentic Supervision §4](../07-Governance/agentic_supervision.md)).
 *   **Boundary rule (both recalls):** optimistic estimates, as with Observed Detection Recall: reported with the QA sample size, the sweeps run and the reopens counted, never as a bare figure.
 *   **Reopen Rate** (auxiliary): closed Cases reopened within 30 days ÷ Cases closed — the passive complement to QA sampling, including Insufficient Data closes whose monitoring watch fired. A reopen that ends in a confirmed Incident is a verdict miss.
 
@@ -228,7 +228,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Disposition Mix (§5.1) | Noise share ≤ 30% and falling | same | same | Legacy human-run SOCs commonly run 30–70% noise. An Insufficient Data share above 10% is a telemetry or playbook signal. |
 | Triage Precision (§5.3) | 50–90% | 50–90% | 50–90% | Below 50%, triage over-promotes; above 90%, it over-closes. Parity across executors on the same alert mix. |
 | Verdict Precision (§5.4) | ≥ 95–98% (confirmed Incidents overturned ≤ 2–5%) | same, ≥ the human baseline | same, ≥ the human baseline | Reported with Observed Verdict Recall, never averaged with it. |
-| Observed Triage Recall, Observed Verdict Recall (§5.5) | ≈ 100%: every miss surfaced is a critical finding | same, ≥ the human baseline | same, ≥ the human baseline | Reported with the QA sample size; never averaged with the gate's precision. |
+| Observed Triage Recall, Observed Verdict Recall (§5.5) | ≈ 100%: every miss surfaced is critical | same, ≥ the human baseline | same, ≥ the human baseline | Reported with the QA sample size; never averaged with the gate's precision. |
 | Approval Override Rate (§6.3) | n/a: humans are the reviewers here | ≤ 10% of proposed actions modified or rejected | ≤ 10% | A higher share means the playbooks or the autonomy matrix need work. |
 | Autonomous Disposition Rate (§6.1) | n/a by definition | Maturity-staged: initial < 20% → operating 20–60% → mature > 80% of G2 dispositions | same | The binding constraint at every stage is the observed recall of the gate being automated, not this band. |
 | Tuning Loop Latency (§5.6) | Executor-independent: a Phase 1 property | Executor-independent | Executor-independent | ≤ 14 days median, matching the High risk band of the Phase 4 [remediation deadlines](../03-Processes/04-post_incident_activity.md#5-remediation-deadlines). |

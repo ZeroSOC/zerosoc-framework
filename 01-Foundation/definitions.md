@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-20
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -57,14 +57,19 @@ A discrete actor, asset, or artifact involved in security-relevant activity — 
 ### SOC Knowledge Base (SOC KB)
 The organization's institutional knowledge about its own environment, maintained by the SOC for use during triage, investigation and response: VIP and high-risk users, approved exceptions and known-benign activity, naming conventions, network ranges and diagrams, vulnerability-scan and maintenance schedules, business-critical (Crown Jewel) assets, and the lessons learned from past Incidents.
 *   **Context:** Many security teams keep this knowledge in internal documentation of varying structure and maturity, often to compensate for an incomplete CMDB. The framework treats it as a foundational component: it is an enrichment source in Triage (Organizational Context, [Detection & Analysis §1.2](../03-Processes/02-detection_and_analysis.md#12-multi-vector-context-enrichment)), it receives the lessons learned of Post-Incident Activity, and it is maintained as part of Preparation & Engineering. Because every executor — human, automation or agent — reads the same knowledge base, it is the mechanism by which institutional knowledge reaches automated execution.
-*   **OCSF Mapping:** None. The knowledge base is a source consulted during enrichment; the facts drawn from it are recorded in the Triage Note and Investigation Note as findings with references.
+*   **OCSF Mapping:** None. The knowledge base is a source consulted during enrichment; the facts drawn from it are recorded in the Triage Note and Investigation Note as Observations with references.
 
 ## 2. Detection & Investigation Entities
 
-### Finding
-A tagged observation about a Case: something the executor asserts, carrying a **side** — Malicious or Benign — and a **confidence**, or carrying neither where it is pure context. The Alerts are the first Findings; every check and every validation query that answers produces one more. Findings are the evidence a verdict rests on: they are scored, they may be **retracted**, and each cites the events it rests on rather than reproducing them ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
-*   **Context:** The word is the most load-bearing term in hypothesis resolution, and **OCSF uses it for something else.** In OCSF a Finding is a class of event: a *Detection Finding* is this framework's **Alert**, and an *Incident Finding* is this framework's **Case**. A Finding here is finer than either — one entry in the Case's record, of which an Alert is one kind.
-*   **OCSF Mapping:** One [`finding_info`](https://schema.ocsf.io/1.9.0/objects/finding_info) object in the Case's `finding_info_list`: `analytic` what produced it, `tags` the side and the confidence, `related_events` the events it rests on ([Case Schema §3](../02-Taxonomy/case_schema.md)). Absence of both tags is how context is expressed.
+### Observation
+A tagged observation about a Case: something the executor asserts, carrying a **side** — Malicious or Benign — and a **confidence**, or carrying neither where it is pure context. The Alerts are the first Observations; every check and every validation query that answers produces one more. Observations are the evidence a verdict rests on: they are scored, they may be **retracted**, and each cites the events it rests on rather than reproducing them ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
+*   **Context:** This is the unit hypothesis resolution works on: an Observation is what carries a side and a confidence, what each side's score is computed from, and what a retraction removes. OCSF uses *Finding* for a class of event — a *Detection Finding* is this framework's **Alert**, an *Incident Finding* is its **Case** — so an Observation is finer than either: one entry in a Case's record, of which an Alert is one kind.
+*   **OCSF Mapping:** One [`finding_info`](https://schema.ocsf.io/1.9.0/objects/finding_info) object in the Case's `finding_info_list`, whose `related_events` cite what the Observation rests on:
+    *   an **Alert** — a [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding)
+    *   an observed **remediation** — a [Remediation Activity [7001]](https://schema.ocsf.io/1.9.0/classes/remediation_activity)
+    *   a check or validation query result — any event class in the System Activity, Application Activity or Network Activity categories
+
+    `types` names which of the three an entry is — `alert`, `observation` or `action` — and the side and the confidence are framework attributes on the object ([Case Schema §3](../02-Taxonomy/case_schema.md)). Absence of a side is how context is expressed.
 
 ### Security Alerts
 A high-priority notification generated by security tools (like SIEM, SOAR, or EDR) indicating a potential security threat that requires human or automated attention. Alerts are generated when events or signals match predefined conditions or correlation rules.
@@ -164,11 +169,11 @@ The steps taken to restore systems and data to their normal, pristine operationa
 
 ### Course of Action (COA)
 The response actions an **executor** takes on a Case — containment, eradication and recovery, and the decisions that select them.
-*   **Context:** A Course of Action is never the adversary's. The term is used this way in security standards and in daily practice, and the framework keeps it strict because a Case Timeline carries both sides: what the adversary did is recorded as Findings, and "actions taken" in a deliverable always means the executor's actions. The adversary's sequence is **the course of the attack**.
+*   **Context:** A Course of Action is never the adversary's. The term is used this way in security standards and in daily practice, and the framework keeps it strict because a Case Timeline carries both sides: what the adversary did is recorded as Observations, and "actions taken" in a deliverable always means the executor's actions. The adversary's sequence is **the course of the attack**.
 *   **Deliverable:** The Course of Action is not a Note element. A list of remaining actions written at the investigation gate is obsolete an hour into the response; response actions are recorded on the Case as they are taken, including those a tool takes before any executor opens it ([Case Schema §5](../02-Taxonomy/case_schema.md)).
 
 ### Post-Incident Activity (Lessons Learned & Root Cause Analysis)
-The retrospective phase of evaluating confirmed incidents or major false-positive disruptions to identify root causes, extract lessons learned, and convert operational findings into engineering and detection improvements.
+The retrospective phase of evaluating confirmed incidents or major false-positive disruptions to identify root causes, extract lessons learned, and convert what was learned into engineering and detection improvements.
 *   **Context:** Aligned with NIST SP 800-61 Rev. 3 (Post-Incident Activity) and ISO/IEC 27035 (Lessons Learned), this phase conducts a blameless Root Cause Analysis (RCA) categorizing failures across four systemic buckets (Telemetry Gaps, Software Flaws, Human/Configuration Errors, Policy/Process Deficiencies) and generating actionable tickets for detection tuning, playbook updates, and infrastructure hardening.
 
 ---
@@ -229,15 +234,15 @@ Severity estimates the *potential* harm of the observed activity and sets the ur
 | **5 Critical** | Action is required immediately and the scope is broad. | Active, spreading or Crown-Jewel-level threat; response and notification run in parallel with investigation. | Ransomware propagating; domain controller compromise; confirmed exfiltration of regulated data. |
 
 ### Confidence (OCSF `confidence_id`)
-Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework uses one scale for two things: every **finding** — an alert, an enrichment result, a query result — is tagged with a side and a confidence (`Malicious (High)`, `Benign (Medium)`, …), and the **Case's** confidence is the highest confidence on the side its verdict rests on ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). The levels weigh 1, 2 and 3; a side is proven at 3.
+Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework uses one scale for two things: every **Observation** — an alert, an enrichment result, a query result — is tagged with a side and a confidence (`Malicious (High)`, `Benign (Medium)`, …), and the **Case's** confidence is the highest confidence on the side its verdict rests on ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). The levels weigh 1, 2 and 3; a side is proven at 3.
 
-| Level | Weight | A finding at this level | The Case at this level | Example |
+| Level | Weight | An Observation at this level | The Case at this level | Example |
 |---|---|---|---|---|
-| **1 Low** | 1 | Consistent with its side, explainable otherwise. Three independent Low findings prove a side. | The verdict rests on Low findings only. A True Positive at Low is declared, and every containment action requires approval; a Benign close at Low carries a monitoring watch and is sampled by QA. | An unsigned process; a sign-in at an unusual hour; a domain registered last week. |
-| **2 Medium** | 2 | Corroborates its side; not conclusive alone. Medium plus Low, or two Medium, prove a side. | The verdict rests on a Medium finding at best. Sufficient for a verdict; autonomous containment requires human review. | A scheduled task created shortly before the activity; a consent seen for six colleagues the same morning. |
-| **3 High** | 3 | Sufficient on its own to prove its side. On the Benign side, a finding that **explains** the alert. | A High finding carries the verdict. Sufficient for pre-authorized autonomous containment. | Multi-engine hash consensus on a known family; a threat-feed C2 destination; an approved exception or authorized test window in the SOC Knowledge Base. |
+| **1 Low** | 1 | Consistent with its side, explainable otherwise. Three independent Low Observations prove a side. | The verdict rests on Low Observations only. A True Positive at Low is declared, and every containment action requires approval; a Benign close at Low carries a monitoring watch and is sampled by QA. | An unsigned process; a sign-in at an unusual hour; a domain registered last week. |
+| **2 Medium** | 2 | Corroborates its side; not conclusive alone. Medium plus Low, or two Medium, prove a side. | The verdict rests on a Medium Observation at best. Sufficient for a verdict; autonomous containment requires human review. | A scheduled task created shortly before the activity; a consent seen for six colleagues the same morning. |
+| **3 High** | 3 | Sufficient on its own to prove its side. On the Benign side, an Observation that **explains** the alert. | A High Observation carries the verdict. Sufficient for pre-authorized autonomous containment. | Multi-engine hash consensus on a known family; a threat-feed C2 destination; an approved exception or authorized test window in the SOC Knowledge Base. |
 
-A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as a finding.
+A detection tool's own confidence, or its severity when it gives none, is the confidence of the alert as an Observation.
 
 **OCSF `likelihood_id` is not used.** Release 1.9.0 added `likelihood_id`, `likelihood` and `likelihood_score` to Detection Finding — Unknown 0 · Very Low 1 · Low 2 · Moderate 3 · High 4 · Very High 5 · Other 99. The framework keeps `confidence_id`. The new field is on Detection Finding only and not on Incident Finding, so it cannot carry a Case's confidence; adopting it for Alerts alone would put two confidence scales of different lengths in one Case, which is what the single scale above exists to prevent.
 

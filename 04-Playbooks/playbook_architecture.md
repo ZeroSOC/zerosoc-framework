@@ -2,7 +2,7 @@
 title: Playbook Architecture
 type: concept
 status: draft
-last_updated: 2026-09-20
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -41,7 +41,7 @@ Each concept has one home; everything else links to it.
 | Concept | Canonical home |
 |---|---|
 | Triage method: enrichment, scope, the coverage rule that closes or promotes; Investigation method: verify or retract, score, coverage, verdict and confidence | [Detection & Analysis](../03-Processes/02-detection_and_analysis.md) §1 and §2 |
-| Finding tags — `Malicious (Low\|Medium\|High)`, `Benign (Low\|Medium\|High)` | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
+| Observation tags — `Malicious (Low\|Medium\|High)`, `Benign (Low\|Medium\|High)` | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
 | Classification: severity, confidence, impact | [Detection & Analysis §1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact); levels in [Definitions §7](../01-Foundation/definitions.md#7-classification-levels) |
 | Containment autonomy: which actions require approval | [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) |
 | Human assignee conditions, approval payload, egress and metering | [Agentic Guardrails](../07-Governance/agentic_guardrails.md) |
@@ -65,13 +65,13 @@ Front matter MUST include `title`, `type: playbook`, `last_updated`, `license`, 
    - **Benign conditions:** authorized activity that *legitimately* matches the detection — an approved change, a sanctioned tool, a documented exception. When such a condition explains the alert, the Case closes as **Benign** (`verdict_id` 5) and, if the exception was not recorded, emits a Knowledge Base entry. The two lists are kept apart because their remediation differs: a False Positive fixes the detection, a Benign fixes the organization's knowledge of itself.
    - **Candidate Incident Category(ies):** the categories this alert type promotes to.
 
-   Checks and conditions are indicative. The decision — close or promote — is the coverage rule of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) applied to the tagged findings; the playbook never restates it.
+   Checks and conditions are indicative. The decision — close or promote — is the coverage rule of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) applied to the tagged observations; the playbook never restates it.
 
 ### 4.2 Investigation & Response playbook (`02-Investigation-Response/`, see [_TEMPLATE](02-Investigation-Response/_TEMPLATE.md))
 
 Front matter MUST include `incident_category`, `mitre_ttps` (indicative), `default_severity`, `required_data_sources` and `status`. Body MUST contain, in order:
 
-1. **Investigation** (MUST) — the **Malicious** and **Benign** hypotheses for the category, and the **validation queries**. Each query is stated as a question the executor translates to its own query language, and names what its outcomes are evidence of, in the tags of Detection & Analysis §2.4: `→ Malicious (High) if <result>; Benign (Low) if <result>`. A query MAY yield context for one of its outcomes. At least one query MUST yield the **`Benign (High)`** finding that explains the alerts when the Benign hypothesis is true: without it the Benign side can never be proven, and the playbook is biased toward promotion. Hypotheses and queries are indicative, not exhaustive; the executor adds the queries the Case calls for and tags them the same way.
+1. **Investigation** (MUST) — the **Malicious** and **Benign** hypotheses for the category, and the **validation queries**. Each query is stated as a question the executor translates to its own query language, and names what its outcomes are evidence of, in the tags of Detection & Analysis §2.4: `→ Malicious (High) if <result>; Benign (Low) if <result>`. A query MAY yield context for one of its outcomes. At least one query MUST yield the **`Benign (High)`** observation that explains the alerts when the Benign hypothesis is true: without it the Benign side can never be proven, and the playbook is biased toward promotion. Hypotheses and queries are indicative, not exhaustive; the executor adds the queries the Case calls for and tags them the same way.
 2. **Re-classification pivots** (SHOULD) — the adjacent categories an investigation commonly re-classifies to, per [Detection & Analysis §2.2](../03-Processes/02-detection_and_analysis.md).
 3. **Incident Response** (MUST) — Containment, Eradication, Recovery for the category. Actions in the approval tier of the [autonomy matrix](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) — stopping a critical service, irreversible, affecting many entities at once — are marked **requires approval**; every other action is pre-authorized, subject to the Case confidence.
 4. **Completion Criteria & Critical Failures** (MUST) — *Complete when:* the Case is resolved per Detection & Analysis §2.4, the Investigation Note is produced and the phase transition contract (or the closure verdict) is emitted, plus category-specific conditions. *Critical failures:* the category-specific outcomes that void a run regardless of any other quality — a verdict reached without a required query, an approval-tier action applied without approval, a closure that leaves a confirmed foothold — consumed by [QA sampling](../07-Governance/agentic_supervision.md) as auto-fail conditions. Numeric scoring is out of scope; it is a platform concern.
@@ -82,7 +82,7 @@ Front matter MUST include `incident_category`, `mitre_ttps` (indicative), `defau
 
 A [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract) states which [Case Schema](../02-Taxonomy/case_schema.md) fields MUST be populated when a Case moves forward. One Case object crosses every phase — a contract carries nothing and copies nothing, it is the condition the object meets at the boundary. No field is defined here.
 
-*   **Triage → Investigation** (promoted Cases only; a closed Case meets no contract): `uid`, `status_id` (In Progress), `severity_id`, `confidence_id`, `impact_id` when already known, `start_time`, `observables` (the normalized entities), `finding_info_list` (the Alerts and every triage Finding, each with its side and confidence), `attacks` (candidate techniques), `candidate_incident_categories`, `entry_path`, `master_case_uid` when correlated to an open Case, `visibility_gaps`, `provenance`, `desc`, and `notes` carrying the **Triage Note**. `verdict_id` stays `0`: the promoted Case carries no verdict.
+*   **Triage → Investigation** (promoted Cases only; a closed Case meets no contract): `uid`, `status_id` (In Progress), `severity_id`, `confidence_id`, `impact_id` when already known, `start_time`, `observables` (the normalized entities), `finding_info_list` (the Alerts and every triage Observation, each with its side and confidence), `attacks` (candidate techniques), `candidate_incident_categories`, `entry_path`, `master_case_uid` when correlated to an open Case, `visibility_gaps`, `provenance`, `desc`, and `notes` carrying the **Triage Note**. `verdict_id` stays `0`: the promoted Case carries no verdict.
 *   **Investigation → Response** (confirmed Incidents only): the fields above, refined, plus `verdict_id` (2), `incident_category` (confirmed), `reclassification_pivots` when the category changed, `impact_id`, `significant`, `cross_border`, `is_suspected_breach`, `handover_reason` when a handover occurred, the recommended containment, eradication and recovery actions from the playbook, and `notes` carrying the **Investigation Note**.
 
 Verdict values: `1` False Positive, `2` True Positive, `5` Benign, `7` Insufficient Data, `10` Duplicate ([Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts)).

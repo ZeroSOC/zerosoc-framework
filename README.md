@@ -1,7 +1,7 @@
 ---
 title: ZeroSOC Framework Index
 type: index
-last_updated: 2026-09-20
+last_updated: 2026-09-24
 license: Apache-2.0
 ---
 
@@ -68,7 +68,7 @@ graph TD
 
     subgraph P1 ["Phase 1: Preparation & Detection"]
         Telemetry[Raw Telemetry] -->|Parsed & Normalized| Events[Security Events]
-        Events -->|Security Observations| Signals["Signals<br>(Informational Finding)"]
+        Events -->|Security Observations| Signals["Signals<br>(Informational Detection Finding)"]
         Signals -->|Correlated & Thresholded| G1["G1: Alert Raised<br>(Detection Finding severity ≥ 2)"]
         Events -->|Direct Detection Rules| G1
     end
