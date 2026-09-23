@@ -55,7 +55,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `first_seen_time` | When the thing it reports was observed, which is not when the Observation was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
 | `analytic` | What produced the Observation — the question, what was asked, and the query the tool ran — below |
 | `types` | `alert` for an aggregated Alert, `observation` for the result of a check or query, `action` for a response action |
-| `tags` | The side and the confidence, and whether the timeline renders it — below |
+| `zerosoc` | The side and the confidence, and whether the timeline renders it — below |
 | `related_events` | The **evidence**: the events the Observation rests on — below |
 | `attack_graph` | Which entity acted on which, below |
 
@@ -80,16 +80,16 @@ OCSF requires `type_id` on the object. A triage check and a validation query are
 | The **recommended actions** | `remediation` on the cited Detection Finding, `desc` and `references`. They are indicative (§1.5): what the Case carries is what came of the ones the executor **ran** — each is the Observation it produced, naming the recommendation it came from. One it did not run leaves nothing on the Case |
 | The **remediation state** of an entity | an `action` entry (§5). The source's own remediation is a [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event that fired before any executor opened the Case: the entry cites it, `status_id` says whether it succeeded and `activity_id` what it did — Isolate, Evict, Restore. An entry typed `action` carries no side and no confidence, which is what the framework means by a remediation being recorded rather than weighed |
 
-**Side and confidence.** Two tags, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
+**Side and confidence.** Two framework attributes on the Observation, under its `zerosoc` object, with the values of [Definitions §7](../01-Foundation/definitions.md#7-classification-levels):
 
-- `zerosoc:side` — `Malicious` or `Benign`
-- `zerosoc:confidence_id` — `1`, `2` or `3`
+- `side` — `Malicious` or `Benign`
+- `confidence_id` — `1`, `2` or `3`
 
-An Observation that bears on no hypothesis carries **neither tag**: absence is how context is expressed, and context carries no weight in hypothesis resolution. An `action` entry carries neither either, since an action is not evidence for a hypothesis.
+An Observation that bears on no hypothesis carries **neither**: absence is how context is expressed, and context carries no weight in hypothesis resolution. An `action` entry carries neither either, since an action is not evidence for a hypothesis.
 
-**The timeline.** A third tag, `zerosoc:timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: an entry is flagged because it belongs to the account of what happened, and most Observations do not.
+**The timeline.** A third attribute, `timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: an entry is flagged because it belongs to the account of what happened, and most Observations do not.
 
-All three tags are declared and validated in the [JSON Schema](case_schema.json); OCSF does not constrain tag names or values, so nothing upstream validates them.
+All three are declared and validated in the [JSON Schema](case_schema.json), and `side` and `confidence_id` are required together or not at all. They were three `tags` until this release, which OCSF intends for categorising and searching and whose names and values it does not constrain, so nothing validated them and a misspelt tag passed silently.
 
 **Evidence.** An Observation's evidence is its `related_events`: the events it rests on. This is the one place evidence is held — there is no second list beside the Observations, and a raw log is never an Observation's body.
 
@@ -145,9 +145,9 @@ A framework field is what the **framework** needs and OCSF does not carry ([§4]
 
 ## 5. Events the Case References
 
-*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`, carrying the OCSF [Remediation Activity](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event in its `related_events`. The entry carries **what was done and what selected it**: the executor's [Course of Action](../01-Foundation/definitions.md#course-of-action-coa) is the actions taken *and the decisions that select them*, so `analytic` names the selector as it names the check that produced an Observation — the playbook action and its step, the source's recommendation, or the automatic remediation of the product — and `desc` states the decision, including whether the action was pre-authorized or approved and by whom ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)). An action with no selector recorded is an action nobody can account for. An action is recorded against the Case and not against the Observation that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done — this is where the remediation state the source reports per entity is carried, one entry per remediation, and an entity the source left active has none. OCSF holds no reference in the other direction.
+*   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`. Its `related_events` **MUST** cite the OCSF [Remediation Activity [7001]](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event the action produced: that event is the record of what the tool did and whether it worked, and the entry is the Case's record of it. The entry states **what was done and what decided it** in `desc` — including whether the action was pre-authorized or approved and by whom ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)) — because the executor's [Course of Action](../01-Foundation/definitions.md#course-of-action-coa) is the actions taken *and the decisions that select them*, and an action nobody can account for is an action nobody authorized. `analytic` is not used here: it names what produced an Observation, and an action is not an Observation's result. An action is recorded against the Case and not against the Observation that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done — this is where the remediation state the source reports per entity is carried, one entry per remediation, and an entity the source left active has none. OCSF holds no reference in the other direction.
 *   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
-*   **The Case Timeline** is the entries tagged `zerosoc:timeline`, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
+*   **The Case Timeline** is the entries whose `zerosoc.timeline` is set, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
 
 ## 6. Where the Fields Are Populated
 
@@ -159,7 +159,7 @@ The Notes render the Case and are a field of it rather than a record beside it (
 |---|---|
 | Every check and every validation query | an Observation, with its `analytic` carrying the question, the request as the executor made it and the query the tool ran (§3) — or, where it could not be answered, a **visibility gap** naming the check it prevented (§4) |
 | The evidence each Observation rests on | the events it rests on, in its `related_events` (§3) |
-| Every action taken | an `action` entry with the Course of Action that selected it (§5) |
+| Every action taken | an `action` entry citing its Remediation Activity, with the decision that selected it in `desc` (§5) |
 | Every entity the Case is about | an observable (§2) |
 | What executed it | the provenance: the playbooks and their versions, the executor classes, the capability classes (§4) |
 | Why the executor concluded what it did | prose, which the Case carries: the Summary (`desc`), each Observation's own `desc`, and the Note's rendering in `notes` (§2). An alternative weighed and set aside is an Observation with no side where evidence bears on it, and the rationale of the Note where only judgment does |

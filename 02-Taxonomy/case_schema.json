@@ -444,94 +444,49 @@
             "$ref": "#/$defs/ocsf_trait"
           }
         },
-        "tags": {
-          "type": "array",
-          "description": "The side and the confidence of an Observation, and whether the Case Timeline renders the entry. An Observation that bears on no hypothesis, and every action entry, carries neither side nor confidence.",
-          "items": {
-            "allOf": [
-              {
-                "$ref": "#/$defs/ocsf_key_value_object"
-              },
-              {
-                "if": {
-                  "required": [
-                    "name"
-                  ],
-                  "properties": {
-                    "name": {
-                      "const": "zerosoc:side"
-                    }
-                  }
-                },
-                "then": {
-                  "required": [
-                    "value"
-                  ],
-                  "properties": {
-                    "value": {
-                      "enum": [
-                        "Malicious",
-                        "Benign"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "required": [
-                    "name"
-                  ],
-                  "properties": {
-                    "name": {
-                      "const": "zerosoc:confidence_id"
-                    }
-                  }
-                },
-                "then": {
-                  "required": [
-                    "value"
-                  ],
-                  "properties": {
-                    "value": {
-                      "enum": [
-                        "1",
-                        "2",
-                        "3"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "required": [
-                    "name"
-                  ],
-                  "properties": {
-                    "name": {
-                      "const": "zerosoc:timeline"
-                    }
-                  }
-                },
-                "then": {
-                  "required": [
-                    "value"
-                  ],
-                  "properties": {
-                    "value": {
-                      "enum": [
-                        "true"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        },
         "attack_graph": {
           "$ref": "#/$defs/ocsf_graph"
+        },
+        "zerosoc": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Framework attributes of an Observation: its side and confidence, and whether the Case Timeline renders it. An Observation that bears on no hypothesis carries neither side nor confidence, and so does every action entry.",
+          "dependentRequired": {
+            "side": [
+              "confidence_id"
+            ],
+            "confidence_id": [
+              "side"
+            ]
+          },
+          "properties": {
+            "side": {
+              "type": "string",
+              "enum": [
+                "Malicious",
+                "Benign"
+              ],
+              "description": "The hypothesis the Observation bears on. Absent where it is pure context."
+            },
+            "confidence_id": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ],
+              "x-enum-captions": {
+                "1": "Low",
+                "2": "Medium",
+                "3": "High"
+              },
+              "description": "Weighs 1, 2 and 3 in hypothesis resolution. Present exactly when side is."
+            },
+            "timeline": {
+              "type": "boolean",
+              "description": "Set on the entries the Case Timeline renders."
+            }
+          }
         }
       },
       "description": "One entry of the Case's record: an Observation — an Alert, or the result of a check or validation query — or a response action taken on the Case."
