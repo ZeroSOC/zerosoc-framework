@@ -547,14 +547,46 @@
         "uid": {
           "type": "string"
         },
+        "type_id": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2,
+            99
+          ],
+          "x-enum-captions": {
+            "0": "Unknown",
+            "1": "Internal",
+            "2": "External",
+            "99": "Other"
+          },
+          "description": "Which system holds the ticket, not what it is for."
+        },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "The type_id caption, as OCSF names it: Internal or External."
         },
         "src_url": {
           "type": "string",
           "format": "uri"
+        },
+        "zerosoc": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "description": "Framework attributes of a ticket the Case raised.",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "description": "What the ticket is for, which OCSF's type_id does not say. The framework names tuning, visibility, containment, eradication and recovery; the set is open while the response phase is still being designed."
+            }
+          }
         }
-      }
+      },
+      "description": "A ticket the Case raised. Borrowed from OCSF and intentionally open, so a platform's full ticket object validates unchanged."
     },
     "ocsf_trait": {
       "type": "object",
