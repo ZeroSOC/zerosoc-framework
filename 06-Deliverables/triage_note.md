@@ -44,6 +44,15 @@ The Note renders the account first, then what was decided, then why, then what i
 
 *The Observations the Case flags for the narrative, in `first_seen_time` order. Early in a Case usually nothing is flagged; write "None." then.*
 
+### Response Actions
+
+*The remediation the Case carries, in one place. The **observed remediation** — each Remediation Activity the Case references, the entity it acted on and whether it succeeded — and the **planned remediation** — each open ticket the Case raised, with its kind. A remediation the source performed before triage opened renders here too: it is recorded, never weighed as evidence. Write "None." when the Case carries neither.*
+
+| What | State | Entity | Ref |
+|---|---|---|---|
+| `<the action>` | observed — `<succeeded / failed / partial>` | `<entity>` | `<Remediation Activity uid>` |
+| `<the action asked for>` | planned — `<kind>` | `<entity>` | `<ticket uid>` |
+
 ### Visibility Gaps
 
 *Every required data source unavailable during triage, and every required input of [§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) the source did not supply, each paired with the check it prevented; write "None." when no gap occurred.*
@@ -83,6 +92,10 @@ The one Benign observation (3) weighs 1 and does not exceed the alert's own weig
 ### Case Timeline
 
 None. No Observation is flagged for the narrative at this gate.
+
+### Response Actions
+
+None. The source recorded the session and remediated nothing, and triage asked for nothing: the Case promotes for a check it could not run, not for an action it could not take.
 
 ### Visibility Gaps
 

@@ -49,6 +49,15 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 |---|---|---|---|
 | `<timestamp>` | `<actor/executor>` | `<action/observation — T0 if earliest confirmed malicious event>` | `<OCSF observation UID / event link>` |
 
+### Response Actions
+
+*As the Triage Note, at this gate. On a confirmed Incident this is what Response is handed, so a ticket still awaiting approval renders as such rather than being left out.*
+
+| What | State | Entity | Ref |
+|---|---|---|---|
+| `<the action>` | observed — `<succeeded / failed / partial>` | `<entity>` | `<Remediation Activity uid>` |
+| `<the action asked for>` | planned — `<kind>` | `<entity>` | `<ticket uid>` |
+
 ### Visibility Gaps
 
 *Every required data source unavailable during investigation, and every required input of [§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) the source did not supply, each paired with the check it prevented; write "None." when no gap occurred.*
@@ -104,6 +113,14 @@ None. Candidate categories IC-09 and IC-11 stand; the Case closes without a cate
 | 2026-09-14 15:12 | Agent (Triage) | Promote to Investigation: the alert is not covered (content exposure unverified). | `triage_note_CASE-4711_20260914-1512` |
 | 2026-09-14 15:20–16:25 | Agent (Investigation) | Queries 1–5: role fit, baseline, HR context, content inspection, concealment. | `EVT-4711-006`…`010` |
 | 2026-09-14 16:35 | Agent (Investigation) | Benign hypothesis proven at High confidence; Case closed Benign (`verdict_id: 5`). Knowledge Base entry emitted recording the use of AI assistants for non-sensitive drafting in Marketing, with a request for a sanctioning decision on the application so that a recurrence closes at triage. | `EVT-4711-011` |
+
+### Response Actions
+
+No observed remediation: nothing was contained, and nothing needed to be. One planned action, raised on the close so that a recurrence closes at triage:
+
+| What | State | Entity | Ref |
+|---|---|---|---|
+| Decide whether to sanction the AI assistant, and allow or block it accordingly | planned — `tuning` | the application | `TKT-4711-001` |
 
 ### Visibility Gaps
 
