@@ -2,7 +2,7 @@
 title: Agentic Governance & Guardrail Protocols
 type: policy
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-09-23
 license: Apache-2.0
 ---
 
@@ -55,7 +55,7 @@ Enrichment frequently sends data to public or third-party analysis services. To 
 
 Inference spend is an operational resource like privilege or egress, and it is governed the same way: metered, budgeted and bounded. Agents are the metered executor class; deterministic automation reports zero token cost by definition ([Operational Metrics §7.2](../05-Metrics/operational_metrics.md)).
 
-*   **Metering:** every model invocation records its input and output token counts, the model identifier and the Case that drove it — the §1 auditability rule extended from API calls to inference spend. Attribute names follow the OpenTelemetry GenAI semantic conventions, adopted provisionally per [Design Decisions](../01-Foundation/design_decisions.md).
+*   **Metering:** every model invocation records its input and output token counts, the model identifier and the Case that drove it — the §1 auditability rule extended from API calls to inference spend. Attribute names follow the OpenTelemetry GenAI semantic conventions, adopted provisionally while that specification remains in Development status.
 *   **Per-Case budget:** every Case carries a token budget scaled by severity; the values are an organization policy knob — the framework fixes the mechanism, not the numbers. Budget exhaustion is not a failure and not a handover: the executor applies the resolution rule of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) to the evidence at hand — at Triage, the decision of [§1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) — and records the spend and the state reached in the Note. The assignee changes only under §3.
 *   **Investigation timebox:** an automation or agent assigned a Case in Investigation has **10 minutes** for High and Critical severity and **20 minutes** otherwise to reach the resolution bar of Detection & Analysis §2.4; on expiry it applies that rule to the evidence at hand — closing as Insufficient Data with a monitoring watch when neither side is proven — and records the state reached. The values are reference values an organization may tighten.
 *   **Per-action runaway ceiling:** independent of the Case budget, a per-action token ceiling bounds any single reasoning loop. Repeated identical tool calls or self-invocations trip the ceiling early: a runaway loop is recognized by its shape, not only by its cumulative bill. The value is an organization policy knob.

@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-09-20
+last_updated: 2026-09-23
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -200,7 +200,7 @@ Autonomous SecOps converts what used to be headcount into **inference spend that
 
 ### 7.1 Attribution and capture
 *   **Every model invocation is attributed to a Case.** Already mandated by [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering); token accounting is a by-product of auditability, not new plumbing.
-*   **Input and output token counts are captured for every invocation**, named per the OpenTelemetry GenAI semantic conventions, adopted provisionally per [Design Decisions](../01-Foundation/design_decisions.md).
+*   **Input and output token counts are captured for every invocation**, named per the OpenTelemetry GenAI semantic conventions, adopted provisionally while that specification remains in Development status.
 *   **Reported in tokens first, currency second.** Token counts are stable; prices are not. A currency figure states the model mix and the price date.
 
 ### 7.2 Boundary rules
@@ -257,7 +257,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 
 ## 10. Sources & Prior Art
 
-Foundations this module builds on rather than reinvents; credited here once, per the sourcing rule of the [Design Decisions](../01-Foundation/design_decisions.md).
+Foundations this module builds on rather than reinvents, credited here once.
 
 *   **Standards and schemas:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) (lifecycle), [OCSF v1.9.0](https://schema.ocsf.io/1.9.0/categories) (state fields), SOC-CMM (maturity alignment), [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) (token-capture naming, provisional), [FinOps FOCUS 1.2](https://www.finops.org/insights/focus-1-2-available/) (cost data normalization).
 *   **Research and practitioner:** [Alahmadi et al., USENIX Security 2022](https://www.usenix.org/system/files/sec22summer_alahmadi.pdf) (false-positive ambiguity; benign triggers), [SpecterOps, Funnel of Fidelity](https://specterops.io/blog/2019/11/20/introducing-the-funnel-of-fidelity/) (stage model), MITRE, *11 Strategies of a World-Class Cybersecurity SOC* (measurement strategy), SANS SOC Surveys (noise burden, adoption data), [Bono et al., arXiv:2511.13860](https://arxiv.org/abs/2511.13860) (randomized controlled trial of AI-assisted phishing triage: human reviewers under-catch the assistant's false negatives — the basis of the oversampling rule), Gartner's evaluation guidance on investigation quality over alert volume.
