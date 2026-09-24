@@ -79,7 +79,7 @@ For every onboarded log source, the SOC must define:
 *   **Heartbeat Cadence:** The maximum acceptable time between log messages before an outage is declared.
 
 ### 2.2 Automated Health Alerting
-The SIEM or data lake must generate an operational alert (distinct from a [Security Alert](../01-Foundation/definitions.md#security-alerts)) when:
+The SIEM or data lake must generate an operational alert (distinct from a [Security Alert](../01-Foundation/definitions.md#security-alert)) when:
 1.  A log source stops sending data entirely (violates heartbeat cadence).
 2.  The EPS drops significantly below the expected baseline (partial failure).
 3.  The data structure changes, causing parsing failures or OCSF mapping errors.

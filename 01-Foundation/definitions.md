@@ -14,8 +14,8 @@ Where applicable, each term is mapped to its corresponding entity in the [Open C
 
 ## 1. Foundational Data & Activity
 
-### Log Sources (Telemetry Sources)
-The originators, assets, applications, security controls, or infrastructure components that generate logs, measurements, and security-relevant activity records. 
+### Log Source (Telemetry Source)
+An originator, asset, application, security control or infrastructure component that generates logs, measurements and security-relevant activity records. 
 *   **Context:** Log sources are the origin points of raw telemetry before collection, parsing, forwarding, or normalization. In the ZeroSOC Framework, log sources are categorized across eight core **telemetry domains** (Endpoint, Identity, Network, Cloud, Email, Data, Application, and OT/ICS). Disambiguating the log source from the telemetry it emits is critical: the log source is the generating entity or software system (e.g., a Domain Controller, an EDR sensor, a Kubernetes API server, or a firewall appliance), whereas telemetry is the actual data stream emitted by that source.
 *   **Examples:** the event log service on a domain controller, an EDR sensor on an endpoint, a cloud provider's control-plane audit log, a network security monitor, an identity provider's audit log exporter, or a next-generation firewall.
 *   **OCSF Mapping:** Corresponds to the generating device, agent, or service context, represented in OCSF objects such as [Metadata (`metadata.log_provider`, `metadata.product`, `metadata.version`)](https://schema.ocsf.io/1.9.0/objects/metadata), [Device](https://schema.ocsf.io/1.9.0/objects/device), [Agent](https://schema.ocsf.io/1.9.0/objects/agent), or [Cloud](https://schema.ocsf.io/1.9.0/objects/cloud).
@@ -27,15 +27,15 @@ The raw, unprocessed data streams continuously emitted by endpoints, network dev
 *   **Examples:** Raw packet captures (PCAP), unfiltered EDR activity traces, basic firewall connection logs.
 *   **OCSF Mapping:** Corresponds to native, unparsed source payloads prior to schema transformation (represented conceptually in OCSF via raw payload structures or the `unmapped` attribute container). ZeroSOC strictly avoids normalizing raw telemetry into OCSF to drastically reduce compute costs. ZeroSOC uses such elements only during investigations.
 
-### Events
-Records of specific, defined actions or occurrences that happened within the IT infrastructure. Events are discrete, typically parsed and normalized extracts derived from raw telemetry.
+### Event
+A record of a specific, defined action or occurrence that happened within the IT infrastructure. An event is discrete, and typically a parsed and normalized extract derived from raw telemetry.
 *   **Context:** While an event indicates a significant change in state or an activity took place, it does not inherently imply malicious intent. It is just a record of "what happened" and "when."
 *   **Examples:** A user successfully authenticating, a process starting, a file being modified, or a service shutting down.
 *   **Reference:** [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) — Defines the foundational difference between an *Event* and a *Cybersecurity Incident*.
 *   **OCSF Mapping:** Maps across OCSF's operational activity categories, primarily: **Category 1 (System Activity)** (e.g., [Process Activity [1007]](https://schema.ocsf.io/1.9.0/classes/process_activity), [File Activity [1001]](https://schema.ocsf.io/1.9.0/classes/file_activity), [Log Activity [1008]](https://schema.ocsf.io/1.9.0/classes/log_activity)), **Category 3 (IAM)** (e.g., [Authentication [3002]](https://schema.ocsf.io/1.9.0/classes/authentication)), **Category 4 (Network Activity)** (e.g., [Network Activity [4001]](https://schema.ocsf.io/1.9.0/classes/network_activity), [HTTP Activity [4002]](https://schema.ocsf.io/1.9.0/classes/http_activity), [DNS Activity [4003]](https://schema.ocsf.io/1.9.0/classes/dns_activity)), and **Category 6 (Application Activity)** (e.g., [API Activity [6003]](https://schema.ocsf.io/1.9.0/classes/api_activity)). Similar to Telemetry, ZeroSOC strictly avoids normalizing general events into OCSF to reduce compute costs, utilizing them only during investigations.
 
-### Signals
-Observable occurrences (often derived from events or groups of events) that have security relevance but are not immediately actionable or necessarily malicious on their own.
+### Signal
+An observable occurrence, often derived from an event or a group of events, that has security relevance but is not immediately actionable or necessarily malicious on its own.
 *   **Context:** Signals are structurally similar to Security Alerts, representing parsed and filtered security observations. However, they differ in operational intent: a single signal does not require immediate human triage or an active investigation (e.g., they are treated as *Informational*). Instead, they act as telemetry/contextual building blocks. When correlated or when a specific threshold of signals is met, they generate an actionable Security Alert.
 *   **Examples:** An unusual spike in network traffic, a login from a new geographic location, or the execution of a rarely used administrative tool.
 *   **OCSF Mapping:** Maps to [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) — the **same class as a Security Alert**, discriminated by **`severity_id`**. A Signal is *always* **Informational (`severity_id = 1`)** and therefore does **not** trigger the triage/investigation workflow; it is a correlation building block. A Detection Finding at `severity_id ≥ Low (2)` is a Security Alert, not a Signal.
@@ -71,7 +71,7 @@ A tagged observation about a Case: something the executor asserts, carrying a **
 
     `types` names which of the three an entry is — `alert`, `observation` or `action` — and the side and the confidence are framework attributes on the object ([Case Schema §3](../02-Taxonomy/case_schema.md)). Absence of a side is how context is expressed.
 
-### Security Alerts
+### Security Alert
 A high-priority notification generated by security tools (like SIEM, SOAR, or EDR) indicating a potential security threat that requires human or automated attention. Alerts are generated when events or signals match predefined conditions or correlation rules.
 *   **Context:** This is the primary trigger for a SOC workflow. Alerts represent specific, point-in-time behaviors. 
 *   **OCSF Mapping:** Maps directly to [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) in the Findings category. Key attributes include `confidence`, `severity_id`, `risk_level_id`, and `attacks` (for [MITRE ATT&CK®](https://schema.ocsf.io/1.9.0/objects/attack) mapping). An Alert is a Detection Finding with **`severity_id ≥ Low (2)`**; an Informational (`severity_id = 1`) Detection Finding is a **Signal**, not an Alert, and does not enter triage.
@@ -80,7 +80,7 @@ A high-priority notification generated by security tools (like SIEM, SOAR, or ED
     *   **Microsoft Sentinel:** Historically and confusingly referred to as *Incidents* (though standard industry parlance reserves "incident" for a confirmed breach). (See: [Sentinel Incidents Documentation](https://learn.microsoft.com/en-us/azure/sentinel/investigate-incidents))
     *   **CrowdStrike:** *Detections*.
 
-### Security Cases
+### Security Case
 A broader, administrative workspace used to manage the investigative workflow. It is the logical container where analysts document activities, gather evidence, and track progress.
 *   **Context:** A case can be opened as soon as an alert fires. A single case may group together multiple related Security Alerts, Signals, and Event Logs. It is the tactical "investigation folder." 
 *   **Outcome:** A closed case will ultimately be dispositioned (e.g., as an Incident, a False Positive, or a Benign Positive).
@@ -88,7 +88,7 @@ A broader, administrative workspace used to manage the investigative workflow. I
 
 *   **Data model:** the fields a Case carries — OCSF fields and the framework's own — are defined once in the [Case Schema](../02-Taxonomy/case_schema.md).
 
-### Security Incidents
+### Security Incident
 An event (or series of events) that has been investigated through a case and **verified as a confirmed security threat** or a serious violation of security policies. 
 *   **Context:** This represents an actual or imminent compromise of confidentiality, integrity, or availability. Escalating a case to an incident fundamentally shifts the workflow from *investigation* to *Incident Response (IR)* (containment, eradication, recovery).
 *   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — discriminated by **`verdict_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A closed non-incident Case carries `verdict_id` False Positive (`1`) or Benign (`5`).
@@ -114,14 +114,14 @@ An alert that correctly identifies actual malicious activity or a genuine policy
 *   **OCSF `verdict_id`:** `2` (True Positive)
 *   **Reference:** [MITRE ATT&CK & D3FEND](https://attack.mitre.org/) - Broadly useful for understanding the behavioral context of true positive signals.
 
-### False Positive (FP) Cases
-Cases where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. 
+### False Positive (FP) Case
+A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. 
 *   **Context:** This represents a "technical error" by the detection logic. The activity did not pose a threat, and it shouldn't have been escalated as an incident.
 *   **Outcome:** The case is closed, and the feedback must be used for detection or triage playbook tuning to reduce noise.
 *   **OCSF `verdict_id`:** `1` (False Positive)
 
-### Benign Positive (BP) Cases
-Cases where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected, or harmless.
+### Benign Positive (BP) Case
+A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or harmless.
 *   **Context:** This is a "contextual issue" rather than a technical misfiring. The rule accurately spotted an action (like a script running), but no breach occurred because the actor was legitimate. The activity looks malicious, but was specifically authorized.
 *   **Examples:** Authorized penetration tests, scheduled vulnerability scans, or an IT administrator executing a remote administration script.
 *   **Outcome:** The case is closed. Benign Positives typically require minor tuning such as whitelisting to reduce noise.

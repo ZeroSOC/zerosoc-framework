@@ -14,7 +14,7 @@ The release this mapping follows is declared on the schema itself, as `ocsf_vers
 
 ## 1. Object Mapping
 
-A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) object; the Alerts it aggregates are [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) objects it references. Case and Incident are one object: the transition is `verdict_id` → True Positive (`2`) (see [Definitions — Security Cases](../01-Foundation/definitions.md#security-cases)).
+A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) object; the Alerts it aggregates are [Detection Finding [2004]](https://schema.ocsf.io/1.9.0/classes/detection_finding) objects it references. Case and Incident are one object: the transition is `verdict_id` → True Positive (`2`) (see [Definitions — Security Cases](../01-Foundation/definitions.md#security-case)).
 
 **One object crosses every phase.** A phase does not copy the Case forward and does not carry a subset of it: the [phase transition contracts](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts) state which of these fields MUST be populated at each boundary, and nothing more. Values are refined as the Case advances; the object is the same one throughout.
 
