@@ -25,7 +25,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   list was named. Measured on one recorded false positive replayed against a live model: the same
   evidence closed as False Positive three times and was promoted once, because one run tagged a
   restatement of the alert as Malicious; the same scenario had earlier closed as `1` and as `5` on
-  the same evidence because the model labelled the kind itself. Both readings are now the rule's.
+  the same evidence because the model labelled the kind itself. Both readings are now the rule's. A Benign condition is one a record establishes — a change
+  ticket, a deployment record, an inventory designation, a written authorization — never what the
+  file or the actor is on its own: the endpoint playbook's malware conditions say so, because a
+  live executor named "an authorized deployment by the endpoint management platform" for a signed
+  internal binary that no deployment record covered, and closed as Benign what was a False Positive.
 - **03-Processes:** a Note that fails its conformance check is corrected and rendered again from
   the Case; it is never discarded, never a reason to re-decide, never a handover. The check tests
   what §1.6 requires — the elements and their order, side and confidence, event references, a
