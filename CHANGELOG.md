@@ -30,6 +30,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   file or the actor is on its own: the endpoint playbook's malware conditions say so, because a
   live executor named "an authorized deployment by the endpoint management platform" for a signed
   internal binary that no deployment record covered, and closed as Benign what was a False Positive.
+  An antivirus test file or test detection — the EICAR file, a vendor's test string for the
+  anti-malware interface — is a Benign condition the repository or the threat name itself
+  records, and the hash-reputation check says so: on ten live Cases the same test-file detection
+  was read as malware once and as an authorized test once.
 - **03-Processes:** a Note that fails its conformance check is corrected and rendered again from
   the Case; it is never discarded, never a reason to re-decide, never a handover. The check tests
   what §1.6 requires — the elements and their order, side and confidence, event references, a
