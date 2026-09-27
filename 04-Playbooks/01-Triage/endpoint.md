@@ -1,7 +1,7 @@
 ---
 title: Endpoint Triage Playbook
 type: playbook
-last_updated: 2026-09-21
+last_updated: 2026-09-27
 license: Apache-2.0
 domain: Endpoint
 required_data_sources:
@@ -28,7 +28,7 @@ One row per alert type of this domain; each row is the index into a subsection o
 | Credential dumping | EDR | Credential Access | T1003 (OS Credential Dumping) | IC-06 (Identity & Credential Attack) |
 | Remote execution / lateral movement | EDR | Lateral Movement | T1021 (Remote Services), T1021.002 (SMB/Windows Admin Shares), T1047 (Windows Management Instrumentation), T1550 (Use Alternate Authentication Material), T1569.002 (Service Execution) | IC-06 (Identity & Credential Attack), IC-08 (Infrastructure Compromise), IC-03 (Ransomware & Digital Extortion) |
 | Ransomware mass-encryption | EDR / file-integrity monitoring | Impact | T1486 (Data Encrypted for Impact), T1490 (Inhibit System Recovery) | IC-03 (Ransomware & Digital Extortion) |
-| Security-tool / AMSI tampering | EDR | Defense Impairment | T1685 (Disable or Modify Tools) | IC-05 (Commodity Malware / Loader), IC-03 (Ransomware & Digital Extortion) |
+| Security-tool / AMSI tampering | EDR | Defense Evasion | T1562.001 (Disable or Modify Tools) | IC-05 (Commodity Malware / Loader), IC-03 (Ransomware & Digital Extortion) |
 | Persistence mechanism created | EDR | Persistence | T1543 (Create or Modify System Process), T1053 (Scheduled Task/Job), T1547 (Boot or Logon Autostart Execution) | IC-05 (Commodity Malware / Loader) |
 | Ingress tool transfer to host | EDR | Command and Control | T1105 (Ingress Tool Transfer) | IC-05 (Commodity Malware / Loader) |
 | Trusted software / updater anomalous behaviour | EDR | Initial Access | T1195.002 (Compromise Software Supply Chain), T1574.001 (DLL), T1554 (Compromise Host Software Binary) | IC-10 (Supply-Chain Compromise), IC-05 (Commodity Malware / Loader) |

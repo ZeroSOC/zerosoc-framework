@@ -2,7 +2,7 @@
 title: Playbook Architecture
 type: concept
 status: draft
-last_updated: 2026-09-24
+last_updated: 2026-09-27
 license: Apache-2.0
 ---
 
@@ -63,6 +63,7 @@ Front matter MUST include `title`, `type: playbook`, `last_updated`, `license`, 
    - **Checks:** the observations specific to this alert type, numbered. Each check states the question and **what its result is evidence of**, in the tags of Detection & Analysis §2.4: `Malicious (Low|Medium|High)` when ..., `Benign (Low|Medium|High)` when .... A result that bears on neither hypothesis is context. The levels follow the confidence table of Definitions §7: High when the observation alone establishes the side, Medium when it is a strong signal that needs a second, Low when it is consistent with the side but common in normal operation. A check whose answer the detection already supplies is recorded with the detection as its source rather than run again, and is re-asked only where the decision turns on it and the answer can be checked independently; a check on an entity the source has already remediated is still run — the block answers what was stopped, not how it arrived.
    - **False Positive conditions:** activity that is *not* what the detection looks for, yet triggers it — a heuristic misfire, a parser artifact, a stale rule. When such a condition explains the alert, the Case closes as **False Positive** (`verdict_id` 1) and emits a tuning ticket to Phase 1.
    - **Benign conditions:** authorized activity that *legitimately* matches the detection — an approved change, a sanctioned tool, a documented exception. When such a condition explains the alert, the Case closes as **Benign** (`verdict_id` 5) and, if the exception was not recorded, emits a Knowledge Base entry. The two lists are kept apart because their remediation differs: a False Positive fixes the detection, a Benign fixes the organization's knowledge of itself.
+   - **Naming the condition.** A Benign observation that covers an alert names the condition it matched, by its place in one of the two lists, and never labels the kind on its own: the list is the authority on what its conditions are, and the verdict is read off it by the rule of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) — Benign when the highest-confidence covering observation names a Benign condition, False Positive otherwise. An observation that fits no entry of either list still covers with its side and confidence; it names nothing, and a Case closed on such observations alone is a False Positive.
    - **Candidate Incident Category(ies):** the categories this alert type promotes to.
 
    Checks and conditions are indicative. The decision — close or promote — is the coverage rule of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) applied to the tagged observations; the playbook never restates it.

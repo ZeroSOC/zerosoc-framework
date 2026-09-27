@@ -1,7 +1,7 @@
 ---
 title: Cloud Triage Playbook
 type: playbook
-last_updated: 2026-09-19
+last_updated: 2026-09-27
 license: Apache-2.0
 domain: Cloud
 required_data_sources:
@@ -27,7 +27,7 @@ One row per alert type of this domain; each row is the index into a subsection o
 | Suspicious IAM policy / role change | Cloud audit logs | Privilege Escalation | T1078.004 (Cloud Accounts), T1098.003 (Additional Cloud Roles) | IC-06 (Identity & Credential Attack), IC-09 (Insider Threat & Privilege Misuse) |
 | Resource hijacking / cryptomining | Cloud audit / billing | Impact | T1496 (Resource Hijacking) | IC-12 (Resource Hijacking / Cryptojacking) |
 | Cloud storage anomalous access | Cloud audit / CASB | Exfiltration | T1530 (Data from Cloud Storage) | IC-11 (Data Breach / Exfiltration) |
-| Logging / guardrail disabled | Cloud audit logs | Defense Impairment | T1685.002 (Disable or Modify Cloud Log) | IC-09 (Insider Threat & Privilege Misuse), IC-05 (Commodity Malware / Loader) |
+| Logging / guardrail disabled | Cloud audit logs | Defense Evasion | T1562.008 (Disable or Modify Cloud Logs) | IC-09 (Insider Threat & Privilege Misuse), IC-05 (Commodity Malware / Loader) |
 | New principal / access-key creation | Cloud audit logs | Persistence | T1136.003 (Cloud Account) | IC-06 (Identity & Credential Attack), IC-09 (Insider Threat & Privilege Misuse) |
 | Public exposure of a resource | Cloud posture / CSPM | Initial Access | T1190 (Exploit Public-Facing Application) | IC-07 (Web App Exploitation), IC-11 (Data Breach / Exfiltration) |
 | Unsanctioned SaaS app usage (Shadow IT / Shadow AI discovery) | CASB / SaaS discovery | Exfiltration | T1567 (Exfiltration Over Web Service) | IC-09 (Insider Threat & Privilege Misuse), IC-11 (Data Breach / Exfiltration) |

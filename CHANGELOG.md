@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 license: Apache-2.0
 ---
 
@@ -12,6 +12,37 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **03-Processes, 04-Playbooks:** the triage close is decided by the rule, not by a label the
+  executor chooses. Two things the coverage rule of §1.5 left to the reader are now said. An
+  observation stands *beyond the alerts* when it rests on at least one event that is not an alert
+  record — what a check or a query returned; one that cites alerts alone restates them and is not a
+  Malicious observation beyond them, however it is tagged. And the verdict a Close carries follows
+  the playbook condition the covering observation *names*, by its place in one of the two lists,
+  never a kind it labels on its own: Benign (`5`) when the highest-confidence covering observation
+  names a Benign condition, False Positive (`1`) otherwise — including when observations of both
+  kinds cover at the same confidence, and when the alerts are explained but no condition of either
+  list was named. Measured on one recorded false positive replayed against a live model: the same
+  evidence closed as False Positive three times and was promoted once, because one run tagged a
+  restatement of the alert as Malicious; the same scenario had earlier closed as `1` and as `5` on
+  the same evidence because the model labelled the kind itself. Both readings are now the rule's.
+- **03-Processes:** a Note that fails its conformance check is corrected and rendered again from
+  the Case; it is never discarded, never a reason to re-decide, never a handover. The check tests
+  what §1.6 requires — the elements and their order, side and confidence, event references, a
+  check named per gap — and never wording or notation.
+- **03-Processes, 06-Deliverables, 02-Taxonomy, CONTRIBUTING:** the four flat statements of the
+  `ID (Name)` form that survived the last release now say what §1.6 says: the name is written where
+  it is known, and a bare identifier is never a conformance failure.
+
+### Fixed
+
+- **01-Foundation:** `types` on an Observation is `alert`, `event` or `action`, as the Case Schema
+  has it; the definition still said `observation`. `verdict_id` open states no longer list a
+  `Suspicious (4)` that is in no enum of the framework.
+- **02-Taxonomy, 04-Playbooks:** `T1685` and `T1685.002` are not ATT&CK identifiers; the
+  security-tool tampering and cloud-logging alert types now cite `T1562.001 (Disable or Modify
+  Tools)` and `T1562.008 (Disable or Modify Cloud Logs)` under the tactic that holds them, Defense
+  Evasion.
 
 - **03-Processes, 02-Taxonomy:** a source's **recommended actions are indicative**, as the
   playbook's own checks (§1.2), its queries (§2.2) and the hypotheses (§2.1) already were. The rule

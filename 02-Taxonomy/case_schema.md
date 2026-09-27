@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-24
+last_updated: 2026-09-27
 license: Apache-2.0
 ---
 
@@ -36,7 +36,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `desc` | string | 2.a; refreshed at each gate and while the response runs | The Case **Summary**: what happened and when, the entities involved and which acted on which, and — once established — the root cause, with the Observations that establish it |
 | `notes` | list of note | 2.a / 2.b | The Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |
 | `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Observation** of the Case: the Alerts first, then the result of every check and validation query (§3) |
-| `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, written `ID (Name)` |
+| `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, `uid` always and `name` where the executor's tables or catalogue hold one; a Note renders them `ID (Name)` where the name is held |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
 | `start_time` / `end_time` | timestamp | 2.a, refined in 2.b | The earliest and the most recent event or Observation that **contributed to** the Case. **`start_time` is required**: a Case always has an Alert, so from the moment it opens it has a time it began at. It opens at the earliest Alert's own `start_time` and only ever moves **earlier**, whenever a Malicious Observation cites evidence of an earlier event (§3) — never later, and never to a time of the investigation rather than of the attack. A benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident `start_time` is the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is **not T0** and anchors no metric. `end_time` is set where the Case's span is known |
 | `vendor_attributes` | the source's `severity` and `severity_id` | 2.a, when triage overrides them | What the source reported before triage assessed it ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)); the override is auditable and countable |
