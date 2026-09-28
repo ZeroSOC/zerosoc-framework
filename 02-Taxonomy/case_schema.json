@@ -186,7 +186,7 @@
       "items": {
         "$ref": "#/$defs/ocsf_ticket"
       },
-      "description": "Tickets the Case raised; the Phase 1 tuning ticket carries type tuning."
+      "description": "Tickets the Case raised; a False Positive raises one of kind tuning to Phase 1, a Benign close one of kind exception, the Knowledge Base entry a person confirms."
     },
     "zerosoc": {
       "$ref": "#/$defs/zerosoc_extension"

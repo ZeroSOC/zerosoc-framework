@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-09-22
+last_updated: 2026-09-27
 license: Apache-2.0
 ---
 
@@ -12,6 +12,56 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **03-Processes, 04-Playbooks:** the triage close is decided by the rule, not by a label the
+  executor chooses. Two things the coverage rule of §1.5 left to the reader are now said. An
+  observation stands *beyond the alerts* when it adds to what the detections asserted: a result a
+  check or a query returned, a reading of an alert's own evidence the detection did not state, or a
+  relation between alerts no single alert states — and it cites what that reading rests on; one
+  that says of a single alert only what its detection asserted restates it and is not a Malicious
+  observation beyond them, however it is tagged. And the verdict a Close carries follows
+  the playbook condition the covering observation *names*, by its place in one of the two lists,
+  never a kind it labels on its own: Benign (`5`) when the highest-confidence covering observation
+  names a Benign condition, False Positive (`1`) otherwise — including when observations of both
+  kinds cover at the same confidence, and when the alerts are explained but no condition of either
+  list was named. Measured on one recorded false positive replayed against a live model: the same
+  evidence closed as False Positive three times and was promoted once, because one run tagged a
+  restatement of the alert as Malicious; the same scenario had earlier closed as `1` and as `5` on
+  the same evidence because the model labelled the kind itself. Both readings are now the rule's. A Benign condition is one a **statement** establishes — a change
+  ticket, a deployment record, an inventory designation, a written authorization — never what the
+  file or the actor is on its own: the endpoint playbook's malware conditions say so, because a
+  live executor named "an authorized deployment by the endpoint management platform" for a signed
+  internal binary that no deployment record covered, and closed as Benign what was a False Positive.
+  An antivirus test file or test detection — the EICAR file, a vendor's test string for the
+  anti-malware interface — is a Benign condition the repository or the threat name itself
+  records, and the hash-reputation check says so: on ten live Cases the same test-file detection
+  was read as malware once and as an authorized test once.
+- **03-Processes:** a Note that fails its conformance check is corrected and rendered again from
+  the Case; it is never discarded, never a reason to re-decide, never a handover. The check tests
+  what §1.6 requires — the elements and their order, side and confidence, event references, a
+  check named per gap — and never wording or notation.
+- **03-Processes, 06-Deliverables, 02-Taxonomy, CONTRIBUTING:** the four flat statements of the
+  `ID (Name)` form that survived the last release now say what §1.6 says: the name is the
+  catalogue's own, which an executor knows or looks up — the framework's tables do not replicate
+  it — and a bare identifier is never a conformance failure.
+
+- **01-Foundation, 02-Taxonomy:** what an Observation rests on is an event or a **statement** —
+  what a system of record or a person states: a Knowledge Base object, a change ticket, a confirmed
+  answer — cited by identifier and version with the system or person that holds it; the Observation
+  that consulted it is typed `event`. The three kinds of entry are unchanged. A Benign close raises
+  an **`exception` ticket** — the Knowledge Base entry it proposes, for a person to confirm — the
+  pair of the `tuning` ticket a False Positive raises; the executor proposes and never confirms its
+  own, and "emits a Knowledge Base entry" is gone from the six places it stood.
+
+### Fixed
+
+- **01-Foundation:** `types` on an Observation is `alert`, `event` or `action`, as the Case Schema
+  has it; the definition still said `observation`. `verdict_id` open states no longer list a
+  `Suspicious (4)` that is in no enum of the framework.
+- **02-Taxonomy, 04-Playbooks:** `T1685` and `T1685.002` are not ATT&CK identifiers; the
+  security-tool tampering and cloud-logging alert types now cite `T1562.001 (Disable or Modify
+  Tools)` and `T1562.008 (Disable or Modify Cloud Logs)` under the tactic that holds them, Defense
+  Evasion.
 
 - **03-Processes, 02-Taxonomy:** a source's **recommended actions are indicative**, as the
   playbook's own checks (§1.2), its queries (§2.2) and the hypotheses (§2.1) already were. The rule

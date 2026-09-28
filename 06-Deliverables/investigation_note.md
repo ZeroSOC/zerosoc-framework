@@ -112,7 +112,7 @@ None. Candidate categories IC-09 and IC-11 stand; the Case closes without a cate
 | 2026-09-14 15:06–15:08 | Agent (Triage) | Enrichment: reputation, CMDB, identity directory, Knowledge Base, active Cases. | `DF-4711-002`, `EVT-4711-003`…`005` |
 | 2026-09-14 15:12 | Agent (Triage) | Promote to Investigation: the alert is not covered (content exposure unverified). | `triage_note_CASE-4711_20260914-1512` |
 | 2026-09-14 15:20–16:25 | Agent (Investigation) | Queries 1–5: role fit, baseline, HR context, content inspection, concealment. | `EVT-4711-006`…`010` |
-| 2026-09-14 16:35 | Agent (Investigation) | Benign hypothesis proven at High confidence; Case closed Benign (`verdict_id: 5`). Knowledge Base entry emitted recording the use of AI assistants for non-sensitive drafting in Marketing, with a request for a sanctioning decision on the application so that a recurrence closes at triage. | `EVT-4711-011` |
+| 2026-09-14 16:35 | Agent (Investigation) | Benign hypothesis proven at High confidence; Case closed Benign (`verdict_id: 5`). Exception ticket raised proposing the use of AI assistants for non-sensitive drafting in Marketing, with a request for a sanctioning decision on the application so that a recurrence closes at triage. | `EVT-4711-011` |
 
 ### Response Actions
 
