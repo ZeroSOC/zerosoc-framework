@@ -22,7 +22,7 @@ The [Framework Manifest](01-Foundation/framework_manifest.md) states the princip
 
 *   **Schema.** Cases, Alerts and their fields are the OCSF classes and attributes recorded in the [Case Schema](02-Taxonomy/case_schema.md); new fields are proposed there, never defined in a process or playbook.
 *   **Vocabulary.** Terms are defined once in [Definitions](01-Foundation/definitions.md). Alerts are organized by **Alert Type** and telemetry domain; Incidents by **Incident Category** (`IC-##`). Observations carry a side and a confidence — `Malicious (Low|Medium|High)` or `Benign (Low|Medium|High)` — as defined in [Detection & Analysis §2.4](03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
-*   **Techniques.** ATT&CK and ATLAS techniques are written `ID (Name)` where the name is known, e.g. `T1566.001 (Spearphishing Attachment)`, and are indicative: an Incident Category is decided by the adversary's objective, not by technique lookup.
+*   **Techniques.** ATT&CK and ATLAS techniques are written `ID (Name)`, the name being the catalogue's own, e.g. `T1566.001 (Spearphishing Attachment)`, and are indicative: an Incident Category is decided by the adversary's objective, not by technique lookup.
 *   **Evidence.** Like ATT&CK, the framework documents behaviors observed in the wild. A new Alert Type, Incident Category or playbook cites public reporting that shows the behavior.
 *   **Standards.** The exact versions of the standards the framework aligns to are registered in the [README](README.md#standard-alignment).
 
