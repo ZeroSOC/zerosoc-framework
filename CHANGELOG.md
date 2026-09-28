@@ -48,7 +48,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **01-Foundation, 02-Taxonomy:** what an Observation rests on is an event or a **statement** —
   what a system of record or a person states: a Knowledge Base object, a change ticket, a confirmed
   answer — cited by identifier and version with the system or person that holds it; the Observation
-  that consulted it is typed `event`. The three kinds of entry are unchanged.
+  that consulted it is typed `event`. The three kinds of entry are unchanged. A Benign close raises
+  an **`exception` ticket** — the Knowledge Base entry it proposes, for a person to confirm — the
+  pair of the `tuning` ticket a False Positive raises; the executor proposes and never confirms its
+  own, and "emits a Knowledge Base entry" is gone from the six places it stood.
 
 ### Fixed
 

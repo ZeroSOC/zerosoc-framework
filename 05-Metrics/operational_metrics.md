@@ -80,7 +80,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 A single "false positive rate" is not a metric; it is an ambiguity. The term conflates detection failures with correctly detected but benign activity, and the famous "99% false positive rate" is mostly benign triggers, not a measure of the technology (§10). The framework measures noise **per verdict and per gate**: noise caught at triage costs triage capacity, while a wrongly confirmed Incident costs the trust of asset owners and leadership, and those are different failures with different owners.
 
-**Verdict split.** False Positive (`verdict_id 1`, detection failure → tuning ticket) and Benign (`verdict_id 5`, context gap → Knowledge Base entry) are tracked separately at every gate; their remediation paths differ ([Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts)). "Noise" below means the two together.
+**Verdict split.** False Positive (`verdict_id 1`, detection failure → tuning ticket) and Benign (`verdict_id 5`, context gap → exception ticket, the Knowledge Base entry a person confirms) are tracked separately at every gate; their remediation paths differ ([Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts)). "Noise" below means the two together.
 
 ### 5.1 Disposition Mix
 *   **KPI candidate.**
@@ -90,7 +90,7 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 | Share | At G2 (triage decisions) | At G3 (investigation verdicts) |
 |---|---|---|
 | **False Positive** | Detection misfires caught cheaply; each is a tuning ticket. Read with Detection Precision (§5.2). | Misfires that survived triage: the subtle rule problems, and the tuning tickets that matter most. |
-| **Benign** | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each is a Knowledge Base entry. |
+| **Benign** | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each raises an exception ticket for a person to confirm. |
 | **Duplicate** | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
 | **Insufficient Data** | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
 | **Promoted / Confirmed Incident** | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
