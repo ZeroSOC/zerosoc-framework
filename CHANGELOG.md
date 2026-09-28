@@ -27,7 +27,7 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   list was named. Measured on one recorded false positive replayed against a live model: the same
   evidence closed as False Positive three times and was promoted once, because one run tagged a
   restatement of the alert as Malicious; the same scenario had earlier closed as `1` and as `5` on
-  the same evidence because the model labelled the kind itself. Both readings are now the rule's. A Benign condition is one a record establishes — a change
+  the same evidence because the model labelled the kind itself. Both readings are now the rule's. A Benign condition is one a **statement** establishes — a change
   ticket, a deployment record, an inventory designation, a written authorization — never what the
   file or the actor is on its own: the endpoint playbook's malware conditions say so, because a
   live executor named "an authorized deployment by the endpoint management platform" for a signed
@@ -44,6 +44,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   `ID (Name)` form that survived the last release now say what §1.6 says: the name is the
   catalogue's own, which an executor knows or looks up — the framework's tables do not replicate
   it — and a bare identifier is never a conformance failure.
+
+- **01-Foundation, 02-Taxonomy:** what an Observation rests on is an event or a **statement** —
+  what a system of record or a person states: a Knowledge Base object, a change ticket, a confirmed
+  answer — cited by identifier and version with the system or person that holds it; the Observation
+  that consulted it is typed `event`. The three kinds of entry are unchanged.
 
 ### Fixed
 
