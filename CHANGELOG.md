@@ -15,9 +15,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 - **03-Processes, 04-Playbooks:** the triage close is decided by the rule, not by a label the
   executor chooses. Two things the coverage rule of §1.5 left to the reader are now said. An
-  observation stands *beyond the alerts* when it rests on at least one event that is not an alert
-  record — what a check or a query returned; one that cites alerts alone restates them and is not a
-  Malicious observation beyond them, however it is tagged. And the verdict a Close carries follows
+  observation stands *beyond the alerts* when it adds to what the detections asserted: a result a
+  check or a query returned, a reading of an alert's own evidence the detection did not state, or a
+  relation between alerts no single alert states — and it cites what that reading rests on; one
+  that says of a single alert only what its detection asserted restates it and is not a Malicious
+  observation beyond them, however it is tagged. And the verdict a Close carries follows
   the playbook condition the covering observation *names*, by its place in one of the two lists,
   never a kind it labels on its own: Benign (`5`) when the highest-confidence covering observation
   names a Benign condition, False Positive (`1`) otherwise — including when observations of both
@@ -39,8 +41,9 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   what §1.6 requires — the elements and their order, side and confidence, event references, a
   check named per gap — and never wording or notation.
 - **03-Processes, 06-Deliverables, 02-Taxonomy, CONTRIBUTING:** the four flat statements of the
-  `ID (Name)` form that survived the last release now say what §1.6 says: the name is written where
-  it is known, and a bare identifier is never a conformance failure.
+  `ID (Name)` form that survived the last release now say what §1.6 says: the name is the
+  catalogue's own, which an executor knows or looks up — the framework's tables do not replicate
+  it — and a bare identifier is never a conformance failure.
 
 ### Fixed
 
