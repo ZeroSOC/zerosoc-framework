@@ -65,7 +65,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   produced, and an acknowledgment, a promotion or a handover is a lifecycle event. Incident
   Response records an approval, a schedule and a scope change on the Case rather than in the
   timeline, and the Post-Incident Review reads the acknowledgment and the verdict from the
-  lifecycle events.
+  lifecycle events. The lifecycle's alignment notes map the three records to CSF 2.0:
+  the timeline to RS.AN-03, the record of the work to RS.AN-06, chain of custody to RS.AN-07.
 - **01-Foundation:** `types` on an Observation is `alert`, `event` or `action`, as the Case Schema
   has it; the definition still said `observation`. `verdict_id` open states no longer list a
   `Suspicious (4)` that is in no enum of the framework.
