@@ -1,7 +1,7 @@
 ---
 title: Investigation Note Template
 type: template
-last_updated: 2026-09-24
+last_updated: 2026-09-30
 license: Apache-2.0
 status: draft
 ---
@@ -24,7 +24,7 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 ### Rationale
 
-*The [§2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) resolution applied: the score of each side, the side proven and the Observations that carry it, and the Observations retracted and why. The confidence is in Classification; the Rationale says **how it was reached**, not what it is. What the close *emitted* is an action of the Case, not reasoning: it is a ticket the Case raised and renders in the Case Timeline.*
+*The [§2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) resolution applied: the score of each side, the side proven and the Observations that carry it, and the Observations retracted and why. The confidence is in Classification; the Rationale says **how it was reached**, not what it is. What the close *emitted* is an action of the Case, not reasoning: it is a ticket the Case raised and renders in Response Actions.*
 
 ### Observations
 
@@ -43,11 +43,11 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 ### Case Timeline
 
-*A chronological reconstruction of the Case: **the course of the attack** (initial access → progression → objective, where established) interleaved with the detection and the response actions taken, each entry timestamped (UTC) and citing its supporting event reference. The earliest **confirmed malicious** event is the Case's **T0**. A Case closed without the Malicious hypothesis proven still carries a timeline — it documents the Case, not only the attack — and has no T0.*
+*The timeline triage compiled, extended by what investigation established: a chronological reconstruction of what happened, **the course of the attack** (initial access → progression → objective, where established) interleaved with the detection and the response actions that ran, each entry timestamped (UTC) and citing its supporting event reference. The validation queries are not entries; each is the Observation it produced. The earliest **confirmed malicious** event is the Case's **T0**. A Case closed without the Malicious hypothesis proven still carries a timeline, the account of what happened whoever did it, and has no T0.*
 
-| UTC timestamp | Actor / executor | Action / observation | Event ref |
+| UTC timestamp | Actor / executor | What happened | Event ref |
 |---|---|---|---|
-| `<timestamp>` | `<actor/executor>` | `<action/observation — T0 if earliest confirmed malicious event>` | `<OCSF observation UID / event link>` |
+| `<timestamp>` | `<actor/executor>` | `<the detection, the action established, or the response action that ran — T0 if earliest confirmed malicious event>` | `<OCSF event UID / event link>` |
 
 ### Response Actions
 
@@ -102,17 +102,12 @@ None. Candidate categories IC-09 and IC-11 stand; the Case closes without a cate
 
 ### Case Timeline
 
-*No T0: the Malicious hypothesis was not proven. The timeline documents the Case from detection to closure.*
+*No T0: the Malicious hypothesis was not proven. The timeline is the one triage compiled: investigation established what the content was, which is an Observation, and nothing further that happened.*
 
-| UTC timestamp | Actor / executor | Action / observation | Event ref |
+| UTC timestamp | Actor / executor | What happened | Event ref |
 |---|---|---|---|
-| 2026-09-14 14:58 | Human (`j.doe`) | Posts content to the AI assistant from the managed laptop — the observed action. | `DF-4711-001` |
-| 2026-09-14 14:59 | Automation (SaaS discovery) | Detection Finding raised; Case `CASE-4711` opened. | `DF-4711-001` |
-| 2026-09-14 15:02 | Agent (Triage) | Case acknowledged, `status_id` → In Progress. | `EVT-4711-CASE-OPEN` |
-| 2026-09-14 15:06–15:08 | Agent (Triage) | Enrichment: reputation, CMDB, identity directory, Knowledge Base, active Cases. | `DF-4711-002`, `EVT-4711-003`…`005` |
-| 2026-09-14 15:12 | Agent (Triage) | Promote to Investigation: the alert is not covered (content exposure unverified). | `triage_note_CASE-4711_20260914-1512` |
-| 2026-09-14 15:20–16:25 | Agent (Investigation) | Queries 1–5: role fit, baseline, HR context, content inspection, concealment. | `EVT-4711-006`…`010` |
-| 2026-09-14 16:35 | Agent (Investigation) | Benign hypothesis proven at High confidence; Case closed Benign (`verdict_id: 5`). Exception ticket raised proposing the use of AI assistants for non-sensitive drafting in Marketing, with a request for a sanctioning decision on the application so that a recurrence closes at triage. | `EVT-4711-011` |
+| 2026-09-14 14:58 | Human (`j.doe`) | Posts content to an AI assistant that is not on the sanctioned list, from the managed laptop over the corporate network path. | `DF-4711-001` |
+| 2026-09-14 14:59 | Automation (SaaS discovery) | Detection Finding raised: unsanctioned SaaS app usage. | `DF-4711-001` |
 
 ### Response Actions
 

@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-09-24
+last_updated: 2026-09-30
 license: Apache-2.0
 ---
 
@@ -47,7 +47,7 @@ The Incident arrives confirmed; this step confirms what the response acts on. Fr
 2. Reads the Case **confidence** resolved by Investigation ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
 3. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
 
-Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded in the Case timeline, and the containment actions are re-selected for the new entities.
+Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, and the containment actions are re-selected for the new entities.
 
 ## 2. Containment
 
@@ -65,7 +65,7 @@ The matrix decides, for each containment action, whether the executor applies it
 *   applying a temporary egress block, or blocking an external IP address or domain at the perimeter (reversed by removing the rule);
 *   quarantining a file or an email message (reversed by releasing it).
 
-**Actions requiring approval** stop a critical service, are not reversible, or affect many entities at once. The executor requests approval before applying them and records the approval in the Case timeline:
+**Actions requiring approval** stop a critical service, are not reversible, or affect many entities at once. The executor requests approval before applying them and records the approval on the Case; once the action has run, its entry in the Case timeline names who approved it ([Case Schema §5](../02-Taxonomy/case_schema.md)):
 
 *   any action that stops a Crown Jewel asset from serving: shutting down or isolating a production server, database or domain controller, disabling a service identity a critical service runs under;
 *   isolating an entire subnet, VLAN or cloud network, or modifying its routing;
@@ -77,7 +77,7 @@ The matrix decides, for each containment action, whether the executor applies it
 
 *   At **Low** confidence every containment action requires approval, including the pre-authorized ones: the Incident is confirmed, but on evidence that a single retracted observation could overturn ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
 *   At **High** and **Critical** severity the pre-authorized actions are applied immediately, before the internal notification of [Detection & Analysis §3.2](02-detection_and_analysis.md#32-stakeholder--regulatory-notification) completes: a threat with a credible path to material harm is stopped first; the notified stakeholders confirm the action afterwards or request its rollback.
-*   At **Low** and **Medium** severity the pre-authorized actions may be scheduled with the affected asset owner when applying them at once would disrupt work; the schedule is recorded in the Case timeline.
+*   At **Low** and **Medium** severity the pre-authorized actions may be scheduled with the affected asset owner when applying them at once would disrupt work; the schedule is recorded on the Case.
 
 **Approval** is requested with the presentation payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) — context, evidence, blast radius, rollback — whoever the executor is: a human analyst requesting approval from the SOC Manager submits the same payload an agent does. Who grants approval is an organization policy knob; the SOC Manager is the default approver. The time spent waiting for approval is measured as dwell time, not as containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies the pre-authorized actions the Incident allows and continues the investigation of the residual observations.
 

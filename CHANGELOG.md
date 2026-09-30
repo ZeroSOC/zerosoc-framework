@@ -55,6 +55,18 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Fixed
 
+- **02-Taxonomy, 03-Processes, 06-Deliverables:** the Case Timeline answers *what happened*: the
+  Alerts, the actions the Observations establish (the adversary's, where there is one) and the
+  response actions that ran. The Case Schema already said the timeline is a reconstruction and not
+  a listing, but the Notes let the work on the Case into it: the Investigation Note's worked example
+  listed the acknowledgment, the enrichment, the promotion and each validation query, and the Triage
+  Note said the timeline is usually empty at triage. Triage now compiles the timeline, a Case closed
+  at triage keeps it, and investigation extends it; a check or a query is the Observation it
+  produced, and an acknowledgment, a promotion or a handover is a lifecycle event. Incident
+  Response records an approval, a schedule and a scope change on the Case rather than in the
+  timeline, and the Post-Incident Review reads the acknowledgment and the verdict from the
+  lifecycle events. The lifecycle's alignment notes map the three records to CSF 2.0:
+  the timeline to RS.AN-03, the record of the work to RS.AN-06, chain of custody to RS.AN-07.
 - **01-Foundation:** `types` on an Observation is `alert`, `event` or `action`, as the Case Schema
   has it; the definition still said `observation`. `verdict_id` open states no longer list a
   `Suspicious (4)` that is in no enum of the framework.

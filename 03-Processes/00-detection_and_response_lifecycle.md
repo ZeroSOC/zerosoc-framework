@@ -2,7 +2,7 @@
 title: Detection & Response Lifecycle
 type: process
 status: development
-last_updated: 2026-09-24
+last_updated: 2026-09-30
 license: Apache-2.0
 ---
 
@@ -60,6 +60,7 @@ Because different international frameworks define their incident lifecycles with
 1. **The Lessons Learned Feedback Loop:** While NIST SP 800-61 Rev. 3 groups lessons learned (Identify–Improvement) alongside preparation in Table 2, ZeroSOC isolates these tasks operationally in **Phase 4: Post-Incident Activity**. The output of Phase 4 is fed back into **Phase 1** to update detection configurations.
 2. **Assessment & Promotion boundaries:** ISO/IEC 27035 separates the identification of an event (Detect & Report) from the decision that it is an incident (Assess & Decide). ZeroSOC maps both segments into **Phase 2: Detection & Analysis**, where Alerts are aggregated into Cases, investigated, and promoted to Incidents.
 3. **Notification deadlines** are regulatory reporting obligations of the SOC Manager; they are distinct from the framework's measurement gates (G1–G5), which are quantitative funnel checkpoints defined in [Operational Metrics](../05-Metrics/operational_metrics.md).
+4. **Three records of the analysis:** NIST CSF 2.0 keeps apart what took place during an incident (RS.AN-03), the actions performed during the investigation (RS.AN-06) and the integrity of the incident data collected (RS.AN-07), and ZeroSOC keeps the same three apart. RS.AN-03 is the **Case Timeline**: what happened, the course of the attack with the detections and the response actions that ran, compiled from triage ([Case Schema §5](../02-Taxonomy/case_schema.md#5-events-the-case-references)). RS.AN-06 is the record of the work: each check and query is the Observation it produced, its `analytic` saying what was asked, and the provenance names the playbooks and executors ([Case Schema §6](../02-Taxonomy/case_schema.md#6-where-the-fields-are-populated)); the work is not written into the timeline. RS.AN-07 is [Evidence Preservation & Chain of Custody](02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody).
 
 ---
 
