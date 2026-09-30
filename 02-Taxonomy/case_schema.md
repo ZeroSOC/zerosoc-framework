@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-27
+last_updated: 2026-09-30
 license: Apache-2.0
 ---
 
@@ -87,7 +87,7 @@ OCSF requires `type_id` on the object. A triage check and a validation query are
 
 An Observation that bears on no hypothesis carries **neither**: absence is how context is expressed, and context carries no weight in hypothesis resolution. An `action` entry carries neither either, since an action is not evidence for a hypothesis.
 
-**The timeline.** A third attribute, `timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: an entry is flagged because it belongs to the account of what happened, and most Observations do not.
+**The timeline.** A third attribute, `timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: it answers *what happened*, and an entry is flagged because it belongs to that account. Three kinds of entry do: the Alerts, the actions an Observation establishes (the adversary's, where there is one), and the response actions that ran. The work on the Case does not: a check, a query or an enrichment is the Observation it produced, and an acknowledgment, a promotion or a handover is a lifecycle event (§5). Most Observations are not flagged. Triage compiles the timeline, and each later phase flags what it establishes on the same Case.
 
 All three are declared and validated in the [JSON Schema](case_schema.json), and `side` and `confidence_id` are required together or not at all. They were three `tags` until this release, which OCSF intends for categorising and searching and whose names and values it does not constrain, so nothing validated them and a misspelt tag passed silently.
 
@@ -148,7 +148,7 @@ A framework field is what the **framework** needs and OCSF does not carry ([§4]
 *   **Response actions** — a containment, eradication or recovery action is its own entry in `finding_info_list`, typed `action`. Its `related_events` **MUST** cite the OCSF [Remediation Activity [7001]](https://schema.ocsf.io/1.9.0/classes/remediation_activity) event the action produced: that event is the record of what the tool did and whether it worked, and the entry is the Case's record of it. The entry states **what was done and what decided it** in `desc` — including whether the action was pre-authorized or approved and by whom ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)) — because the executor's [Course of Action](../01-Foundation/definitions.md#course-of-action-coa) is the actions taken *and the decisions that select them*, and an action nobody can account for is an action nobody authorized. `analytic` is not used here: it names what produced an Observation, and an action is not an Observation's result. An action is recorded against the Case and not against the Observation that prompted it: the reasoning may be retracted, and the action still happened. A tool-initiated action that fires before any executor opens the Case is an entry like any other, so that triage sees what has already been done — this is where the remediation state the source reports per entity is carried, one entry per remediation, and an entity the source left active has none. OCSF holds no reference in the other direction.
 *   **Statements** — a Knowledge Base object, a change ticket, a deployment record, an inventory designation, a written authorization or a confirmed answer that an Observation rests on is cited in its `related_events` with `type` `statement`, `uid` the object's identifier and version, and `product` the system that holds it or the person who gave it. The Case cites the statement and never copies it: it is what a Benign condition rests on ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), and the Observation that consulted it is typed `event`, as the result of that check.
 *   **Lifecycle** — acknowledgment, promotion, handover and closure are `activity_id` Create, Update and Close events on the Case. They are not stored in the object.
-*   **The Case Timeline** is the entries whose `zerosoc.timeline` is set, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of the Case, not a listing of it.
+*   **The Case Timeline** is the entries whose `zerosoc.timeline` is set, in `first_seen_time` order — when the thing happened, rather than when it was recorded. It is a reconstruction of what happened (§3), not a listing of the work on the Case, and a Case closed at triage carries the timeline triage compiled.
 
 ## 6. Where the Fields Are Populated
 

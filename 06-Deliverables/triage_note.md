@@ -1,7 +1,7 @@
 ---
 title: Triage Note Template
 type: template
-last_updated: 2026-09-27
+last_updated: 2026-09-30
 license: Apache-2.0
 status: draft
 ---
@@ -42,7 +42,11 @@ The Note renders the account first, then what was decided, then why, then what i
 
 ### Case Timeline
 
-*The Observations the Case flags for the narrative, in `first_seen_time` order. Early in a Case usually nothing is flagged; write "None." then.*
+*What happened, as far as triage establishes it: the Alerts, the actions the Observations establish (the adversary's, where there is one), and the response actions that ran, a remediation the source performed included. Each entry is timestamped (UTC) and cites its event reference, in `first_seen_time` order. Triage compiles the timeline: a Case closed here keeps it, and investigation extends it. The checks triage ran are not entries; each is the Observation it produced.*
+
+| UTC timestamp | Actor / executor | What happened | Event ref |
+|---|---|---|---|
+| `<timestamp>` | `<actor/executor>` | `<the detection, the action established, or the response action that ran>` | `<OCSF event UID / event link>` |
 
 ### Response Actions
 
@@ -91,7 +95,10 @@ The one Benign observation (3) weighs 1 and does not exceed the alert's own weig
 
 ### Case Timeline
 
-None. No Observation is flagged for the narrative at this gate.
+| UTC timestamp | Actor / executor | What happened | Event ref |
+|---|---|---|---|
+| 2026-09-14 14:58 | Human (`j.doe`) | Posts content to an AI assistant that is not on the sanctioned list, from the managed laptop over the corporate network path. | `DF-4711-001` |
+| 2026-09-14 14:59 | Automation (SaaS discovery) | Detection Finding raised: unsanctioned SaaS app usage. | `DF-4711-001` |
 
 ### Response Actions
 
