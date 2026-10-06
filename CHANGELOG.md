@@ -25,6 +25,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   the entity is. Found in a live run: a confirmed Incident whose evidence named the computer account
   a scheduled task ran under asked a person to approve disabling that account, which contains no
   one; the scope listed it among the affected identities and nothing in the framework said otherwise.
+  Incident Response §2 also says where an identity is contained: an account held by a cloud identity
+  provider, an on-premises directory, both (synchronized) or a single host is acted on where each copy
+  is held, since disabling or ending the sessions of one copy leaves the others signing in; and an
+  action no means of the executor reaches is handed to a person as a task with its steps, keeps its
+  place in the matrix, and is recorded under the name of whoever applied it. Found in a live run: a
+  local account of a host, which no directory holds, was proposed for disabling through the cloud
+  identity provider, and the approved action failed because the provider holds no such account.
 
 - **03-Processes, 04-Playbooks:** the triage close is decided by the rule, not by a label the
   executor chooses. Two things the coverage rule of §1.5 left to the reader are now said. An

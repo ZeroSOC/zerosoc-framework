@@ -54,6 +54,19 @@ Scope expands during the response as containment and eradication reveal further 
 
 Containment stops the threat from causing further damage while the Incident is eradicated. The executor selects the containment actions from the playbook of the confirmed Incident Category and applies them under the autonomy matrix below. Every containment action is recorded in the Case timeline with its timestamp, the entity it acted on and how it is reversed.
 
+**An identity is contained where it is held.** An account may be held by a cloud identity provider, by an on-premises directory, by both (an on-premises account synchronized to the cloud identity provider), or by a single host (a local account). An identity action applies to the copy held where the action is taken, and to nothing else:
+
+*   Disabling the synchronized cloud copy of an on-premises account leaves the account signing in against the on-premises directory, and the next synchronization may enable the copy again. The account is disabled in the directory that manages it, and its synchronized copy is disabled as well.
+*   Suspending sessions ends the sessions the issuing system granted: ending the cloud sessions leaves the sign-ins the on-premises directory granted, which end when the account is disabled there and its open sign-ins on hosts are ended.
+*   A credential reset is made where the credential is managed.
+*   A local account is disabled, and its open sign-ins ended, on the host that holds it; no directory reaches it.
+
+The executor applies the action in each place that holds the identity and records each one.
+
+**An action the executor cannot apply is handed to a person.** Where no means the executor holds reaches the place an entity is held (an on-premises directory, a host's local accounts), the executor hands the action to a person as a task stating the steps, and the person applies it. Handing it over does not change its place in the matrix below: an action that requires approval is approved before anyone applies it. Its entry in the Case timeline names who applied it.
+
+> **Example — a synchronized account.** A confirmed credential-theft Incident: an account managed in the on-premises directory and synchronized to the cloud identity provider signed in from an unfamiliar country, then to a file server. The executor acts through the cloud identity provider only. It suspends the account's cloud sessions and disables the cloud copy, and hands a person the rest: disable the account in the on-premises directory, reset its password there, end its sign-ins on the file server. The Case timeline records each action, the last three under the name of the person who applied them.
+
 ### 2.1 Risk-Based Autonomy Matrix for Containment
 
 The matrix decides, for each containment action, whether the executor applies it directly or requests approval first. It keys on three things: the **reversibility** of the action, the **criticality** of the entity it acts on, and the Case **confidence** and **severity**. It is the single authority on containment autonomy in the framework: the Guardrails define how approval is requested and who grants it, and the playbooks list the actions of each Incident Category.
