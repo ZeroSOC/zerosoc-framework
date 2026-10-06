@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-09-30
+last_updated: 2026-10-06
 license: Apache-2.0
 ---
 
@@ -45,13 +45,27 @@ The Incident arrives confirmed; this step confirms what the response acts on. Fr
 
 1. Confirms the **scope**: the affected entities (identities, assets, network locations, artifacts) and the confirmed [Incident Category](../02-Taxonomy/incident_categories.md), whose Investigation & Response playbook lists the containment, eradication and recovery actions for that kind of Incident.
 2. Reads the Case **confidence** resolved by Investigation ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
-3. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
+3. Reads what each affected identity is ([Definitions](../01-Foundation/definitions.md#entity)): a person's account, a service identity, or a host's own identity. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
+4. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
 
 Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, and the containment actions are re-selected for the new entities.
 
 ## 2. Containment
 
 Containment stops the threat from causing further damage while the Incident is eradicated. The executor selects the containment actions from the playbook of the confirmed Incident Category and applies them under the autonomy matrix below. Every containment action is recorded in the Case timeline with its timestamp, the entity it acted on and how it is reversed.
+
+**An identity is contained where it is held.** An account may be held by a cloud identity provider, by an on-premises directory, by both (an on-premises account synchronized to the cloud identity provider), or by a single host (a local account). An identity action applies to the copy held where the action is taken, and to nothing else:
+
+*   Disabling the synchronized cloud copy of an on-premises account leaves the account signing in against the on-premises directory, and the next synchronization may enable the copy again. The account is disabled in the directory that manages it, and its synchronized copy is disabled as well.
+*   Suspending sessions ends the sessions the issuing system granted: ending the cloud sessions leaves the sign-ins the on-premises directory granted, which end when the account is disabled there and its open sign-ins on hosts are ended.
+*   A credential reset is made where the credential is managed.
+*   A local account is disabled, and its open sign-ins ended, on the host that holds it; no directory reaches it.
+
+The executor applies the action in each place that holds the identity and records each one.
+
+**An action the executor cannot apply is handed to a person.** Where no means the executor holds reaches the place an entity is held (an on-premises directory, a host's local accounts), the executor hands the action to a person as a task stating the steps, and the person applies it. Handing it over does not change its place in the matrix below: an action that requires approval is approved before anyone applies it. Its entry in the Case timeline names who applied it.
+
+> **Example — a synchronized account.** A confirmed credential-theft Incident: an account managed in the on-premises directory and synchronized to the cloud identity provider signed in from an unfamiliar country, then to a file server. The executor acts through the cloud identity provider only. It suspends the account's cloud sessions and disables the cloud copy, and hands a person the rest: disable the account in the on-premises directory, reset its password there, end its sign-ins on the file server. The Case timeline records each action, the last three under the name of the person who applied them.
 
 ### 2.1 Risk-Based Autonomy Matrix for Containment
 
@@ -60,7 +74,7 @@ The matrix decides, for each containment action, whether the executor applies it
 **Pre-authorized actions** are reversible and leave the affected entity's service running. Any executor applies them without approval, on any entity — a Crown Jewel included — and records the action and its rollback in the Case timeline:
 
 *   isolating an end-user workstation from the network (reversed by reconnecting it);
-*   suspending the active sessions of an identity, or disabling an identity no critical service runs under (reversed by re-enabling it);
+*   suspending the active sessions of an identity, or disabling an identity no critical service runs under (reversed by re-enabling it). A host's own identity is never such an identity: every service of the host runs under it, and disabling it takes the host off its directory. The host is contained by isolating it;
 *   revoking a specific API key, token or certificate (reversed by issuing a new one);
 *   applying a temporary egress block, or blocking an external IP address or domain at the perimeter (reversed by removing the rule);
 *   quarantining a file or an email message (reversed by releasing it).

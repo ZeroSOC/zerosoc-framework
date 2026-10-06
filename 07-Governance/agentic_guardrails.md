@@ -2,7 +2,7 @@
 title: Agentic Governance & Guardrail Protocols
 type: policy
 status: draft
-last_updated: 2026-09-24
+last_updated: 2026-10-06
 license: Apache-2.0
 ---
 
@@ -22,11 +22,11 @@ Automation and agents do not operate with standing, highly privileged accounts.
 
 ## 2. The Human-in-the-Loop (HITL) Presentation Payload
 
-An action that requires approval under the containment autonomy matrix of [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) is requested with the payload below, whoever the executor is: a human analyst asking the SOC Manager to isolate a production server submits the same payload an agent does. The payload is what the approver decides on; the decision — approved, modified, rejected — is recorded in the Case timeline, and a rejection is an overturn source for [Operational Metrics §5.4](../05-Metrics/operational_metrics.md).
+An action that requires approval under the containment autonomy matrix of [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment) is requested with the payload below, whoever the executor is: a human analyst asking the SOC Manager to isolate a production server submits the same payload an agent does. An action is requested only on an entity of the kind it acts on ([Incident Response §1](../03-Processes/03-response.md#1-scope-confirmation)): disabling an account is never requested on a host's own identity. The approver decides whether to act; whether the action can apply to the entity is settled before the request. The payload is what the approver decides on; the decision — approved, modified, rejected — is recorded in the Case timeline, and a rejection is an overturn source for [Operational Metrics §5.4](../05-Metrics/operational_metrics.md).
 
 1.  **Context:** the Incident Category, the Case severity and confidence, and in plain language why the Malicious hypothesis was proven — the score and the observations that carry it ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
 2.  **Evidence:** the observations, each with its tag and the event references and queries behind it.
-3.  **The action and its matrix entry:** what will be done, to which entity, and why it requires approval (stops a critical service, is irreversible, affects many entities, or Low confidence).
+3.  **The action and its matrix entry:** what will be done, to which entity and what that entity is (for an identity: a person's account or a service identity), and why it requires approval (stops a critical service, is irreversible, affects many entities, or Low confidence).
 4.  **Blast radius:** the expected effect on operations, e.g., "disconnects the primary database server; the customer portal is unavailable until reconnected".
 5.  **Rollback:** the exact call, script or procedure that reverses the action, or the statement that it cannot be reversed.
 

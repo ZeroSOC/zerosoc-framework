@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-09-27
+last_updated: 2026-10-06
 license: Apache-2.0
 ---
 
@@ -43,6 +43,7 @@ An observable occurrence, often derived from an event or a group of events, that
 ### Entity
 A discrete actor, asset, or artifact involved in security-relevant activity — the "who" and "what" that Telemetry, Events, and Alerts are *about*. Entities are the **nouns** of Detection & Response: extracted from raw data, normalized to a common schema, and enriched with context during Triage.
 *   **Context:** Entities are the **join keys** of an investigation. Correlating on shared entities — the same user, host, or IP recurring across multiple alerts — is what bounds the scope of a Security Case and drives the domain → Incident Category pivot at the Triage → Investigation phase transition contract. **Entity enrichment** (adding Threat Intelligence, asset/CMDB, and identity context) turns a bare identifier into an actionable picture. Entities are commonly typed as **identity** (user, account, service principal), **asset** (host/device, cloud resource, application), **network** (IP address, domain, URL), and **artifact** (file, hash, process, registry key, email message).
+*   **Kinds of identity:** an identity is a **person's account**, a **service identity** (an account or service principal that software runs under), or a **host's own identity**: the computer account a directory gives a joined device, and the operating system's built-in principals such as `SYSTEM` or `NETWORK SERVICE`. OCSF types the last as a User of type System. A host's own identity is evidence of what ran on that host. What the response does to it, it does to the host ([Incident Response §1](../03-Processes/03-response.md#1-scope-confirmation)).
 *   **Examples:** A user `jdoe`, a host `FIN-LAPTOP-07`, the IP `203.0.113.10`, a SHA-256 file hash, a process `powershell.exe`, a sender domain.
 *   **Entity vs. Observable/Indicator:** We define **entity** broadly as any typed, correlatable pivot (user, host, IP, file, process). An entity and its indicators represent the same concept at different granularities: a complex object (e.g., `User`, `File`) is the entity, while a scalar property of it (e.g., username, file hash, IP address) functions as its indicator.
 *   **OCSF Mapping:** OCSF carries both entities and indicators in the [Observable](https://schema.ocsf.io/1.9.0/objects/observable) object, told apart by `type_id`. The values are of three kinds:
