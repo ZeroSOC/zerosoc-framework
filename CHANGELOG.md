@@ -13,11 +13,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
-- **01-Foundation, 03-Processes, 07-Governance:** an identity action targets a person's account or
-  a service identity. Definitions now name three kinds of identity: a person's account, a service
-  identity, and a host's own identity (the computer account a directory gives a joined device, and
-  the operating system's built-in principals, which OCSF types as a User of type System). Incident
-  Response §1 selects an identity action (suspending sessions, disabling the account, resetting its
+- **03-Processes, 07-Governance:** an identity action targets a person's account or a service
+  identity. Incident Response §1 names three kinds of identity it reads in the scope: a person's
+  account, a service identity, and a host's own identity (the computer account a directory gives a
+  joined device, and the operating system's built-in principals, which OCSF types as a User of type
+  System), and it selects an identity action (suspending sessions, disabling the account, resetting its
   credentials) only for a person's account or a service identity the Case shows was used or exposed;
   a host's own identity is contained through its host. §2.1 says a host's own identity is never "an
   identity no critical service runs under", since every service of the host runs under it. The
