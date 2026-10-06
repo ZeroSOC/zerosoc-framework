@@ -13,6 +13,19 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **01-Foundation, 03-Processes, 07-Governance:** an identity action targets a person's account or
+  a service identity. Definitions now name three kinds of identity: a person's account, a service
+  identity, and a host's own identity (the computer account a directory gives a joined device, and
+  the operating system's built-in principals, which OCSF types as a User of type System). Incident
+  Response §1 selects an identity action (suspending sessions, disabling the account, resetting its
+  credentials) only for a person's account or a service identity the Case shows was used or exposed;
+  a host's own identity is contained through its host. §2.1 says a host's own identity is never "an
+  identity no critical service runs under", since every service of the host runs under it. The
+  Guardrails request an action only on an entity of the kind it acts on, and the payload says what
+  the entity is. Found in a live run: a confirmed Incident whose evidence named the computer account
+  a scheduled task ran under asked a person to approve disabling that account, which contains no
+  one; the scope listed it among the affected identities and nothing in the framework said otherwise.
+
 - **03-Processes, 04-Playbooks:** the triage close is decided by the rule, not by a label the
   executor chooses. Two things the coverage rule of §1.5 left to the reader are now said. An
   observation stands *beyond the alerts* when it adds to what the detections asserted: a result a

@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-09-30
+last_updated: 2026-10-06
 license: Apache-2.0
 ---
 
@@ -45,7 +45,8 @@ The Incident arrives confirmed; this step confirms what the response acts on. Fr
 
 1. Confirms the **scope**: the affected entities (identities, assets, network locations, artifacts) and the confirmed [Incident Category](../02-Taxonomy/incident_categories.md), whose Investigation & Response playbook lists the containment, eradication and recovery actions for that kind of Incident.
 2. Reads the Case **confidence** resolved by Investigation ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
-3. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
+3. Reads what each affected identity is ([Definitions](../01-Foundation/definitions.md#entity)): a person's account, a service identity, or a host's own identity. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
+4. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
 
 Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, and the containment actions are re-selected for the new entities.
 
@@ -60,7 +61,7 @@ The matrix decides, for each containment action, whether the executor applies it
 **Pre-authorized actions** are reversible and leave the affected entity's service running. Any executor applies them without approval, on any entity — a Crown Jewel included — and records the action and its rollback in the Case timeline:
 
 *   isolating an end-user workstation from the network (reversed by reconnecting it);
-*   suspending the active sessions of an identity, or disabling an identity no critical service runs under (reversed by re-enabling it);
+*   suspending the active sessions of an identity, or disabling an identity no critical service runs under (reversed by re-enabling it). A host's own identity is never such an identity: every service of the host runs under it, and disabling it takes the host off its directory. The host is contained by isolating it;
 *   revoking a specific API key, token or certificate (reversed by issuing a new one);
 *   applying a temporary egress block, or blocking an external IP address or domain at the perimeter (reversed by removing the rule);
 *   quarantining a file or an email message (reversed by releasing it).
