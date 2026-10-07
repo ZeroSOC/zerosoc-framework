@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-09-30
+last_updated: 2026-10-07
 license: Apache-2.0
 ---
 
@@ -77,6 +77,8 @@ The triage process begins as soon as an Alert is triggered and a Case is opened.
     | **Recommended actions** | the procedure the source publishes for this detection | **indicative**: read as a set across the Case and used where they bear on it (§1.5). One the executor runs is recorded as the Observation it produced; one it does not is not recorded at all |
 
     An input the source does not supply is a **Visibility Gap** (§1.6), recorded with the check it prevented. A Case whose Alerts carry none of them still runs; no value for them is assumed, and none is inferred from the alert title.
+
+    > **Note:** what the executor itself wrote into a source's record (its Note, its verdict, the Case) is not one of these inputs.
 6.  **Watch the Case while it is open:** a source may append alerts to a Case after it was opened, and may change its severity or the assets it names. Before a gate decision the executor SHOULD **check whether the Case changed while it was being worked on**, so that activity arriving mid-work is decided on rather than missed.
 
 ### 1.2 Multi-Vector Context Enrichment

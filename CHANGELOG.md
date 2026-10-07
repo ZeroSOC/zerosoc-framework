@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-09-27
+last_updated: 2026-10-07
 license: Apache-2.0
 ---
 
@@ -13,6 +13,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes:** Detection & Analysis §1.1 notes that what the executor itself wrote into a
+  source's record (its Note, its verdict, the Case) is not one of the inputs the source asserts.
 - **03-Processes, 07-Governance:** an identity action targets a person's account or a service
   identity. Incident Response §1 names three kinds of identity it reads in the scope: a person's
   account, a service identity, and a host's own identity (the computer account a directory gives a
