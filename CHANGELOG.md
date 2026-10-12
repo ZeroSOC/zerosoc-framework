@@ -13,6 +13,16 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes, 01-Foundation:** the alerts alone do not prove Malicious at investigation unless
+  one of them is at High confidence (#88, item 7). Detection & Analysis §2.4: Malicious is proven
+  at a score of 3 or more only when at least one of its observations is an alert at High
+  confidence or an observation beyond the alerts (§1.5); a restatement of an alert counts as the
+  alert. Alerts at Medium or Low confidence that the investigation could not check leave the Case
+  *neither proven*, and at the timebox it closes as Insufficient Data naming the gaps. Definitions
+  §7 points to these conditions. Found in live runs: two Medium audit alerts on a cloud provider's
+  own job, which triage could not cover and the investigation could not check, were proven
+  Malicious by their own 4 points before any query ran.
+
 - **04-Playbooks, 03-Processes:** the cloud provider's own operations on the organization's tenant.
   A detection firing on the provider's provisioning or maintenance of the tenant is a False Positive
   condition, established by the source's records (one request or job identifier shared with the
