@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-10-07
+last_updated: 2026-10-12
 license: Apache-2.0
 ---
 
@@ -61,8 +61,9 @@ The triage process begins as soon as an Alert is triggered and a Case is opened.
 ### 1.1 Reception, Aggregation, and Assignment
 1.  **Alert Registration & Aggregation:** An incoming Alert is registered in the queue. To reduce alert fatigue and provide broader visibility of the potential incident, SIEM, SOAR, or XDR tools may aggregate multiple related alerts (e.g., sharing common attributes like host, user, or threat actor) into a consolidated **Security Case**.
 2.  **Deduplication & Throttling Rules:**
-    *   *Active Case Correlation:* The triage system queries the active Cases database. If an open, unresolved Case exists for the same host, identity, or IP address, incoming alerts are automatically appended to that existing Case instead of spawning a new one.
+    *   *Active Case Correlation:* The triage system queries the active Cases database. If an open, unresolved Case exists for the same host, identity, or IP address, or for the same operation (one request or job identifier in the source's records), incoming alerts are automatically appended to that existing Case instead of spawning a new one.
     *   *Rate Throttling:* If the same alert type repeatedly triggers from a single source within a sliding window (e.g., 1 hour), the system consolidates them into a single summary signal and suppresses duplicate alerts.
+    *   *Shared service identities:* a service identity that acts for every run of a service (the operating system's built-in principals, the cloud provider's own service identities, a service account the SOC Knowledge Base records as shared) is on its own no host, identity or source for either rule: two alerts that share only such an identity are neither appended to one Case nor consolidated, whatever produced them. The identity stays an entity of the Case, enriched and available to investigation. This matters most for throttling, which suppresses: keyed on a shared identity, an alert raised by misuse of it would be absorbed into the Case of a benign run. Misuse spread across several operations is therefore not grouped by correlation; it is left to detection and triage, which look for the identity acting outside its usual pattern.
 3.  **Acknowledgment:** The Analyst (human, automation, or agent — see [Definitions §6](../01-Foundation/definitions.md#6-executors-and-functions)) acknowledges the Case (and its constituent alerts) and shifts its state to `In Progress`.
 4.  **Review the Alert(s):** Read the detection logic and key fields and form a first impression before enrichment — do not skim. Identify what behavior triggered the alert and whether it plainly warrants deeper work, so the steps that follow are directed rather than exploratory. In case multiple alerts are aggregated in a Case by the SecOps tools try to understand the relationships between the alerts and the related entities. A case with multiple alerts of different types and mapping to multiple techniques has a higher probability of representing an incident compared to an alert with a single Low / Medium severity alert.
 5.  **Read what the detection asserts:** an Alert carries more than its entities and its type. Each of the inputs below is **required** at triage — read before enrichment and recorded on the Case ([Case Schema §3](../02-Taxonomy/case_schema.md#3-observations)) — because a method that ignores them re-derives by enquiry what the source already stated, and can decide a Case without noticing that the object of it was blocked at execution. They are the source's assertions, validated like the source's severity (§1.4) and never taken as a verdict.

@@ -1,7 +1,7 @@
 ---
 title: Cloud Triage Playbook
 type: playbook
-last_updated: 2026-09-27
+last_updated: 2026-10-12
 license: Apache-2.0
 domain: Cloud
 required_data_sources:
@@ -74,11 +74,11 @@ One row per alert type of this domain; each row is the index into a subsection o
 
 - **Enrich entities:** [User](../99-Shared/sub_enrichment_identity.md) (principal disabling the control), [Network observable](../99-Shared/sub_enrichment_network.md) (source IP).
 - **Checks:**
-  1. **Change-control correlation.** Is the disablement tied to an approved maintenance change, or is it undocumented? → `Benign (High)` when an approved change covers the control and the window and the disabling principal is the one the change names — the disablement is explained; `Benign (Medium)` when the change covers the control and the window but not the principal — an attacker acting inside an open maintenance window satisfies the window alone; `Malicious (Medium)` when it is undocumented.
-  2. **Scope of impairment.** Does the change blind logging or detection broadly (an organization-wide trail, all regions, a detached guardrail policy) or narrowly (one non-critical log stream)? → `Malicious (High)` on broad impairment; `Malicious (Low)` on a narrow one.
+  1. **Change-control correlation.** Is the disablement tied to an approved maintenance change, or is it undocumented? → `Benign (High)` when an approved change covers the control and the window and the disabling principal is the one the change names — the disablement is explained; `Benign (Medium)` when the change covers the control and the window but not the principal — an attacker acting inside an open maintenance window satisfies the window alone; `Malicious (Medium)` when it is undocumented. A change the cloud provider's own job made is one the organization's change control never records: it is read against the False Positive conditions, and this check does not tag it.
+  2. **Scope of impairment.** Does the change blind logging or detection broadly (an organization-wide trail, all regions, a detached guardrail policy) or narrowly (one non-critical log stream)? → `Malicious (High)` on broad impairment; `Malicious (Low)` on a narrow one. A change that enabled or strengthened logging and disabled nothing impairs nothing: that is a False Positive condition.
   3. **Surrounding activity.** Does the disablement immediately precede other suspicious IAM or resource changes in the same account? → `Malicious (High)` — guardrail removal followed by privileged changes is a defense-evasion chain; context when isolated.
-  4. **Actor baseline.** Has the principal ever managed logging configuration, and is it a human or a workload identity? → `Malicious (Medium)` when it never has, or is a workload identity with no configuration role; `Benign (Low)` when it is a platform administrator who routinely does.
-- **False Positive conditions:** a detection firing on a log-destination rotation or on a trail the pipeline deletes and re-creates during a redeploy; a rule matching an update that only changed retention; a sink's transient delivery error reported as disabled logging.
+  4. **Actor baseline.** Has the principal ever managed logging configuration, and is it a human or a workload identity? → `Malicious (Medium)` when it never has, or is a workload identity of the organization's with no configuration role; `Benign (Low)` when it is a platform administrator who routinely does. The cloud provider's own service identity, acting within a job the provider ran, is read against the False Positive conditions instead.
+- **False Positive conditions:** a detection firing on a log-destination rotation or on a trail the pipeline deletes and re-creates during a redeploy; a rule matching an update that only changed retention, or that enabled or strengthened logging and disabled nothing; a sink's transient delivery error reported as disabled logging; a detection firing on the cloud provider's own provisioning or maintenance of the tenant, shown by the source's records (the change shares one request or job identifier with the provider's other operations, issued from the provider's own infrastructure, with no session of the organization's at the time).
 - **Benign conditions:** a sanctioned logging or guardrail change during a maintenance window; a decommissioning of a redundant trail recorded under change control.
 - **Candidate Incident Category(ies):** IC-09 (Insider Threat & Privilege Misuse); IC-05 (Commodity Malware / Loader) when malware or automated tooling disables the control.
 
