@@ -13,6 +13,9 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes, 04-Playbooks:** a search that finds no approval carries no weight
+  (Detection & Analysis §2.4). The cloud triage check *Change-control correlation* and IC-05
+  Query 6 no longer tag a missing approval `Malicious`.
 - **03-Processes, 06-Deliverables:** Observations are numbered O1, O2, … across the Case;
   investigation keeps the triage numbers and continues from the next. The `T` that marked a
   triage Observation read like T0 and like an ATT&CK technique.
