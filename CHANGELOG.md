@@ -13,11 +13,6 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
-- **03-Processes, 04-Playbooks:** one client connection ties the cloud provider's own job together
-  as a shared request or job identifier does (Detection & Analysis §1.1, Playbook Architecture
-  §4.1, the cloud and identity triage playbooks). Found in a live run: a provider's provisioning
-  job gave each of its 70 operations its own request identifier; all 70 came over one client
-  connection to one server.
 - **03-Processes, 04-Playbooks:** a search that finds no approval carries no weight
   (Detection & Analysis §2.4). The cloud triage check *Change-control correlation* and IC-05
   Query 6 no longer tag a missing approval `Malicious`.
@@ -38,19 +33,18 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 - **04-Playbooks, 03-Processes:** the cloud provider's own operations on the organization's tenant.
   A detection firing on the provider's provisioning or maintenance of the tenant is a False Positive
-  condition, established by the source's records (one request or job identifier shared with the
-  provider's other operations, issued from the provider's own infrastructure, with no session of the
-  organization's), never by the actor's name alone (Playbook Architecture §4.1, the cloud triage
-  playbook's *Logging / guardrail disabled* and the identity triage playbook's *Privileged role /
-  group grant*). In those sections the change-control, scope and actor checks no longer tag such a
-  change Malicious, and *Logging / guardrail disabled* gains the False Positive condition of an
-  update that enabled or strengthened logging and disabled nothing. Detection & Analysis §1.1:
-  Active Case Correlation also appends alerts of the same operation (one request or job identifier),
-  and a shared service identity (built-in principals, the provider's own service identities, a
-  service account the SOC Knowledge Base records as shared) is on its own no key for correlation or
-  throttling; it stays an entity of the Case. Found in a live run: a provider's provisioning job of
-  70 operations matched two audit alert policies, a literal reading of the checks promoted both as
-  undocumented changes by a workload identity, and each run of the job opened its own Cases (#90).
+  condition, established by the source's records, never by the actor's name alone (Playbook
+  Architecture §4.1, the cloud triage playbook's *Logging / guardrail disabled* and the identity
+  triage playbook's *Privileged role / group grant*). In those sections the change-control, scope
+  and actor checks no longer tag such a change Malicious, and *Logging / guardrail disabled* gains
+  the False Positive condition of an update that enabled or strengthened logging and disabled
+  nothing. Detection & Analysis §1.1: Active Case Correlation also appends alerts of the same
+  operation, and a shared service identity (built-in principals, the provider's own service
+  identities, a service account the SOC Knowledge Base records as shared) is on its own no key for
+  correlation or throttling; it stays an entity of the Case. Found in a live run: a provider's
+  provisioning job of 70 operations matched two audit alert policies, a literal reading of the
+  checks promoted both as undocumented changes by a workload identity, and each run of the job
+  opened its own Cases (#90).
 
 - **03-Processes:** Detection & Analysis §1.1 notes that what the executor itself wrote into a
   source's record (its Note, its verdict, the Case) is not one of the inputs the source asserts.
