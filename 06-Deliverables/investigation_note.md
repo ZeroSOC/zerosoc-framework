@@ -34,8 +34,8 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| T`<n>` | `<the triage Observation>` — **verified** or **retracted**, with the reason | `<tag>` or removed on a retraction | `<the query that settled it>` | `<event ref>` |
-| `<n>` | `<what the validation query established>` | `<Malicious/Benign (confidence)>` or context | `<the question the query asked>` | `<event ref>` |
+| O`<n>` | `<the triage Observation>` — **verified** or **retracted**, with the reason | `<tag>` or removed on a retraction | `<the query that settled it>` | `<event ref>` |
+| O`<n>` | `<what the validation query established>` | `<Malicious/Benign (confidence)>` or context | `<the question the query asked>` | `<event ref>` |
 
 ### Re-classification Pivots
 
@@ -82,19 +82,19 @@ Last candidate Incident Category: **IC-09** (Insider Threat & Privilege Misuse).
 
 ### Rationale
 
-Malicious side: the alert alone, `Malicious (Low)`, weight 1; no Observation stands beyond it. Benign side: T3, 1, 2 and 5 at Low (1 each) and Observation 4 at High (3), weight 7. The **Benign hypothesis is proven**: Observation 4 explains the alert, so the only Malicious Observation is accounted for and leaves no residual observation, and there is no Medium or High Malicious Observation to cover. No Observation was retracted.
+Malicious side: the alert alone, `Malicious (Low)`, weight 1; no Observation stands beyond it. Benign side: O3, O6, O7 and O10 at Low (1 each) and O9 at High (3), weight 7. The **Benign hypothesis is proven**: O9 explains the alert, so the only Malicious Observation is accounted for and leaves no residual observation, and there is no Medium or High Malicious Observation to cover. No Observation was retracted.
 
 ### Observations
 
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| T1 | The alert, **verified** — unchanged at this gate; no entity was remediated, the session having been recorded rather than blocked. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
-| T3 | Access over the normal corporate network path, **verified** — unchanged. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
-| 1 | Drafting marketing copy with a general-purpose AI assistant is plausible for the role. | `Benign (Low)` | Does the use fit `j.doe`'s role? | `EVT-4711-006` |
-| 2 | Single, first occurrence; no recurring or bulk pattern. | `Benign (Low)` | Does the usage deviate from the user's 30-day baseline? | `EVT-4711-007` |
-| 3 | No resignation, performance process or offboarding on record. | context | Is there HR risk context? | `EVT-4711-008` |
-| 4 | The posted content is a product description draft: no regulated, proprietary or personal data. This **explains the alert** — an unsanctioned tool used for non-sensitive work. | `Benign (High)` | Was regulated or sensitive data posted? (tests `T1567 (Exfiltration Over Web Service)`) | `DF-4711-009` |
-| 5 | No VPN bypass, private browsing or log deletion. | `Benign (Low)` | Any concealment? | `EVT-4711-010` |
+| O1 | The alert, **verified** — unchanged at this gate; no entity was remediated, the session having been recorded rather than blocked. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
+| O3 | Access over the normal corporate network path, **verified** — unchanged. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
+| O6 | Drafting marketing copy with a general-purpose AI assistant is plausible for the role. | `Benign (Low)` | Does the use fit `j.doe`'s role? | `EVT-4711-006` |
+| O7 | Single, first occurrence; no recurring or bulk pattern. | `Benign (Low)` | Does the usage deviate from the user's 30-day baseline? | `EVT-4711-007` |
+| O8 | No resignation, performance process or offboarding on record. | context | Is there HR risk context? | `EVT-4711-008` |
+| O9 | The posted content is a product description draft: no regulated, proprietary or personal data. This **explains the alert** — an unsanctioned tool used for non-sensitive work. | `Benign (High)` | Was regulated or sensitive data posted? (tests `T1567 (Exfiltration Over Web Service)`) | `DF-4711-009` |
+| O10 | No VPN bypass, private browsing or log deletion. | `Benign (Low)` | Any concealment? | `EVT-4711-010` |
 
 ### Re-classification Pivots
 

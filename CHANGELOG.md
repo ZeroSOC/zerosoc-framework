@@ -13,6 +13,9 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes, 06-Deliverables:** Observations are numbered O1, O2, … across the Case;
+  investigation keeps the triage numbers and continues from the next. The `T` that marked a
+  triage Observation read like T0 and like an ATT&CK technique.
 - **02-Taxonomy:** an Observation names alerts by title, entity and time; identifiers stay in
   `related_events` (Case Schema §3).
 - **03-Processes, 01-Foundation:** the alerts alone do not prove Malicious at investigation unless
