@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-07
+last_updated: 2026-10-13
 license: Apache-2.0
 ---
 
@@ -13,6 +13,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **02-Taxonomy:** an Observation names alerts by title, entity and time; identifiers stay in
+  `related_events` (Case Schema §3).
 - **03-Processes, 01-Foundation:** the alerts alone do not prove Malicious at investigation unless
   one of them is at High confidence (#88, item 7). Detection & Analysis §2.4: Malicious is proven
   at a score of 3 or more only when at least one of its observations is an alert at High

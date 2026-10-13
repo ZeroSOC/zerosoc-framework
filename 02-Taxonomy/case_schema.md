@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-09-30
+last_updated: 2026-10-13
 license: Apache-2.0
 ---
 
@@ -51,7 +51,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 | Attribute | Carries |
 |---|---|
-| `title`, `desc` | The Observation, or the action taken, stated in accurate terms |
+| `title`, `desc` | The Observation, or the action taken, stated in accurate terms. Alerts are named by title, entity and time; identifiers stay in `related_events` |
 | `first_seen_time` | When the thing it reports was observed, which is not when the Observation was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
 | `analytic` | What produced the Observation — the question, what was asked, and the query the tool ran — below |
 | `types` | What the entry rests on: `alert` for an aggregated Alert, `event` for the result of a check or query, `action` for a response action. Every entry is an Observation, so `observation` would discriminate nothing |
