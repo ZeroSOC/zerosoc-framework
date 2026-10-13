@@ -36,9 +36,9 @@ The Note renders the account first, then what was decided, then why, then what i
 
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| 1 | `<alert>` — `<T#### (Name), ...>`; threat `<name (family)>`; detected by `<detection source>`; `<entity>` `<remediation state>` | `Malicious (<confidence>)` | `<detector>` | `<observation UID>` |
-| 2 | `<enrichment, scope or correlation result>` | `<Malicious/Benign (confidence)>` or context | `<the check that produced it>` | `<event ref>` |
-| 3 | `<result of a recommended action you ran>` | `<tag>` or context | `<the recommendation it came from>` | `<event ref>` |
+| O1 | `<alert>` — `<T#### (Name), ...>`; threat `<name (family)>`; detected by `<detection source>`; `<entity>` `<remediation state>` | `Malicious (<confidence>)` | `<detector>` | `<observation UID>` |
+| O2 | `<enrichment, scope or correlation result>` | `<Malicious/Benign (confidence)>` or context | `<the check that produced it>` | `<event ref>` |
+| O3 | `<result of a recommended action you ran>` | `<tag>` or context | `<the recommendation it came from>` | `<event ref>` |
 
 ### Case Timeline
 
@@ -87,11 +87,11 @@ The one Benign observation (3) weighs 1 and does not exceed the alert's own weig
 
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
-| 1 | Unsanctioned SaaS app usage: `j.doe` → AI assistant, content posted over the corporate network path. No technique asserted; no threat name; no entity remediated — the session was recorded, not blocked. Tool reports no confidence; severity Low → Low. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
-| 2 | `j.doe` is a standard-privilege user in Marketing, within normal working hours; the endpoint is a managed laptop, not a Crown Jewel. | context | CMDB and identity directory lookup | `EVT-4711-003`, `EVT-4711-004` |
-| 3 | Access over the normal corporate network path: no VPN bypass, no private browsing session. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
-| 4 | Destination is a well-known AI assistant with a non-malicious reputation. Reputation does not bear on the hypothesis: the concern is the data posted, not the destination. | context | Multi-engine reputation lookup | `DF-4711-002` |
-| 5 | No approved exception in the Knowledge Base for this user or application; no prior Cases for the user, the endpoint or the alert type. | context | Knowledge Base and active-Cases query | `EVT-4711-005` |
+| O1 | Unsanctioned SaaS app usage: `j.doe` → AI assistant, content posted over the corporate network path. No technique asserted; no threat name; no entity remediated — the session was recorded, not blocked. Tool reports no confidence; severity Low → Low. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
+| O2 | `j.doe` is a standard-privilege user in Marketing, within normal working hours; the endpoint is a managed laptop, not a Crown Jewel. | context | CMDB and identity directory lookup | `EVT-4711-003`, `EVT-4711-004` |
+| O3 | Access over the normal corporate network path: no VPN bypass, no private browsing session. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
+| O4 | Destination is a well-known AI assistant with a non-malicious reputation. Reputation does not bear on the hypothesis: the concern is the data posted, not the destination. | context | Multi-engine reputation lookup | `DF-4711-002` |
+| O5 | No approved exception in the Knowledge Base for this user or application; no prior Cases for the user, the endpoint or the alert type. | context | Knowledge Base and active-Cases query | `EVT-4711-005` |
 
 ### Case Timeline
 
