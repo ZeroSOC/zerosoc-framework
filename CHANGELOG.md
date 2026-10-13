@@ -11,6 +11,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-13
+
+The first tagged release: a baseline of the framework as it stands, for adopters and implementations
+to cite and to migrate from. Most modules are still `development` or draft.
+
+Contributors: @G-and-alf.
+
 ### Changed
 
 - **03-Processes, 04-Playbooks:** a search that finds no approval carries no weight
@@ -185,4 +192,5 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **07-Governance (draft):** Agentic Guardrails and Agentic Supervision.
 - Community and project files: Contributing guidelines, Governance, Security policy, Code of Conduct, Trademarks, continuous checks (markdownlint, link check, frontmatter validation, DCO).
 
-[Unreleased]: https://github.com/ZeroSOC/zerosoc-framework/commits/main
+[Unreleased]: https://github.com/ZeroSOC/zerosoc-framework/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ZeroSOC/zerosoc-framework/releases/tag/v0.1.0
