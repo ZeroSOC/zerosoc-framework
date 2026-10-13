@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 license: Apache-2.0
 ---
 
@@ -248,7 +248,7 @@ Every Case has one **assignee** (OCSF `assignee`): the executor responsible for 
 
 Every observation — an alert, a tagged Triage Note Observation (§1.6) or a query result — carries a **side** and a **confidence**: `Malicious (Low | Medium | High)` or `Benign (Low | Medium | High)`. Playbook query tags MUST use exactly this vocabulary. The levels are the framework's confidence levels ([Definitions §7](../01-Foundation/definitions.md#7-classification-levels)): **Low** (weight 1) — consistent with the side, explainable otherwise; **Medium** (2) — corroborates the side, not conclusive alone; **High** (3) — sufficient on its own; on the Benign side, an observation that explains the alert.
 
-**What carries no weight.** A result that yields no information carries neither side: an indicator no source holds a record of is **context**. This is narrower than "found nothing" — a covered host showing no child process in the window is a scoped negative observation and a real `Benign` observation, because something was learned; a threat-intelligence lookup that knows nothing is not. A check that could not be run at all is a **visibility gap** (§1.6), not an observation. A **remediation the source performed** carries neither side either, at this gate as at triage (§1.5): it is an action the Case records, and the questions it leaves open — how the entity arrived, what ran before it was stopped, whether the same thing is elsewhere — are the ones the validation queries answer.
+**What carries no weight.** A result that yields no information carries neither side: an indicator no source holds a record of is **context**. This is narrower than "found nothing" — a covered host showing no child process in the window is a scoped negative observation and a real `Benign` observation, because something was learned; a threat-intelligence lookup that knows nothing is not, nor is a search that finds no approval. A check that could not be run at all is a **visibility gap** (§1.6), not an observation. A **remediation the source performed** carries neither side either, at this gate as at triage (§1.5): it is an action the Case records, and the questions it leaves open — how the entity arrived, what ran before it was stopped, whether the same thing is elsewhere — are the ones the validation queries answer.
 
 **Score and retraction.** Each side scores the sum of its observations' weights, triage and investigation together. Observations derived from the same underlying telemetry artifact count once — a triage lookup and an investigation lookup on the same indicator are one observation. A query result that refutes an observation **retracts** it: its tag is removed, the score recomputed, and the retraction with its reason recorded in the Note. A result that indicates the other side is tagged on that side at the confidence it deserves.
 
