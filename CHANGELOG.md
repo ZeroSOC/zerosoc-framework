@@ -13,6 +13,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes, 04-Playbooks:** one client connection ties the cloud provider's own job together
+  as a shared request or job identifier does (Detection & Analysis §1.1, Playbook Architecture
+  §4.1, the cloud and identity triage playbooks). Found in a live run: a provider's provisioning
+  job gave each of its 70 operations its own request identifier; all 70 came over one client
+  connection to one server.
 - **03-Processes, 04-Playbooks:** a search that finds no approval carries no weight
   (Detection & Analysis §2.4). The cloud triage check *Change-control correlation* and IC-05
   Query 6 no longer tag a missing approval `Malicious`.
