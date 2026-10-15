@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-13
+last_updated: 2026-10-15
 license: Apache-2.0
 ---
 
@@ -10,6 +10,12 @@ license: Apache-2.0
 All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in [GOVERNANCE.md](GOVERNANCE.md#5-releases). Each release entry credits the contributors whose work landed in it.
 
 ## [Unreleased]
+
+### Changed
+
+- **03-Processes, 06-Deliverables:** an input of Detection & Analysis §1.1 that the source did not
+  supply is no longer a Visibility Gap by itself. A visibility gap is a question the executor needed
+  answered and could not get (§1.2). §1.1 and the *Before deciding* list of §1.2 are shorter.
 
 ## [0.1.0] - 2026-10-13
 
