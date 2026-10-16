@@ -13,6 +13,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **04-Playbooks:** *Ingress tool transfer to host* check 3 decides on what the file was run to do,
+  as *Malware / loader execution* check 7 does: a downloaded file written to a user's folder and run
+  shortly after is no longer `Malicious (High)` by itself. Where it landed and how soon it ran are
+  context.
+
 - **04-Playbooks:** discovery is `Malicious (Medium)` in the Endpoint triage playbook, in *Malware /
   loader execution* check 4, *Suspicious script / interpreter execution* check 3 and *Remote
   execution / lateral movement* check 5. Administrators and their scripts run the same commands
