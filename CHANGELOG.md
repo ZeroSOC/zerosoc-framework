@@ -13,6 +13,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **04-Playbooks:** discovery is `Malicious (Medium)` in the Endpoint triage playbook, in *Malware /
+  loader execution* check 4, *Suspicious script / interpreter execution* check 3 and *Remote
+  execution / lateral movement* check 5. Administrators and their scripts run the same commands
+  every day, so discovery alone corroborates the Malicious side without settling it; credential
+  access, recovery sabotage, a tunnel or a further transfer stay `Malicious (High)`.
+
 - **04-Playbooks:** the Endpoint triage playbook reads what a legitimate tool was asked to do.
   *Malware / loader execution* gains check 7, *What the tool was asked to do*: a signed tool's
   command and arguments are Malicious when they open a tunnel, read credentials, stage files or
