@@ -13,6 +13,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **04-Playbooks:** *Malware / loader execution* check 2, *Payload location*, applies only to a file
+  that ran: `Malicious (Medium)` when an unknown or unsigned binary ran from a temporary or shared
+  folder, context when the file was not run. A user's Downloads folder is no longer in the list.
+
 - **04-Playbooks:** *Ingress tool transfer to host* check 3 decides on what the file was run to do,
   as *Malware / loader execution* check 7 does: a downloaded file written to a user's folder and run
   shortly after is no longer `Malicious (High)` by itself. Where it landed and how soon it ran are
