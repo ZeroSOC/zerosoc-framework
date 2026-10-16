@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-15
+last_updated: 2026-10-16
 license: Apache-2.0
 ---
 
@@ -12,6 +12,16 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **04-Playbooks:** the Endpoint triage playbook reads what a legitimate tool was asked to do.
+  *Malware / loader execution* gains check 7, *What the tool was asked to do*: a signed tool's
+  command and arguments are Malicious when they open a tunnel, read credentials, stage files or
+  disable a defence, and Benign (Medium) when they are clearly benign. *Remote execution / lateral
+  movement* check 5 no longer reads every discovery command as Malicious (High): account, group and
+  domain discovery is, read-only status and health checks are Benign (Medium). *Malware / loader
+  execution* and *Ingress tool transfer to host* name a False Positive condition for a
+  threat-intelligence indicator that lists a legitimate, signed tool which was not run, or ran only
+  clearly benign commands.
 
 - **03-Processes, 06-Deliverables:** an input of Detection & Analysis §1.1 that the source did not
   supply is no longer a Visibility Gap by itself. A visibility gap is a question the executor needed
