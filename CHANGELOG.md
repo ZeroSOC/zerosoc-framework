@@ -58,6 +58,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   threat-intelligence indicator that lists a legitimate, signed tool which was not run, or ran only
   clearly benign commands.
 
+- **04-Playbooks:** the script host of a delivery chain is named: `wscript.exe`, `cscript.exe` or
+  `mshta.exe`. PowerShell could be read as a script host or as a user's shell, so the same parent
+  fit both sides. *Commodity Malware / Loader* Query 3 and *Malware / loader execution* check 3 read
+  the chain through a shell to where it starts, and *Suspicious script / interpreter execution*
+  check 2 names the same hosts. A chain whose start is not in the evidence is a visibility gap.
+
 - **03-Processes, 06-Deliverables:** an input of Detection & Analysis §1.1 that the source did not
   supply is no longer a Visibility Gap by itself. A visibility gap is a question the executor needed
   answered and could not get (§1.2). §1.1 and the *Before deciding* list of §1.2 are shorter.
