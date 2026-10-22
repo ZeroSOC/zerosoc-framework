@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-10-13
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -27,9 +27,10 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | Field | Values | Set in | Meaning in the framework |
 |---|---|---|---|
 | `uid` | string | 2.a | Case identifier, cited by the Notes, tuning tickets and metrics |
+| `message` | string | 2.a; follows the source while the Case is open | The Case's **title**: the source's own title for the incident, which the source may change as alerts join it; the first Alert's title where the source gives none. Each Alert keeps its own title (§3) |
 | `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment |
 | `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification |
-| `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). A source's own `confidence_id` and `likelihood_id` are inputs triage validates, never accepted at face value |
+| `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and re-assessed when the Incident is confirmed ([§2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)). A source's own `confidence_id` and `likelihood_id` are inputs triage validates, never accepted at face value |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
 | `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
 | `assignee` | user | 2.a; changes at handover | The Case **assignee**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-assignment)) |
@@ -172,7 +173,7 @@ A question that was asked and that nobody answered is on the Case: as a visibili
 **Per phase**, the fields each one sets:
 
 *   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); Observations, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
-*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Observations from the validation queries, confidence and verdict (§2.4); confirmed category, impact, significance and cross-border effect (§3.1); handover reason (§2.3).
+*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Observations from the validation queries, confidence and verdict (§2.4); on a confirmed Incident, severity, confidence, category, impact, planned response actions and T0 (§2.5); significance and cross-border effect (§3.1); handover reason (§2.3).
 *   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; Remediation Activity events referenced from the Observations that motivated them.
 *   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by `uid`.
 

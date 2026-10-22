@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-16
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -12,6 +12,23 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **03-Processes:** Investigation gains §2.5, *Incident Confirmation*, between the resolution of
+  §2.4 and the Investigation Note, which is now §2.6. When the Malicious hypothesis is proven the
+  executor re-assesses severity, confidence and Incident Category, estimates the impact, and plans
+  the initial response actions from the source's recommendations, the category's playbook and its
+  own judgment, dropping redundant ones. Setting `verdict_id = 2` and recording the category,
+  techniques and T0 move here from §3.1, which keeps significance, the retrospective sweep and the
+  hand-off to Response. Response starts from the planned actions, and the Investigation → Response
+  contract carries them in place of the playbook's list. The Case's confidence is re-assessed at
+  confirmation instead of staying the highest on the proven side.
+
+- **03-Processes:** checking whether the Case changed while it was being worked on, before a gate
+  decision, is a MUST.
+
+- **02-Taxonomy:** the Case's title is OCSF `message`, the source's own title for the incident, which
+  follows the source as it retitles the incident; the first Alert's title where the source gives
+  none.
 
 - **04-Playbooks:** *Malware / loader execution* check 2, *Payload location*, applies only to a file
   that ran: `Malicious (Medium)` when an unknown or unsigned binary ran from a temporary or shared
@@ -41,6 +58,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **03-Processes, 06-Deliverables:** an input of Detection & Analysis §1.1 that the source did not
   supply is no longer a Visibility Gap by itself. A visibility gap is a question the executor needed
   answered and could not get (§1.2). §1.1 and the *Before deciding* list of §1.2 are shorter.
+
+### Removed
+
+- **03-Processes:** the two "former elements" paragraphs of the Triage Note and the Investigation
+  Note, which described an earlier version of the Notes.
 
 ## [0.1.0] - 2026-10-13
 

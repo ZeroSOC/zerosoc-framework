@@ -23,6 +23,10 @@
       "type": "string",
       "description": "Case identifier, cited by the Notes, tuning tickets and metrics."
     },
+    "message": {
+      "type": "string",
+      "description": "The Case title: the source's own title for the incident, which the source may change as alerts join it; the first Alert's title where the source gives none."
+    },
     "status_id": {
       "type": "integer",
       "enum": [

@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-10-12
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -235,7 +235,7 @@ Severity estimates the *potential* harm of the observed activity and sets the ur
 | **5 Critical** | Action is required immediately and the scope is broad. | Active, spreading or Crown-Jewel-level threat; response and notification run in parallel with investigation. | Ransomware propagating; domain controller compromise; confirmed exfiltration of regulated data. |
 
 ### Confidence (OCSF `confidence_id`)
-Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework uses one scale for two things: every **Observation** — an alert, an enrichment result, a query result — is tagged with a side and a confidence (`Malicious (High)`, `Benign (Medium)`, …), and the **Case's** confidence is the highest confidence on the side its verdict rests on ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). The levels weigh 1, 2 and 3; a side is proven at 3, with the conditions of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) (Benign must cover the Malicious observations; alerts below High confidence do not prove Malicious alone).
+Confidence is the likelihood that the Malicious hypothesis is true. OCSF names the levels without defining them; the framework uses one scale for two things: every **Observation** — an alert, an enrichment result, a query result — is tagged with a side and a confidence (`Malicious (High)`, `Benign (Medium)`, …), and the **Case's** confidence is the highest confidence on the side its verdict rests on ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)), re-assessed by the executor when an Incident is confirmed ([§2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)). The levels weigh 1, 2 and 3; a side is proven at 3, with the conditions of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) (Benign must cover the Malicious observations; alerts below High confidence do not prove Malicious alone).
 
 | Level | Weight | An Observation at this level | The Case at this level | Example |
 |---|---|---|---|---|

@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-10-15
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -31,9 +31,11 @@ graph TD
     Playbooks --> Resolve{Resolve: score both sides}
     Resolve -->|"Benign proven, or duplicate of an open Case"| CloseI[Close the Case: False Positive / Benign / Duplicate]
     Resolve -->|"Insufficient data: remaining queries; at expiry close with a watch"| Playbooks
-    Resolve -->|"Malicious proven"| Reclass{Objective exceeds the candidate category?}
+    Resolve -->|"Malicious proven"| Assess[Re-assess severity, confidence and category; estimate impact]
+    Assess --> Reclass{Category changed?}
     Reclass -->|"Yes: re-classify"| Playbooks
-    Reclass -->|No| Decl[Confirm the Incident: verdict True Positive, category, severity, impact]
+    Reclass -->|No| PlanR[Plan the initial response actions]
+    PlanR --> Decl[Confirm the Incident: verdict True Positive, category, techniques, T0]
     Decl --> Notify[Stakeholder and regulatory notification]
     Decl --> Evid[Evidence preservation and chain of custody]
     Decl --> Pass[Pass scope to Phase 3 Incident Response]
@@ -78,7 +80,7 @@ The triage process begins as soon as an Alert is triggered and a Case is opened.
     | **Recommended actions** | the procedure the source publishes for this detection | **indicative**: read as a set across the Case and used where they bear on it (§1.5). One the executor runs is recorded as the Observation it produced; one it does not is not recorded at all |
 
     > **Note:** what the executor itself wrote into a source's record (its Note, its verdict, the Case) is not one of these inputs.
-6.  **Watch the Case while it is open:** a source may append alerts to a Case after it was opened, and may change its severity or the assets it names. Before a gate decision the executor SHOULD **check whether the Case changed while it was being worked on**, so that activity arriving mid-work is decided on rather than missed.
+6.  **Watch the Case while it is open:** a source may append alerts to a Case after it was opened, and may change its severity or the assets it names. Before a gate decision the executor MUST **check whether the Case changed while it was being worked on**, so that activity arriving mid-work is decided on rather than missed.
 
 ### 1.2 Multi-Vector Context Enrichment
 Before performing deep-dive analysis, the alert is enriched with the business and environmental context the decision will rest on. Enrichment starts from what the detection already asserted (§1.1) and does not repeat it: a family the detection names is looked up for its behavior rather than re-attributed, and a question the detection has already answered is recorded with the detection as its source and asked again only where the decision turns on it and the answer can be checked independently.
@@ -125,7 +127,7 @@ Every Case carries three measures, defined level by level in [Definitions §7](.
 **Low (1) · Medium (2) · High (3)**. The likelihood that the Malicious hypothesis is true. The same scale tags every observation (§1.6): the Case's confidence starts from its strongest alert's — or, when the tool gives none, from its severity (Informational/Low → Low, Medium → Medium, High/Critical → High) — and is set by the triage rule (§1.5) and the resolution rule (§2.4). Sets what may be acted on autonomously.
 
 #### C. Impact — "how much harm" (OCSF `impact_id`)
-**Low (1) · Medium (2) · High (3) · Critical (4)**. Realized or expected harm. Assessed at triage when already known — an external report stating the harm, or affected entities classified as critical assets or VIP users — and otherwise at incident confirmation (§3.1); **unknown** until then, never guessed. Sets what must be reported (§3.2).
+**Low (1) · Medium (2) · High (3) · Critical (4)**. Realized or expected harm. Assessed at triage when already known — an external report stating the harm, or affected entities classified as critical assets or VIP users — and otherwise at incident confirmation (§2.5); **unknown** until then, never guessed. Sets what must be reported (§3.2).
 
 #### D. Candidate Incident Categories
 
@@ -203,8 +205,6 @@ A conformant Triage Note renders, in this order — the account first, then what
 7.  **Visibility Gaps** — every `required_data_sources` entry ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution)) unavailable during triage, each paired with the check it prevented; write "None." when no gap occurred. The countable source for [Visibility-Gap Rate](../05-Metrics/operational_metrics.md).
 8.  **Provenance** — the playbook(s) used (path plus its `last_updated` date as version), the executor (human / automation / agent — list all classes that materially contributed, e.g. `automation + agent`), the capability classes invoked, and the case/incident ID(s). Required for Glass Box auditability ([Agentic Guardrails](../07-Governance/agentic_guardrails.md)).
 
-**Two former elements are gone, not lost.** *Actions Taken* was a prose restatement of work each Observation already accounts for: the check that produced an Observation is that Observation's `analytic`, rendered beside it. *References* was a second list of the same event identifiers the Observations cite; per-Observation evidence stays with the Observation, and the preserved-evidence pointer belongs with Provenance, where it appears only once preservation has happened (§3.3).
-
 Notes must be specific and concise: state observations in accurate terms rather than vague language, and summarize evidence rather than pasting raw logs — what the Note summarizes, the Case keeps, and neither holds what no Observation rested on. Whenever ATT&CK/ATLAS technique codes appear in a Note, they SHOULD be written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`). The name is the catalogue's — ATT&CK's or ATLAS's — which an executor knows or looks up; the framework's own tables name only the techniques they categorize and do not replicate the catalogue. The form is a property of the rendering, not a test of the Note: a Note is never non-conformant for a technique written bare.
 
 **A Note that fails its conformance check is corrected and rendered again.** What the check tests is what this section requires — the elements and their order, a side with a confidence or neither on every Observation, an event reference on each, a check named for each Visibility Gap — and never wording or notation. A failure is a defect of the rendering, not of the decision: the Case holds everything the Note shows, so the executor renders again from the Case with the failures in hand, and the decision already taken stands. It does not discard the account, does not re-decide the Case and does not hand it over — the assignee changes only under [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions). A rendering that cannot be repaired is recorded on the Case as such, with the failures named, so that the state reached is never silent.
@@ -220,7 +220,7 @@ Investigation is driven by testing competing hypotheses rather than unstructured
 | | |
 |---|---|
 | **Consumes** | The promoted Case, its Triage → Investigation phase transition contract, and its Triage Note (§1.6). The Note's tagged Observations — the enrichment of §1.2 and the scope and correlation results of §1.3 — are the starting evidence of the investigation and seed its score (§2.4); they are verified and extended, not re-collected. The Note also carries the reason the Case could not close: the Malicious observations beyond the alerts, and the Benign observations they were weighed against — the conflict Investigation starts from. |
-| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)); or (b) a **Confirmed Incident** — Malicious hypothesis proven — by setting `verdict_id = 2` (True Positive), assigning the definitive Incident Category, severity and impact, and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of assignee (§2.3) is a within-phase control. |
+| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)); or (b) a **Confirmed Incident** — Malicious hypothesis proven — with the severity, confidence, Incident Category, impact estimate and planned response actions of §2.5, `verdict_id = 2` (True Positive) and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of assignee (§2.3) is a within-phase control. |
 
 ### 2.1 Concurrent Malicious/Benign Hypothesis Formulation
 The executor formulates two competing narratives based on the observed behaviors and MITRE ATT&CK techniques:
@@ -234,9 +234,9 @@ There are always exactly two sides. Competing explanations within a side — whi
 ### 2.2 Playbook Execution
 1. **Verify the triage observations, starting from the conflict** that promoted the Case: confirm each tagged Observation (§1.6) or **retract** it when it does not hold or does not apply to this Case, and aim the first discriminating queries at the observations that conflict.
 2. Apply the **domain → Incident Category pivot**: using the candidate `incident_category` from the Triage → Investigation phase transition contract, open the matching Investigation & Response playbook in [`04-Playbooks/02-Investigation-Response/`](../04-Playbooks/02-Investigation-Response/); if no specialized playbook exists, use the catch-all `00-generic.md`. (Contract fields per [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md).) The technique lists in the playbooks and alert types are indicative, not exhaustive: the relation between techniques and Incident Categories is intentionally loose, and a category is decided by the adversary's objective and impact, not by technique lookup.
-3. Execute the validation queries. The playbook's queries are **indicative, non-exhaustive examples** of the discriminating evidence that has worked for that category: the executor chooses the applicable ones and adds any step their experience warrants; every query run, listed or added, is recorded in the Investigation Note with its tag (§2.5). Queries must be **discriminating** and state the reading of both outcomes. Seek evidence against the favoured hypothesis, not only for it.
-4. Resolve per §2.4, then act on the outcome: a proven Malicious hypothesis promotes the Case to a confirmed Incident (§3.1); a proven Benign hypothesis closes the Case (a False Positive submits a tuning ticket to [Phase 1: Preparation & Engineering](01-preparation_and_engineering.md)).
-5. **Re-classify on evidence drift:** if evidence reveals the activity's objective differs from, or exceeds, the current candidate Incident Category (e.g. a commodity loader staging ransomware, or phishing that yielded credentials), update the candidate `incident_category`, switch to the matching Investigation & Response playbook, and carry all accumulated evidence forward. Record the pivot, and its reason, in the Investigation Note (§2.5). The classification remains provisional until `verdict_id = 2` is set at incident promotion (§3.1).
+3. Execute the validation queries. The playbook's queries are **indicative, non-exhaustive examples** of the discriminating evidence that has worked for that category: the executor chooses the applicable ones and adds any step their experience warrants; every query run, listed or added, is recorded in the Investigation Note with its tag (§2.6). Queries must be **discriminating** and state the reading of both outcomes. Seek evidence against the favoured hypothesis, not only for it.
+4. Resolve per §2.4, then act on the outcome: a proven Malicious hypothesis confirms the Incident (§2.5); a proven Benign hypothesis closes the Case (a False Positive submits a tuning ticket to [Phase 1: Preparation & Engineering](01-preparation_and_engineering.md)).
+5. **Re-classify on evidence drift:** if evidence reveals the activity's objective differs from, or exceeds, the current candidate Incident Category (e.g. a commodity loader staging ransomware, or phishing that yielded credentials), update the candidate `incident_category`, switch to the matching Investigation & Response playbook, and carry all accumulated evidence forward. Record the pivot, and its reason, in the Investigation Note (§2.6). The classification remains provisional until `verdict_id = 2` is set (§2.5).
 
 ### 2.3 Case Assignment
 Every Case has one **assignee** (OCSF `assignee`): the executor responsible for advancing it and for its verdict. A change of assignee is a [handover](../01-Foundation/definitions.md#handover). The conditions under which the assignee must be a human — accountability for Crown Jewel assets and privileged identities — and the metering of automation and agents (investigation timebox, token budget) are specified in [Agentic Guardrails](../07-Governance/agentic_guardrails.md); this process applies the same resolution rule (§2.4) whoever the assignee is. A handover does not block the containment actions that [Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment) pre-authorizes.
@@ -258,7 +258,7 @@ Every observation — an alert, a tagged Triage Note Observation (§1.6) or a qu
 | Outcome | Verdict (`verdict_id`) | Confidence (`confidence_id`) | Next step |
 |---|---|---|---|
 | Benign proven | False Positive (`1`) if the detection was wrong; Benign Positive (`5`) if the activity was authorized | the highest confidence on the Benign side, minus one level for residual Low-confidence Malicious observations | Close; a False Positive raises a `tuning` ticket to Phase 1, a Benign an `exception` ticket unless the Knowledge Base already holds the exception (§1.5); a Low-confidence close carries a monitoring watch and is flagged for QA sampling |
-| Malicious proven (and Benign not) | True Positive (`2`) | the highest confidence on the Malicious side | Promote to Incident (§3.1); response autonomy keys on this confidence — at Low, every containment action requires approval per [Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment) |
+| Malicious proven (and Benign not) | True Positive (`2`) | the highest confidence on the Malicious side, re-assessed in §2.5 | Confirm the Incident (§2.5); response autonomy keys on its confidence — at Low, every containment action requires approval per [Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment) |
 | The activity is already handled by an open master Case (§1.5 duplicate criteria met) | Duplicate (`10`) | — | Close; evidence merged into the master Case |
 | Neither proven | none — **insufficient data** | — | Run the remaining discriminating queries, listed or added; when the investigation timebox or budget expires ([Agentic Guardrails](../07-Governance/agentic_guardrails.md)), apply this rule to the evidence at hand and, if still neither, close as Insufficient Data (`7`) with a monitoring watch (re-open on recurrence of the entities; active monitoring for the retention window at High/Critical severity) and a visibility or tuning ticket |
 
@@ -274,9 +274,21 @@ Because Benign proof requires coverage, the two sides cannot both be proven: an 
 >
 > **Example — a Low-confidence verdict is acted on, not escalated.** New cloud access key, tool confidence Low → `Malicious (Low)`, 1. Investigation adds: created outside change windows → `Malicious (Low)`, 1; by a principal that never created keys → `Malicious (Low)`, 1; used from a region the account never used → `Malicious (Low)`, 1. Malicious 4, Benign 0: **True Positive at Low confidence.** The Incident is declared and passed to Response, where at Low confidence every containment action — even revoking the key — requires approval under the autonomy matrix. The remaining queries, or the response itself, raise the confidence or retract the observations.
 
-### 2.5 Investigation Note (Verdict Evidence Record)
+### 2.5 Incident Confirmation
 
-Every Investigation — whether performed by a human, automation, or an agent — produces an **Investigation Note** on Investigation close or incident promotion. It has the **same element structure as the Triage Note** (§1.6), and the same rendering contract: it holds no state of its own, and renders the Case at this gate. It **extends and updates** the Triage Note rather than mirroring it — the same Case further along, with the Observations triage made now verified or retracted.
+When the Malicious hypothesis is proven (§2.4), the executor MUST, before writing the Investigation Note:
+
+1. **Re-assess the classification:** the severity, the confidence and the Incident Category, based on its understanding of the Incident (§1.4). A value that changes is recorded with its reason in the Note's Rationale (§2.6); a change of category is a re-classification (§2.2, step 5).
+2. **Estimate the impact** (`impact_id`) from the information available.
+3. **Plan the initial response actions.** The executor chooses them from three inputs: the actions the detecting source recommends, carried by the Alerts (§1.1); the actions the Incident Category's Investigation & Response playbook describes; and its own judgment of the Case. It prioritizes the planned actions, drops the unnecessary or redundant ones, and adds the ones the Incident, its context, its severity and the impact estimate call for. Each planned action is a ticket the Case raises, of its kind (§1.6).
+4. **Confirm the Incident** by setting `verdict_id = 2` (True Positive), the step that distinguishes an Incident from a Case (see [Definitions](../01-Foundation/definitions.md)).
+5. **Record** the definitive [Incident Category](../02-Taxonomy/incident_categories.md), the observed MITRE ATT&CK tactics and techniques, and the timeline: the Investigation Note's **Case Timeline** (§2.6), whose earliest **confirmed malicious** event is **T0**, the anchor for MTTD/MTTC/MTTR ([Operational Metrics §4](../05-Metrics/operational_metrics.md)).
+
+> **Example — a redundant action.** A host is isolated, and the Case shows a local, non-domain account on it was used by the threat. Disabling that account after the isolation succeeded is redundant: the account exists only on the host, and the isolated host reaches nothing. The executor drops it from the plan; eradication deals with the account.
+
+### 2.6 Investigation Note (Verdict Evidence Record)
+
+Every Investigation — whether performed by a human, automation, or an agent — produces an **Investigation Note** on Investigation close or incident confirmation (§2.5). It has the **same element structure as the Triage Note** (§1.6), and the same rendering contract: it holds no state of its own, and renders the Case at this gate. It **extends and updates** the Triage Note rather than mirroring it — the same Case further along, with the Observations triage made now verified or retracted.
 
 A conformant Investigation Note renders, in this order:
 
@@ -290,8 +302,6 @@ A conformant Investigation Note renders, in this order:
 8.  **Visibility Gaps** — every `required_data_sources` entry ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution)) unavailable to the Case, each paired with the check it prevented; write "None." when no gap occurred. A gap accumulates: one triage recorded stands here too unless investigation closed it, because the Case carries the gaps and the Note renders what the Case carries. The countable source for [Visibility-Gap Rate](../05-Metrics/operational_metrics.md).
 9.  **Provenance** — the playbook(s) used (path plus its `last_updated` date as version), the executor (human / automation / agent — list all classes that materially contributed, e.g. `automation + agent`), the capability classes invoked, the case/incident ID(s), and — once evidence has been preserved — the pointer to it (§3.3). The playbooks, the executor classes and the capability classes **accumulate**: this Note names triage's as well as investigation's, because the Case carries them and the Note renders the Case. Required for Glass Box auditability ([Agentic Guardrails](../07-Governance/agentic_guardrails.md)).
 
-**Two former elements are gone, not lost.** *Executed Queries* named a table that never held only queries: a query that produced an Observation is that Observation's `analytic`, and the triage Observations carried forward are Observations, so both belong in the Observations element. *Evidence References* was the same second list of identifiers §1.6 dropped, with the preserved-evidence pointer moved to Provenance.
-
 The Investigation Note is the machine-reviewable record consumed by QA sampling ([Agentic Supervision](../07-Governance/agentic_supervision.md)) and by post-incident review (Phase 4). As in the Triage Note, ATT&CK/ATLAS technique codes SHOULD be written as `ID (Name)` (e.g. `T1114.003 (Email Forwarding Rule)`).
 
 ---
@@ -301,15 +311,13 @@ The Investigation Note is the machine-reviewable record consumed by QA sampling 
 The promotion of a Case to an Incident is a formal event that triggers technical, management, and regulatory communication channels.
 
 ### 3.1 Incident Promotion
-The moment Malicious hypothesis is proven:
-1. Promote the Case to an active **Incident** by setting its `Incident Finding` **`verdict_id = 2` (True Positive)** — the confirmation step that distinguishes an Incident from a Case (see [Definitions](../01-Foundation/definitions.md)).
-2. Assign the definitive [Incident Category](../02-Taxonomy/incident_categories.md), record the observed MITRE ATT&CK tactics and techniques, and carry forward the timeline: promotion's `scope/impact/timeline` output (§2, Inputs & Outputs) *is* the Investigation Note's **Case Timeline** (§2.5); its earliest **confirmed malicious** event is recorded as **T0**, the anchor for MTTD/MTTC/MTTR ([Operational Metrics §4](../05-Metrics/operational_metrics.md)).
-3. **Confirm or assess Impact and regulatory significance:** confirm the Impact recorded at triage, or assess it now — `impact_id` (Low / Medium / High / Critical) as the realized or expected harm to operations, data and third parties; determine whether the Incident is **significant** under NIS2 Article 23(3) — it caused or can cause severe operational disruption or financial loss, or considerable material or non-material damage to other persons — and whether it has **cross-border** effect. For financial entities, DORA's classification criteria (clients and counterparts affected, duration, geographic spread, data losses, criticality of the services, economic impact) inform the same assessment. These are fields of the [Case Schema](../02-Taxonomy/case_schema.md) and drive §3.2.
-4. **Retrospective entity sweep:** query Cases closed as False Positive or Benign within the lookback window (default 90 days) that share the incident's entities. Every match is a candidate **verdict false negative** — flag it for mandatory QA review ([Agentic Supervision §2](../07-Governance/agentic_supervision.md)); confirmed misses are adjudicated in the Post-Incident Review ([Phase 4 §3](04-post_incident_activity.md)). Candidate matches are never silently dismissed.
-5. Pass the initial scope (blast radius) directly to [Phase 3: Incident Response](03-response.md) for immediate containment.
+Once the Incident is confirmed (§2.5):
+1. **Confirm Impact and assess regulatory significance:** confirm the impact estimated in §2.5 — `impact_id` (Low / Medium / High / Critical) as the realized or expected harm to operations, data and third parties; determine whether the Incident is **significant** under NIS2 Article 23(3) — it caused or can cause severe operational disruption or financial loss, or considerable material or non-material damage to other persons — and whether it has **cross-border** effect. For financial entities, DORA's classification criteria (clients and counterparts affected, duration, geographic spread, data losses, criticality of the services, economic impact) inform the same assessment. These are fields of the [Case Schema](../02-Taxonomy/case_schema.md) and drive §3.2.
+2. **Retrospective entity sweep:** query Cases closed as False Positive or Benign within the lookback window (default 90 days) that share the incident's entities. Every match is a candidate **verdict false negative** — flag it for mandatory QA review ([Agentic Supervision §2](../07-Governance/agentic_supervision.md)); confirmed misses are adjudicated in the Post-Incident Review ([Phase 4 §3](04-post_incident_activity.md)). Candidate matches are never silently dismissed.
+3. Pass the initial scope (blast radius) and the planned response actions directly to [Phase 3: Incident Response](03-response.md) for immediate containment.
 
 ### 3.2 Stakeholder & Regulatory Notification
-Notification is the responsibility of the [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) and keyed on the Incident's severity and impact (§3.1).
+Notification is the responsibility of the [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) and keyed on the Incident's severity and impact (§2.5).
 
 **Internal notification, by severity** (reference response times; the values are an organization policy knob):
 *   **Low / Medium:** incident ticket to the affected asset owners; no out-of-hours notification.
