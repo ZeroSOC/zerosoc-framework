@@ -24,7 +24,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   confirmation instead of staying the highest on the proven side.
 
 - **03-Processes:** checking whether the Case changed while it was being worked on, before a gate
-  decision, is a MUST.
+  decision, is a MUST. Before resolving, Investigation checks for alerts that joined the Case after
+  promotion and investigates them without returning the Case to triage: each is scored as an Alert
+  Observation, and the executor assesses whether it changes the verdict. A new technique or a new
+  targeted entity weighs more than a repeat of what the Case already holds.
 
 - **02-Taxonomy:** the Case's title is OCSF `message`, the source's own title for the incident, which
   follows the source as it retitles the incident; the first Alert's title where the source gives
