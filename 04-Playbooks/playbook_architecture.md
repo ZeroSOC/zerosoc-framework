@@ -2,7 +2,7 @@
 title: Playbook Architecture
 type: concept
 status: draft
-last_updated: 2026-10-13
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -84,7 +84,7 @@ Front matter MUST include `incident_category`, `mitre_ttps` (indicative), `defau
 A [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract) states which [Case Schema](../02-Taxonomy/case_schema.md) fields MUST be populated when a Case moves forward. One Case object crosses every phase — a contract carries nothing and copies nothing, it is the condition the object meets at the boundary. No field is defined here.
 
 *   **Triage → Investigation** (promoted Cases only; a closed Case meets no contract): `uid`, `status_id` (In Progress), `severity_id`, `confidence_id`, `impact_id` when already known, `start_time`, `observables` (the normalized entities), `finding_info_list` (the Alerts and every triage Observation, each with its side and confidence), `attacks` (candidate techniques), `candidate_incident_categories`, `entry_path`, `master_case_uid` when correlated to an open Case, `visibility_gaps`, `provenance`, `desc`, and `notes` carrying the **Triage Note**. `verdict_id` stays `0`: the promoted Case carries no verdict.
-*   **Investigation → Response** (confirmed Incidents only): the fields above, refined, plus `verdict_id` (2), `incident_category` (confirmed), `reclassification_pivots` when the category changed, `impact_id`, `significant`, `cross_border`, `is_suspected_breach`, `handover_reason` when a handover occurred, the recommended containment, eradication and recovery actions from the playbook, and `notes` carrying the **Investigation Note**.
+*   **Investigation → Response** (confirmed Incidents only): the fields above, refined, plus `verdict_id` (2), `incident_category` (confirmed), `reclassification_pivots` when the category changed, `impact_id`, `significant`, `cross_border`, `is_suspected_breach`, `handover_reason` when a handover occurred, the planned response actions ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), and `notes` carrying the **Investigation Note**.
 
 Verdict values: `1` False Positive, `2` True Positive, `5` Benign, `7` Insufficient Data, `10` Duplicate ([Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts)).
 
@@ -114,7 +114,7 @@ The playbooks cover the eight telemetry domains and the fifteen Incident Categor
 
 ## 7. Execution
 
-The playbooks are Markdown read by whoever executes them: a human analyst opens them, automation and agents load them at runtime. The triage playbook classifies the alert and proposes the candidate categories; the front matter of the Investigation & Response playbook (`incident_category`, `mitre_ttps`) is the deterministic selection key; `required_data_sources` lets the executor detect a **visibility gap** before running. When a required data source is unavailable, the executor MUST record the gap in the Note's Visibility Gaps element ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note), [§2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record)). Queries are stated as questions; the executor translates them to the query language of its tools, so no playbook carries product-specific query code. Response actions run under the autonomy matrix and the [Agentic Guardrails](../07-Governance/agentic_guardrails.md).
+The playbooks are Markdown read by whoever executes them: a human analyst opens them, automation and agents load them at runtime. The triage playbook classifies the alert and proposes the candidate categories; the front matter of the Investigation & Response playbook (`incident_category`, `mitre_ttps`) is the deterministic selection key; `required_data_sources` lets the executor detect a **visibility gap** before running. When a required data source is unavailable, the executor MUST record the gap in the Note's Visibility Gaps element ([Detection & Analysis §1.6](../03-Processes/02-detection_and_analysis.md#16-triage-note), [§2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)). Queries are stated as questions; the executor translates them to the query language of its tools, so no playbook carries product-specific query code. Response actions run under the autonomy matrix and the [Agentic Guardrails](../07-Governance/agentic_guardrails.md).
 
 ## 8. References
 

@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-10-06
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -16,7 +16,7 @@ The Case [assignee](../01-Foundation/definitions.md#6-executors-and-functions) c
 
 | | |
 |---|---|
-| **Consumes** | A **Confirmed Incident** with its Investigation → Response [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract): confirmed Incident Category, scope (affected entities), timeline with T0, severity, confidence, impact, the significance and cross-border flags, and the recommended containment, eradication and recovery actions (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts)). |
+| **Consumes** | A **Confirmed Incident** with its Investigation → Response [phase transition contract](../01-Foundation/definitions.md#phase-transition-contract): confirmed Incident Category, scope (affected entities), timeline with T0, severity, confidence, impact, the significance and cross-border flags, and the planned response actions (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md#5-phase-transition-contracts)). |
 | **Produces** | A contained, eradicated and recovered environment (services restored, containment lifted); every response action appended to the Case timeline ([Case Schema](../02-Taxonomy/case_schema.md)); the regulatory notifications the Incident requires (§6); and the transition to [Phase 4: Post-Incident Activity](04-post_incident_activity.md) (§5). |
 
 ## Process Flowchart
@@ -44,7 +44,7 @@ graph TD
 The Incident arrives confirmed; this step confirms what the response acts on. From the phase transition contract, the executor:
 
 1. Confirms the **scope**: the affected entities (identities, assets, network locations, artifacts) and the confirmed [Incident Category](../02-Taxonomy/incident_categories.md), whose Investigation & Response playbook lists the containment, eradication and recovery actions for that kind of Incident.
-2. Reads the Case **confidence** resolved by Investigation ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
+2. Reads the Case **confidence** re-assessed at confirmation ([Detection & Analysis §2.5](02-detection_and_analysis.md#25-incident-confirmation)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
 3. Reads what each affected identity is. It is a **person's account**; a **service identity**, an account or service principal that software runs under; or a **host's own identity**, the computer account a directory gives a joined device or one of the operating system's built-in principals such as `SYSTEM` or `NETWORK SERVICE`, which OCSF types as a User of type System. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
 4. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
 
@@ -52,7 +52,7 @@ Scope expands during the response as containment and eradication reveal further 
 
 ## 2. Containment
 
-Containment stops the threat from causing further damage while the Incident is eradicated. The executor selects the containment actions from the playbook of the confirmed Incident Category and applies them under the autonomy matrix below. Every containment action is recorded in the Case timeline with its timestamp, the entity it acted on and how it is reversed.
+Containment stops the threat from causing further damage while the Incident is eradicated. The executor starts from the containment actions planned at confirmation ([Detection & Analysis §2.5](02-detection_and_analysis.md#25-incident-confirmation)), selects further ones from the playbook of the confirmed Incident Category as the scope expands, and applies them under the autonomy matrix below. Every containment action is recorded in the Case timeline with its timestamp, the entity it acted on and how it is reversed.
 
 **An identity is contained where it is held.** An account may be held by a cloud identity provider, by an on-premises directory, by both (an on-premises account synchronized to the cloud identity provider), or by a single host (a local account). An identity action applies to the copy held where the action is taken, and to nothing else:
 

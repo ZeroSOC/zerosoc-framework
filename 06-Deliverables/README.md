@@ -1,13 +1,13 @@
 ---
 title: Deliverables Module
 type: index
-last_updated: 2026-10-15
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
 # 06-Deliverables
 
-Fill-in **templates** and **worked examples** for the framework's written deliverables. The element lists are canonical in [Detection & Analysis §1.6 and §2.5](../03-Processes/02-detection_and_analysis.md); this module holds the practitioner-facing forms and one worked example each. Per the [Executor Neutrality principle](../01-Foundation/framework_manifest.md#executor-neutrality-and-human-readability), the same template is used whether the deliverable is produced by a human analyst, automation or an agent.
+Fill-in **templates** and **worked examples** for the framework's written deliverables. The element lists are canonical in [Detection & Analysis §1.6 and §2.6](../03-Processes/02-detection_and_analysis.md); this module holds the practitioner-facing forms and one worked example each. Per the [Executor Neutrality principle](../01-Foundation/framework_manifest.md#executor-neutrality-and-human-readability), the same template is used whether the deliverable is produced by a human analyst, automation or an agent.
 
 The Notes are the records the framework reviews: QA sampling ([Agentic Supervision §2](../07-Governance/agentic_supervision.md)) and the Post-Incident Review ([Phase 4](../03-Processes/04-post_incident_activity.md)) read the Notes, not execution transcripts. Phase 3 and Phase 4 have no separate deliverable in this release: the [Case](../02-Taxonomy/case_schema.md), with its timeline and these Notes, is the record of an Incident ([Incident Response §5](../03-Processes/03-response.md#5-transition-to-phase-4)); an Incident Record and a Post-Incident Review report are staged on the [Roadmap](../01-Foundation/roadmap.md).
 

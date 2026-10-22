@@ -1,14 +1,14 @@
 ---
 title: Investigation Note Template
 type: template
-last_updated: 2026-10-15
+last_updated: 2026-10-22
 license: Apache-2.0
 status: draft
 ---
 
 # Investigation Note
 
-Fill-in template and worked example for the **Investigation Note**, the verdict evidence record produced when Investigation closes a Case or confirms an Incident. The canonical element list is [Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-investigation-note-verdict-evidence-record); this page is the practitioner-facing form. Naming convention: `investigation_note_<case-id>_<YYYYMMDD-HHMM>`.
+Fill-in template and worked example for the **Investigation Note**, the verdict evidence record produced when Investigation closes a Case or confirms an Incident. The canonical element list is [Detection & Analysis §2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record); this page is the practitioner-facing form. Naming convention: `investigation_note_<case-id>_<YYYYMMDD-HHMM>`.
 
 It has the **same element structure as the [Triage Note](triage_note.md)**, with one element more, and the same rendering contract: it holds no state of its own, and renders the Case at this gate. It **extends and updates** the Triage Note rather than mirroring it — the same Case further along, with the Observations triage made now verified or retracted.
 

@@ -2,7 +2,7 @@
 title: Agentic Supervision
 type: process
 status: draft
-last_updated: 2026-09-24
+last_updated: 2026-10-22
 license: Apache-2.0
 ---
 
@@ -26,7 +26,7 @@ An executor never stops for doubt: when the evidence is insufficient it applies 
 A Case closed by automation or an agent with no human touch is reviewed after the fact by sampling. Every week (a reference cadence) a random sample of the autonomous closes — False Positive, Benign, Duplicate and Insufficient Data — is reviewed by a Security Analyst under the SOC Manager's supervision, **oversampling** the closes where a wrong verdict costs most: closes at Low confidence, Duplicates (a wrong Duplicate is a missed threat) and Insufficient Data closes whose monitoring watch expired without a recurrence. The sample rate is an organization policy knob; 5% of closes is a reference value.
 
 *   **Objective:** find wrong verdicts — the verdict misses of [Operational Metrics §5.5](../05-Metrics/operational_metrics.md) — and the drift, hallucination or confirmation bias behind them, before an Incident does.
-*   **Review basis:** the Triage Note and the Investigation Note ([Detection & Analysis §1.6 and §2.5](../03-Processes/02-detection_and_analysis.md)) — the observations, their tags and the resolution — not raw execution transcripts.
+*   **Review basis:** the Triage Note and the Investigation Note ([Detection & Analysis §1.6 and §2.6](../03-Processes/02-detection_and_analysis.md)) — the observations, their tags and the resolution — not raw execution transcripts.
 *   **Outcome:** an overturned verdict reopens the Case and counts against Verdict Precision when a confirmed Incident is overturned ([Operational Metrics §5.4](../05-Metrics/operational_metrics.md)) or as a triage or investigation miss in Observed Triage Recall or Observed Verdict Recall when a close is overturned ([Operational Metrics §5.5](../05-Metrics/operational_metrics.md)); a wrong verdict traced to a playbook query or a missing organizational context becomes a playbook update or a [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb) entry.
 *   **Standing input:** budget-exhaustion closes and per-action ceiling trips ([Agentic Guardrails §5](agentic_guardrails.md#5-resource--token-metering)) are always in the sample: they indicate playbook inefficiency or runaway behavior, a failure mode distinct from verdict quality.
 
