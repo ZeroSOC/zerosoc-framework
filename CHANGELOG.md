@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 ---
 
@@ -12,6 +12,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **02-Taxonomy:** `vendor_attributes` on the Case is the Case's severity as the source reports it,
+  kept current while the Case is open: the highest of its alerts' where the source reports none,
+  and never a value the executor wrote back. It is no longer set only when
+  triage overrides the severity, which left a Case with nothing to compare `severity_id` against
+  and missed the severity Investigation now re-assesses.
 
 - **03-Processes:** Investigation gains §2.5, *Incident Confirmation*, between the resolution of
   §2.4 and the Investigation Note, which is now §2.6. When the Malicious hypothesis is proven the
@@ -29,9 +35,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   Observation, and the executor assesses whether it changes the verdict. A new technique or a new
   targeted entity weighs more than a repeat of what the Case already holds.
 
-- **02-Taxonomy:** the Case's title is OCSF `message`, the source's own title for the incident, which
-  follows the source as it retitles the incident; the first Alert's title where the source gives
-  none.
+- **02-Taxonomy:** the Case's title is OCSF `message`, the source's own title for the Case, which
+  follows the source as it retitles the Case; the first Alert's title where the source gives none.
 
 - **04-Playbooks:** *Malware / loader execution* check 2, *Payload location*, applies only to a file
   that ran: `Malicious (Medium)` when an unknown or unsigned binary ran from a temporary or shared
