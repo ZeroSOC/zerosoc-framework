@@ -138,7 +138,7 @@
       "items": {
         "$ref": "#/$defs/ocsf_attack"
       },
-      "description": "The Incident's tactics and techniques, assessed at incident confirmation from the Observations that stand. Empty until then: the techniques the Alerts assert are provisional and stay on the Alerts."
+      "description": "The Incident's tactics and techniques, assessed at incident confirmation from the Observations that stand and kept current as the response reveals more. Empty until confirmation: the techniques the Alerts assert are provisional and stay on the Alerts."
     },
     "observables": {
       "type": "array",
@@ -943,7 +943,7 @@
         },
         "relation": {
           "type": "string",
-          "description": "An ATT&CK technique identifier where the edge is an observed technique, one the Observation's attacks carries, otherwise a STIX 2.1 relationship type."
+          "description": "Where the edge is an observed technique, the most specific identifier the Observation's attacks carries for it, whose entry gives the edge its tactic; otherwise a STIX 2.1 relationship type."
         },
         "name": {
           "type": "string"
