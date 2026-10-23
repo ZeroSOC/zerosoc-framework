@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 ---
 
@@ -150,7 +150,7 @@ External standards and sources are credited in this registry once, per DD-12.
 
 ## DD-26: The Case Takes Its Title From the Source
 
-- **Decision:** A Case's title is OCSF `message` on the Incident Finding: the source's own title for the incident, kept in step with the source while the Case is open, and the first Alert's title where the source gives none. The Alerts keep their own titles as Observations. Mapped in the [Case Schema](../02-Taxonomy/case_schema.md).
-- **Rationale:** A source that groups alerts into an incident retitles it as alerts join, so that the title describes the whole incident rather than its first alert. A Case named after its first Alert drifts from the incident a reader opens in the source, and two names for one Case is the drift the single Case Schema exists to prevent. OCSF has no `title` on Incident Finding; `message` is defined as the source's concise, human-readable description, suitable for display, which is what a title is.
-- **Discarded alternatives:** the first Alert's title (stable, but stale once the source retitles the incident, and it names one alert for many); a `title` under the `zerosoc` extension (OCSF already carries the concept); one source's own extension (every source that groups alerts titles its incidents, so it is not one source's concept).
+- **Decision:** A Case's title is OCSF `message` on the Incident Finding: the source's own title for the Case, kept in step with the source while the Case is open, and the first Alert's title where the source gives none. The Alerts keep their own titles as Observations. Mapped in the [Case Schema](../02-Taxonomy/case_schema.md).
+- **Rationale:** A source that groups alerts retitles the group as alerts join, so that the title describes all of them rather than the first. A Case named after its first Alert drifts from what a reader opens in the source, and two names for one Case is the drift the single Case Schema exists to prevent. OCSF has no `title` on Incident Finding; `message` is defined as the source's concise, human-readable description, suitable for display, which is what a title is.
+- **Discarded alternatives:** the first Alert's title (stable, but stale once the source retitles the Case, and it names one alert for many); a `title` under the `zerosoc` extension (OCSF already carries the concept); one source's own extension (every source that groups alerts titles the group, so it is not one source's concept).
 - **Revisit:** if OCSF adds a title to Incident Finding.
