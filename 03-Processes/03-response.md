@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 ---
 
@@ -48,7 +48,7 @@ The Incident arrives confirmed; this step confirms what the response acts on. Fr
 3. Reads what each affected identity is. It is a **person's account**; a **service identity**, an account or service principal that software runs under; or a **host's own identity**, the computer account a directory gives a joined device or one of the operating system's built-in principals such as `SYSTEM` or `NETWORK SERVICE`, which OCSF types as a User of type System. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
 4. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
 
-Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, and the containment actions are re-selected for the new entities.
+Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, a technique it reveals joins the Case's tactics and techniques, and the containment actions are re-selected for the new entities.
 
 ## 2. Containment
 

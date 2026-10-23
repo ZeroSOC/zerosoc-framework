@@ -13,6 +13,19 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **02-Taxonomy, 03-Processes:** tactics and techniques are carried at two levels. Each
+  Observation's `attacks` holds the ones it shows: an Alert the ones its detection asserted, and a
+  Malicious Observation SHOULD carry the ones it establishes. The Case's `attacks` holds the
+  Incident's tactics and techniques: empty until incident confirmation (§2.5), assessed then from
+  the Observations that stand before the Investigation Note is written, and kept current as the
+  response reveals more. The Alerts' mappings are provisional: one no Observation shows is left
+  out, and a broad one is narrowed. A technique edge of an Observation's `attack_graph` names the
+  most specific identifier the Observation's `attacks` carries, whose entry gives it its tactic, and
+  the Case's graph is the union of the graphs of the Observations that stand. The Triage →
+  Investigation contract no longer carries the Case's `attacks`; the Investigation → Response
+  contract does. The Investigation Note's Classification renders the Incident's techniques, and both
+  Notes render the techniques on Malicious Observations.
+
 - **02-Taxonomy:** `vendor_attributes` on the Case is the Case's severity as the source reports it,
   kept current while the Case is open: the highest of its alerts' where the source reports none,
   and never a value the executor wrote back. It is no longer set only when

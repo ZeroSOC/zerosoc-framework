@@ -37,7 +37,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `desc` | string | 2.a; refreshed at each gate and while the response runs | The Case **Summary**: what happened and when, the entities involved and which acted on which, and — once established — the root cause, with the Observations that establish it |
 | `notes` | list of note | 2.a / 2.b | The Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |
 | `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Observation** of the Case: the Alerts first, then the result of every check and validation query (§3) |
-| `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, each with its `uid` and its `name` as ATT&CK or ATLAS give them |
+| `attacks` | list of MITRE ATT&CK objects | 2.b at incident confirmation, kept current in Phase 3 | The Incident's tactics and techniques, each with its `uid` and its `name` as ATT&CK or ATLAS give them, assessed from the Observations that stand ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)) and kept current as the response reveals more. Empty until confirmation: the techniques the Alerts assert are provisional and stay on the Alerts (§3) |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
 | `start_time` / `end_time` | timestamp | 2.a, refined in 2.b | The earliest and the most recent event or Observation that **contributed to** the Case. **`start_time` is required**: a Case always has an Alert, so from the moment it opens it has a time it began at. It opens at the earliest Alert's own `start_time` and only ever moves **earlier**, whenever a Malicious Observation cites evidence of an earlier event (§3) — never later, and never to a time of the investigation rather than of the attack. A benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident `start_time` is the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is **not T0** and anchors no metric. `end_time` is set where the Case's span is known |
 | `vendor_attributes` | the source's `severity` and `severity_id` | 2.a; kept current while the Case is open | The Case's severity as the source reports it, or the highest of its alerts' where the source reports none; never a value the executor wrote back. Beside `severity_id` it shows where the executor's assessment differs from the source's ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)) |
@@ -58,6 +58,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `types` | What the entry rests on: `alert` for an aggregated Alert, `event` for the result of a check or query, `action` for a response action. Every entry is an Observation, so `observation` would discriminate nothing |
 | `zerosoc` | The side and the confidence, and whether the timeline renders it — below |
 | `related_events` | The **evidence**: the events the Observation rests on, and the statements — what a system of record or a person states: a Knowledge Base object, a change ticket, a confirmed answer — cited by identifier and version with the system or person that holds them (§5) |
+| `attacks` | The tactics and techniques the entry shows. An Alert carries the ones its detection asserted, and a Malicious Observation SHOULD carry the ones it shows |
 | `attack_graph` | Which entity acted on which, below |
 
 **What produced it.** An Observation and what produced it are never separated, and `analytic` carries all three parts of that:
@@ -74,7 +75,7 @@ OCSF requires `type_id` on the object. A triage check and a validation query are
 
 | What the detection asserts | Where the Case carries it |
 |---|---|
-| The **technique identifiers** | `attacks` on the Alert's `finding_info`, and on the Case (§2) once they are the Case's |
+| The **technique identifiers** | `attacks` on the Alert's `finding_info`, provisional until the Incident's own are assessed (§2) |
 | **What detected it**, and which detector | the Alert's `analytic`: `type_id` for the kind of detection — Rule, Behavioral, Statistical, Learning (ML/DL), Fingerprinting are the values a detection source maps onto — with `uid` and `name` for the detector itself. This is the one place `type_id` is not Other (99): an Alert keeps the analytic its source reported |
 | The source's **description** of the detection | `desc` of the Alert's `finding_info` |
 | The **threat name and family** | the `malware` object on the cited Detection Finding, which is where OCSF carries it. A deployment may also surface it on the Alert's `finding_info` as a `trait`; `traits` is OCSF's generic list of characteristics extracted from an observation, and the framework reserves it for no one purpose |
@@ -106,10 +107,12 @@ This is not the incident-grade record of [Detection & Analysis §3.3](../03-Proc
 
 - `node.uid` is the entity's value as it appears in `observables`, and `node.type` is that observable's OCSF `type_id` — a node is an [Entity](../01-Foundation/definitions.md#entity), not a parallel concept.
 - `edge.source` is the acting entity and `edge.target` the entity acted on.
-- `edge.relation` is the ATT&CK technique identifier where the edge is an observed technique, and otherwise a STIX 2.1 relationship type.
+- `edge.relation`, where the edge is an observed technique, is the most specific identifier the Observation's `attacks` carries for it (the sub-technique where there is one), and the edge's tactic is the one that entry names. Otherwise it is a STIX 2.1 relationship type.
 - `edge.data` cites the events grounding the edge, on the same terms as an Observation.
 
-OCSF constrains none of this and no published convention exists, so an implementation that populates the graph is stating one; the framework states this one so that two implementations agree.
+The Case's graph is the union of the graphs of the Observations that stand, joined on `node.uid`, so a retraction removes an Observation's edges with its techniques.
+
+OCSF constrains none of this and no published convention maps it to OCSF, so an implementation that populates the graph is stating one; the framework states this one so that two implementations agree.
 
 ## 4. Framework Fields
 
@@ -172,9 +175,9 @@ A question that was asked and that nobody answered is on the Case: as a visibili
 
 **Per phase**, the fields each one sets:
 
-*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables and techniques (§1.2–1.3); severity and confidence (§1.4); Observations, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
-*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Observations from the validation queries, confidence and verdict (§2.4); on a confirmed Incident, severity, confidence, category, impact, planned response actions and T0 (§2.5); significance and cross-border effect (§3.1); handover reason (§2.3).
-*   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; Remediation Activity events referenced from the Observations that motivated them.
+*   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables (§1.2–1.3); severity and confidence (§1.4); Observations, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
+*   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Observations from the validation queries, confidence and verdict (§2.4); on a confirmed Incident, severity, confidence, category, techniques, impact, planned response actions and T0 (§2.5); significance and cross-border effect (§3.1); handover reason (§2.3).
+*   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; scope expansions and the techniques they reveal; Remediation Activity events referenced from the Observations that motivated them.
 *   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by `uid`.
 
 ## 7. JSON Schema

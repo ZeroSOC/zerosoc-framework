@@ -1,7 +1,7 @@
 ---
 title: Investigation Note Template
 type: template
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 status: draft
 ---
@@ -20,7 +20,7 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 ### Classification
 
-*The confirmed (or, on close, the last candidate) Incident Category, the assessed `severity_id`, `confidence_id` and `impact_id`, and for a confirmed Incident whether it is significant and whether it is cross-border ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)); and the decision: the `verdict_id` the resolution rule produced, with the master Case identifier where that verdict is Duplicate.*
+*The confirmed (or, on close, the last candidate) Incident Category, the assessed `severity_id`, `confidence_id` and `impact_id`, and for a confirmed Incident its tactics and techniques and whether it is significant and whether it is cross-border ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)); and the decision: the `verdict_id` the resolution rule produced, with the master Case identifier where that verdict is Duplicate.*
 
 ### Rationale
 
@@ -30,7 +30,7 @@ It has the **same element structure as the [Triage Note](triage_note.md)**, with
 
 *Every Observation the Case holds: the Alerts; the Observations triage made, each now **verified or retracted** with the reason; and the result of each validation query run. Each renders with its side and confidence or with neither, with **what produced it** — the validation query being the Observation's `analytic` — and with the events it rests on, cited by identifier.*
 
-*The Alerts render what their detection asserted ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)), as in the Triage Note, with the **remediation state of each entity as it stands at this gate**. A remediation the source performed is an action the Case records and never a Benign observation. Any recommended action run at this gate renders as the Observation it produced.*
+*The Alerts render what their detection asserted ([§1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) and the Malicious Observations the techniques they show, as in the Triage Note, with the **remediation state of each entity as it stands at this gate**. A remediation the source performed is an action the Case records and never a Benign observation. Any recommended action run at this gate renders as the Observation it produced.*
 
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
