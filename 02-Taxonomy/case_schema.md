@@ -56,7 +56,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `first_seen_time` | When the thing it reports was observed, which is not when the Observation was made. The Case Timeline orders on this, and `start_time` is the earliest of them |
 | `analytic` | What produced the Observation — the question, what was asked, and the query the tool ran — below |
 | `types` | What the entry rests on: `alert` for an aggregated Alert, `event` for the result of a check or query, `action` for a response action. Every entry is an Observation, so `observation` would discriminate nothing |
-| `zerosoc` | The side and the confidence, and whether the timeline renders it — below |
+| `zerosoc` | The side and the confidence, whether the timeline renders it, and an Alert's alert type — below |
 | `related_events` | The **evidence**: the events the Observation rests on, and the statements — what a system of record or a person states: a Knowledge Base object, a change ticket, a confirmed answer — cited by identifier and version with the system or person that holds them (§5) |
 | `attacks` | The tactics and techniques the entry shows. An Alert carries the ones its detection asserted, and a Malicious Observation SHOULD carry the ones it shows |
 | `attack_graph` | Which entity acted on which, below |
@@ -92,6 +92,8 @@ An Observation that bears on no hypothesis carries **neither**: absence is how c
 **The timeline.** A third attribute, `timeline`, marks the entries the Case Timeline renders (§5). The timeline is a reconstruction and not a listing: it answers *what happened*, and an entry is flagged because it belongs to that account. Three kinds of entry do: the Alerts, the actions an Observation establishes (the adversary's, where there is one), and the response actions that ran. The work on the Case does not: a check, a query or an enrichment is the Observation it produced, and an acknowledgment, a promotion or a handover is a lifecycle event (§5). Most Observations are not flagged. Triage compiles the timeline, and each later phase flags what it establishes on the same Case.
 
 All three are declared and validated in the [JSON Schema](case_schema.json), and `side` and `confidence_id` are required together or not at all. They were three `tags` until this release, which OCSF intends for categorising and searching and whose names and values it does not constrain, so nothing validated them and a misspelt tag passed silently.
+
+**The alert type.** On an Alert, `alert_type` names the [alert type](alert_types.md) it is triaged under. A source that writes its detections for the framework's alert types declares it, and the Alert keeps the type declared; for any other Alert the executor identifies it at reception. It is absent where no alert type describes the Alert, and on every entry that is not an Alert. It is declared in the [JSON Schema](case_schema.json) beside the other three.
 
 **Evidence.** An Observation's evidence is its `related_events`: the events it rests on. This is the one place evidence is held — there is no second list beside the Observations, and a raw log is never an Observation's body.
 

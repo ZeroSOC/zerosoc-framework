@@ -456,7 +456,7 @@
         "zerosoc": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Framework attributes of an Observation: its side and confidence, and whether the Case Timeline renders it. An Observation that bears on no hypothesis carries neither side nor confidence, and so does every action entry.",
+          "description": "Framework attributes of an Observation: its side and confidence, whether the Case Timeline renders it, and an Alert's alert type. An Observation that bears on no hypothesis carries neither side nor confidence, and so does every action entry.",
           "dependentRequired": {
             "side": [
               "confidence_id"
@@ -491,6 +491,11 @@
             "timeline": {
               "type": "boolean",
               "description": "Set on the entries the Case Timeline renders."
+            },
+            "alert_type": {
+              "type": "string",
+              "minLength": 1,
+              "description": "On an Alert, the alert type it is triaged under: the one its source declares, or the one the executor identified. Absent where no alert type describes the Alert, and on every entry that is not an Alert."
             }
           }
         }
