@@ -158,7 +158,7 @@
       "type": "object",
       "x-ocsf-object": "vendor_attributes",
       "additionalProperties": true,
-      "description": "What the source reported before triage assessed it.",
+      "description": "The severity the source gives its incident, or the highest of the Case's alerts' where it reports no incident, kept current while the Case is open; never a value the executor wrote back.",
       "properties": {
         "severity": {
           "type": "string"

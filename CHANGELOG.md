@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 ---
 
@@ -12,6 +12,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 ## [Unreleased]
 
 ### Changed
+
+- **02-Taxonomy:** `vendor_attributes` on the Case is the source's own severity, kept current
+  while the Case is open: its incident's, or the highest of the Case's alerts' where the source
+  reports no incident, and never a value the executor wrote back. It is no longer set only when
+  triage overrides the severity, which left a Case with nothing to compare `severity_id` against
+  and missed the severity Investigation now re-assesses.
 
 - **03-Processes:** Investigation gains §2.5, *Incident Confirmation*, between the resolution of
   §2.4 and the Investigation Note, which is now §2.6. When the Malicious hypothesis is proven the

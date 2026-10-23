@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-10-22
+last_updated: 2026-10-23
 license: Apache-2.0
 ---
 
@@ -40,7 +40,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `attacks` | list of MITRE ATT&CK objects | 2.a, refined in 2.b | Observed tactics and techniques, each with its `uid` and its `name` as ATT&CK or ATLAS give them |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
 | `start_time` / `end_time` | timestamp | 2.a, refined in 2.b | The earliest and the most recent event or Observation that **contributed to** the Case. **`start_time` is required**: a Case always has an Alert, so from the moment it opens it has a time it began at. It opens at the earliest Alert's own `start_time` and only ever moves **earlier**, whenever a Malicious Observation cites evidence of an earlier event (§3) — never later, and never to a time of the investigation rather than of the attack. A benign precursor examined and ruled out contributed to the investigation and not to the Case, and never moves it. On a confirmed Incident `start_time` is the earliest confirmed malicious event — what the framework calls **T0**, the anchor of the speed metrics ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). On a Case closed as a False Positive or a Benign Positive it is still the earliest Alert's own start and nothing more: nothing malicious was confirmed, so it is **not T0** and anchors no metric. `end_time` is set where the Case's span is known |
-| `vendor_attributes` | the source's `severity` and `severity_id` | 2.a, when triage overrides them | What the source reported before triage assessed it ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)); the override is auditable and countable |
+| `vendor_attributes` | the source's `severity` and `severity_id` | 2.a; kept current while the Case is open | The severity the source gives its incident, or the highest of the Case's alerts' where it reports no incident; never a value the executor wrote back. Beside `severity_id` it shows where the executor's assessment differs from the source's ([§1.4](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact)) |
 | `is_suspected_breach` | boolean | 2.b | Set when data compromise is suspected; informs the significance test |
 | `tickets` | list of ticket | 2.a / 2.b | Tickets the Case **raised**, which is not a ticket it consulted: a change ticket an enrichment check read is evidence, and belongs to the Observation that cites it. `title` says what it asks for and `status_id` where it stands — a planned remediation is open, one the Case acted on is resolved (§1.6). OCSF's `type_id` says which system holds the ticket — **Internal** (`1`) or **External** (`2`) — and not what it is for, which is `zerosoc.kind`: `tuning`, `exception`, `visibility`, `containment`, `eradication`, `recovery`. A `tuning` ticket is what a False Positive raises to Phase 1; an `exception` ticket is the Knowledge Base entry a Benign close proposes — the statement it rested on, or the activity it explained, as an exception for the next occurrence — open until a person confirms it into the Knowledge Base, never confirmed by the executor itself. The set is open while the response phase is still being designed |
 
@@ -138,7 +138,7 @@ A detection source states more than the framework has a home for — its own cla
 
 What belongs there is **what the source states and the framework carries nowhere**. What does not:
 
-- Anything the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one triage assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
+- Anything the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one the executor assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
 - Anything an executor produced. The extension is the source's own record; what the work on the Case produced is the Case's own, below.
 - Raw telemetry, message bodies, file content. The extension is not a loophole for the evidence rule of §3: relevance bounds what a Case holds, wherever it is held.
 
