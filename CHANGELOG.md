@@ -13,6 +13,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Added
 
+- **02-Taxonomy:** the Case Schema says how a Case carries process lineage and decoded commands, with
+  OCSF's own objects: a process's parentage in `parent_process` and `ancestry`, a decoded command in
+  a `script` (`script_content`), and a parent the evidence does not show as a process entity with
+  what is known of it. The JSON Schema declares both on a related event (`process`, `script`).
+
 - **02-Taxonomy:** an Alert carries its alert type, as `alert_type` on its Observation (DD-28). A
   source that writes its detections for the framework's alert types declares it and the Alert keeps
   it; for any other Alert the executor identifies it at reception.
