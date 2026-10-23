@@ -11,6 +11,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ## [Unreleased]
 
+### Added
+
+- **02-Taxonomy:** an Alert carries its alert type, as `alert_type` on its Observation (DD-28). A
+  source that writes its detections for the framework's alert types declares it and the Alert keeps
+  it; for any other Alert the executor identifies it at reception.
+
 ### Changed
 
 - **02-Taxonomy, 03-Processes:** tactics and techniques are carried at two levels. Each
