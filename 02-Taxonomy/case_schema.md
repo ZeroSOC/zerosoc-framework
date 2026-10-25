@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-10-23
+last_updated: 2026-10-25
 license: Apache-2.0
 ---
 
@@ -20,7 +20,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 **The Notes render the Case.** The Triage Note and the Investigation Note are readable renderings of this object at their gate, held in `notes` (§2). They are a field of the Case and not a record beside it: a fact that has a field of its own is recorded in the field, and a Note is never the only place it is kept. Prose that has no structured form — the Summary, the rationale, the root cause and how confident the executor is of it — lives in the rendering, and is on the Case because the rendering is.
 
-**Where OCSF carries a concept, the framework maps to it** and adds no field of its own. The fields in §4 are the concepts looked for in the current OCSF release and not found, or found in a form that loses what the framework needs.
+**Where OCSF carries a concept, the framework maps to it** and adds no field of its own. The fields in §4 are the concepts looked for in the current OCSF release and not found, or found in a form that loses what the framework needs. The framework states a mapping only where OCSF is ambiguous, where the framework requires the attribute, or where it extends OCSF; any other attribute of the OCSF class is used as OCSF defines it.
 
 ## 2. OCSF Fields Used by the Framework
 
@@ -35,7 +35,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
 | `assignee` | user | 2.a; changes at handover | The Case **assignee**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-assignment)) |
 | `desc` | string | 2.a; refreshed at each gate and while the response runs | The Case **Summary**: what happened and when, the entities involved and which acted on which, and — once established — the root cause, with the Observations that establish it |
-| `notes` | list of note | 2.a / 2.b | The Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |
+| `notes` | list of note | 2.a / 2.b | Among them the Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |
 | `finding_info_list` | list of finding_info | 2.a; appended while open | Every **Observation** of the Case: the Alerts first, then the result of every check and validation query (§3) |
 | `attacks` | list of MITRE ATT&CK objects | 2.b at incident confirmation, kept current in Phase 3 | The Incident's tactics and techniques, each with its `uid` and its `name` as ATT&CK or ATLAS give them, assessed from the Observations that stand ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)) and kept current as the response reveals more. Empty until confirmation: the techniques the Alerts assert are provisional and stay on the Alerts (§3) |
 | `observables` | list of observables | 2.a, extended in 2.b | Normalized [entities](../01-Foundation/definitions.md#entity) — the join keys of the investigation |
@@ -139,13 +139,13 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 ### One source's own record: the per-source extension
 
-A detection source states more than the framework has a home for — its own classification and determination, its tags, its links, the identifiers it uses for entities. Discarding them loses what an executor opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
+A detection source states more than OCSF and the framework have a home for — its own classification and determination, the identifiers it uses for entities. Discarding them loses what an executor opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
 
 **One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. A platform may not add a key that nothing declares, and a reader who has the declaration can read the object without the platform that wrote it.
 
-What belongs there is **what the source states and the framework carries nowhere**. What does not:
+What belongs there is **what the source states and neither OCSF nor the framework carries**. What does not:
 
-- Anything the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one the executor assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
+- Anything OCSF or the framework already carries. The severity, the status, the techniques, the entities and the evidence are mappings, not extensions, and a Case that carries them twice has two answers to the same question. Where a source's value differs from the framework's — its own severity against the one the executor assessed — the native carrier for that difference is `vendor_attributes` (§2), not a second copy under the source's key.
 - Anything an executor produced. The extension is the source's own record; what the work on the Case produced is the Case's own, below.
 - Raw telemetry, message bodies, file content. The extension is not a loophole for the evidence rule of §3: relevance bounds what a Case holds, wherever it is held.
 

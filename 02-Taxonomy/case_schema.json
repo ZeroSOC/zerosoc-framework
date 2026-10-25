@@ -6,8 +6,7 @@
   "ocsf_version": "1.9.0",
   "type": "object",
   "additionalProperties": {
-    "type": "object",
-    "description": "A per-source extension: one object per source, under the source's own key, its shape declared by that source's own description and validated against it. Anything the framework already carries is a mapping and not an extension, and a scalar added at this level is neither."
+    "description": "An attribute of the OCSF class the framework does not state, used as OCSF defines it, or a per-source extension: one object per source, under the source's own key, its shape declared by that source's own description and validated against it."
   },
   "required": [
     "uid",
@@ -123,7 +122,7 @@
       "items": {
         "$ref": "#/$defs/ocsf_note"
       },
-      "description": "The Triage Note and the Investigation Note: renderings of the Case at their gate."
+      "description": "Notes on the Case, among them the Triage Note and the Investigation Note: renderings of the Case at their gate."
     },
     "finding_info_list": {
       "type": "array",
