@@ -1,0 +1,7 @@
+{
+  "caption": "ZeroSOC",
+  "description": "The ZeroSOC Framework's attributes of a Case, of its Observations and of the tickets it raises: what the framework needs and OCSF does not carry. A Case is an Incident Finding; its framework attributes are under zerosoc.",
+  "name": "zerosoc",
+  "uid": 984,
+  "version": "0.2.0"
+}

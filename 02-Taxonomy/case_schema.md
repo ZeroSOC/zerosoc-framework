@@ -26,7 +26,7 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 
 | Field | Values | Set in | Meaning in the framework |
 |---|---|---|---|
-| `uid` | string | 2.a | Case identifier, cited by the Notes, tuning tickets and metrics |
+| `metadata.correlation_uid` | string | 2.a | Case identifier, the same on every event of the Case, cited by the Notes, tuning tickets and metrics |
 | `message` | string | 2.a; follows the source while the Case is open | The Case's **title**: the source's own title for the Case, which it may change as alerts join; the first Alert's title where the source gives none. Each Alert keeps its own title (§3) |
 | `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment |
 | `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification |
@@ -120,13 +120,13 @@ OCSF constrains none of this and no published convention maps it to OCSF, so an 
 
 ## 4. Framework Fields
 
-Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` object, the attribute of the ZeroSOC extension to OCSF ([DD-23](../01-Foundation/design_decisions.md#dd-23-native-ocsf-mapping-preferred-over-framework-extensions)), and validated in the [JSON Schema](case_schema.json).
+Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` object, the attribute of the ZeroSOC extension to OCSF ([DD-23](../01-Foundation/design_decisions.md#dd-23-native-ocsf-mapping-preferred-over-framework-extensions)), and validated in the [JSON Schema](case_schema.json). The Case, its Observations (§3) and the tickets it raises carry the same object, and each attribute applies to one of them.
 
 | Field | Values | Set in | Meaning |
 |---|---|---|---|
 | `candidate_incident_categories` | list of `IC-##` | 2.a | Candidate categories proposed by the [alert types](alert_types.md) |
 | `incident_category` | `IC-##` | 2.b | Confirmed category (provisional until `verdict_id = 2`) |
-| `reclassification_pivots` | list of {from, to, reason, event_refs} | 2.b | Every change of candidate category, with the evidence that triggered it. OCSF records the new state of an observation but never what it was before, so a Case's classification history has no native form |
+| `reclassification_pivots` | list of {from_category, to_category, reason, event_refs} | 2.b | Every change of candidate category, with the evidence that triggered it. OCSF records the new state of an observation but never what it was before, so a Case's classification history has no native form |
 | `entry_path` | `alert` · `hunt` · `out-of-band` | 2.a | How the Case entered the loop; hunt and out-of-band Cases are detection false negatives by construction |
 | `visibility_gaps` | list of required data sources unavailable | 2.a / 2.b | Recorded with the check each prevented ([Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution)); counted by the Visibility-Gap Rate |
 | `provenance` | playbooks used (path and version), executor classes, capability classes | every phase | Glass Box audit trail |
@@ -135,7 +135,7 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 | `notifications` | list of {recipient, deadline, sent_at} | 3 | Stakeholder and regulatory notifications and their deadlines |
 | `handover_reason` | `crown-jewel` · `privileged-identity` · `manual` | any | Why the assignee became a human |
 | `watch_until` | timestamp | 2.a / 2.b close | Monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close |
-| `master_case_uid` | Case `uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
+| `master_case_uid` | the master Case's `metadata.correlation_uid` | 2.a / 2.b, on a Duplicate close | The open master Case that handles the activity |
 
 ### One source's own record: the per-source extension
 
@@ -182,8 +182,10 @@ A question that was asked and that nobody answered is on the Case: as a visibili
 *   **Phase 2.a Triage** ([Detection & Analysis §1](../03-Processes/02-detection_and_analysis.md#1-phase-2a--triage-verification-enrichment--prioritization)): aggregation, status and assignee (§1.1); observables (§1.2–1.3); severity and confidence (§1.4); Observations, verdict on close, candidate categories, visibility gaps and provenance (§1.5–1.6).
 *   **Phase 2.b Investigation** ([§2](../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation)): Observations from the validation queries, confidence and verdict (§2.4); on a confirmed Incident, severity, confidence, category, techniques, impact, planned response actions and T0 (§2.5); significance and cross-border effect (§3.1); handover reason (§2.3).
 *   **Phase 3 Incident Response** ([03-response.md](../03-Processes/03-response.md)): notifications; scope expansions and the techniques they reveal; Remediation Activity events referenced from the Observations that motivated them.
-*   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by `uid`.
+*   **Phase 4 Post-Incident Activity** ([04-post_incident_activity.md](../03-Processes/04-post_incident_activity.md)): review outcomes reference the Case by its identifier, `metadata.correlation_uid`.
 
 ## 7. JSON Schema
 
 [`case_schema.json`](case_schema.json) is the formal, machine-readable version of this document (JSON Schema 2020-12). It declares the OCSF Incident Finding fields of §2 with their enum values, the Observation mapping of §3 including the tag names the framework reserves, and the framework fields of §4 under a single `zerosoc` extension object, following OCSF's extension convention of adding attributes rather than redefining classes. Where a framework field has a natural OCSF type it reuses it: provenance carries OCSF `product` objects, a ticket is an OCSF `ticket`. Object shapes borrowed from OCSF are marked `x-ocsf-object` and are intentionally open (`additionalProperties: true`) so that a platform's full OCSF object validates unchanged.
+
+The extension itself is declared in OCSF's own form in [`ocsf_extension`](ocsf_extension/extension.json), as `zerosoc` with the uid 984 requested for it in OCSF's extensions registry. It adds the `zerosoc` attribute to the Incident Finding class and to the `finding_info` and `ticket` objects, and declares the object it holds; it is compiled and validated against the OCSF release `ocsf_version` names, and declares the same fields as the JSON Schema.

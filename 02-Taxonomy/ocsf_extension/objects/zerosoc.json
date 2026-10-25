@@ -1,0 +1,76 @@
+{
+  "caption": "ZeroSOC",
+  "name": "zerosoc",
+  "extends": "object",
+  "description": "The ZeroSOC Framework's attributes of a Case, of an Observation of a Case, or of a ticket a Case raised. Each attribute applies to one of them, as its description says; the framework's Case Schema says which are required where.",
+  "attributes": {
+    "candidate_incident_categories": {
+      "requirement": "optional",
+      "description": "On a Case: the incident categories the Case's alert types propose, each an IC-## identifier of the framework's incident categories."
+    },
+    "incident_category": {
+      "requirement": "optional",
+      "description": "On a Case: the Case's incident category, an IC-## identifier of the framework's incident categories. Provisional until the Case is an Incident."
+    },
+    "reclassification_pivots": {
+      "requirement": "optional",
+      "description": "On a Case: each change of the Case's candidate incident category, with the evidence that triggered it."
+    },
+    "entry_path": {
+      "requirement": "optional",
+      "description": "On a Case: how the Case entered the loop: alert, hunt or out-of-band. A hunt or out-of-band Case is a detection false negative by construction."
+    },
+    "visibility_gaps": {
+      "requirement": "optional",
+      "description": "On a Case: the required data sources that were not available, each with the check it prevented."
+    },
+    "provenance": {
+      "requirement": "optional",
+      "description": "On a Case: the playbooks the Case was handled under, the classes of executor that handled it, the capability classes they invoked and the products whose records it was built from."
+    },
+    "significant": {
+      "requirement": "optional",
+      "description": "On a Case: whether the incident is significant under the NIS2 Directive's test: severe operational disruption or financial loss, or considerable damage to other persons."
+    },
+    "cross_border": {
+      "requirement": "optional",
+      "description": "On a Case: whether the incident has a cross-border effect."
+    },
+    "notifications": {
+      "requirement": "optional",
+      "description": "On a Case: the stakeholder and regulatory notifications the Case requires, and their deadlines."
+    },
+    "handover_reason": {
+      "requirement": "optional",
+      "description": "On a Case: why the Case's assignee became a person: crown-jewel, privileged-identity or manual."
+    },
+    "watch_until": {
+      "requirement": "optional",
+      "description": "On a Case: until when the Case's entities are watched after an Insufficient Data or Low-confidence close."
+    },
+    "master_case_uid": {
+      "requirement": "optional",
+      "description": "On a Case: on a Case closed as a Duplicate, the open master Case that handles the activity, by the identifier its metadata.correlation_uid holds."
+    },
+    "side": {
+      "requirement": "optional",
+      "description": "On an Observation: the hypothesis it bears on, Malicious or Benign. Absent where the Observation is context."
+    },
+    "confidence_id": {
+      "requirement": "optional",
+      "description": "On an Observation with a side: how far it bears on that hypothesis, Low (1), Medium (2) or High (3)."
+    },
+    "timeline": {
+      "requirement": "optional",
+      "description": "On an Observation: whether the Case Timeline renders it."
+    },
+    "alert_type": {
+      "requirement": "optional",
+      "description": "On an Alert: the framework's alert type it is triaged under, the one its source declares or the one the executor identifies."
+    },
+    "kind": {
+      "requirement": "optional",
+      "description": "On a ticket: what it is for, which the ticket's type does not say, such as tuning, visibility, containment, eradication, recovery or exception."
+    }
+  }
+}

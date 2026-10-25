@@ -1,0 +1,20 @@
+{
+  "caption": "Reclassification Pivot",
+  "name": "reclassification_pivot",
+  "extends": "object",
+  "description": "One change of a Case's candidate incident category, with the evidence that triggered it.",
+  "attributes": {
+    "from_category": {
+      "requirement": "required"
+    },
+    "to_category": {
+      "requirement": "required"
+    },
+    "reason": {
+      "requirement": "required"
+    },
+    "event_refs": {
+      "requirement": "recommended"
+    }
+  }
+}

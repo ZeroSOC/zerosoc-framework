@@ -13,6 +13,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Added
 
+- **02-Taxonomy:** the ZeroSOC extension to OCSF, in `ocsf_extension/` (DD-29): the framework's
+  fields in OCSF's own form, as `zerosoc` with the uid 984 requested in OCSF's extensions registry. It adds
+  the `zerosoc` attribute to the Incident Finding class and to the `finding_info` and `ticket`
+  objects, and declares the one object the Case, its Observations and its tickets carry there. CI
+  compiles and validates it against the OCSF release the Case Schema names, and checks that it
+  declares the same fields as the JSON Schema.
+
 - **02-Taxonomy:** the Case Schema says how a Case carries process lineage and decoded commands, with
   OCSF's own objects: a process's parentage in `parent_process` and `ancestry`, a decoded command in
   a `script` (`script_content`), and a parent the evidence does not show as a process entity with
@@ -24,10 +31,16 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **02-Taxonomy, 04-Playbooks:** a Case is identified by `metadata.correlation_uid`, the same on
+  every event of the Case, and no longer by a root `uid`, which OCSF's Incident Finding does not
+  have (DD-29). The Triage → Investigation contract, the master Case of a Duplicate and the
+  post-incident review name the Case by it. A reclassification pivot's categories are
+  `from_category` and `to_category`: OCSF's dictionary types `from` and `to` as e-mail addresses.
+
 - **01-Foundation, 02-Taxonomy:** the framework states a mapping only where OCSF is ambiguous, where
   it requires the attribute, or where it extends OCSF (DD-23). Any other attribute of the OCSF class
   is used as OCSF defines it, such as the analysts' `notes` beside the two Notes, an Incident
-  Finding's closing `comment`, its `src_url` and its `metadata.labels`, and the JSON Schema no longer
+  Finding's `src_url` and its `metadata.labels`, and the JSON Schema no longer
   rejects one that is not an object. A source's tags and links leave the per-source extension:
   OCSF carries both. A source's own record moves from a key at the Case's root to `unmapped`, keyed
   by the source's identifier, where OCSF puts the source-specific attributes a mapper preserves; the

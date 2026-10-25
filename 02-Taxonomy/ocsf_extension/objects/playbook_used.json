@@ -1,0 +1,16 @@
+{
+  "caption": "Playbook Used",
+  "name": "playbook_used",
+  "extends": "object",
+  "description": "A playbook a Case was handled under.",
+  "attributes": {
+    "path": {
+      "requirement": "required",
+      "description": "The playbook's path in the framework or in the organization's knowledge base."
+    },
+    "version": {
+      "requirement": "required",
+      "description": "The playbook's version: the date it was last updated."
+    }
+  }
+}

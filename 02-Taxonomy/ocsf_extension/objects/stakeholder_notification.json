@@ -1,0 +1,21 @@
+{
+  "caption": "Stakeholder Notification",
+  "name": "stakeholder_notification",
+  "extends": "object",
+  "description": "A stakeholder or regulatory notification a Case requires.",
+  "attributes": {
+    "kind": {
+      "requirement": "required",
+      "description": "The kind of notification: internal, nis2-early-warning, nis2-notification, nis2-final-report, dora-initial, dora-intermediate, dora-final or other."
+    },
+    "recipient": {
+      "requirement": "required"
+    },
+    "deadline": {
+      "requirement": "required"
+    },
+    "sent_at": {
+      "requirement": "optional"
+    }
+  }
+}
