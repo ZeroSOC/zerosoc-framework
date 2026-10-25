@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-23
+last_updated: 2026-10-25
 license: Apache-2.0
 ---
 
@@ -23,6 +23,16 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   it; for any other Alert the executor identifies it at reception.
 
 ### Changed
+
+- **01-Foundation, 02-Taxonomy:** the framework states a mapping only where OCSF is ambiguous, where
+  it requires the attribute, or where it extends OCSF (DD-23). Any other attribute of the OCSF class
+  is used as OCSF defines it, such as the analysts' `notes` beside the two Notes, an Incident
+  Finding's closing `comment`, its `src_url` and its `metadata.labels`, and the JSON Schema no longer
+  rejects one that is not an object. A source's tags and links leave the per-source extension:
+  OCSF carries both. A source's own record moves from a key at the Case's root to `unmapped`, keyed
+  by the source's identifier, where OCSF puts the source-specific attributes a mapper preserves; the
+  framework's own `zerosoc` fields become the ZeroSOC extension to OCSF, registered in OCSF's
+  extensions registry.
 
 - **02-Taxonomy, 03-Processes:** tactics and techniques are carried at two levels. Each
   Observation's `attacks` holds the ones it shows: an Alert the ones its detection asserted, and a

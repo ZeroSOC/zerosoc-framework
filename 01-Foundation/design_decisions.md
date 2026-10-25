@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-10-23
+last_updated: 2026-10-25
 license: Apache-2.0
 ---
 
@@ -130,7 +130,7 @@ External standards and sources are credited in this registry once, per DD-12.
 
 ## DD-23: Native OCSF Mapping Preferred Over Framework Extensions
 
-- **Decision:** Where OCSF carries a concept, the framework maps to it and defines no field of its own. A field under the `zerosoc` extension is added only where the concept was looked for in the current OCSF release and found absent, or present in a form that loses what the framework needs; it is then declared and validated in the [JSON Schema](../02-Taxonomy/case_schema.json), which is what makes it checkable.
+- **Decision:** Where OCSF carries a concept, the framework maps to it and defines no field of its own. A field under the `zerosoc` extension is added only where the concept was looked for in the current OCSF release and found absent, or present in a form that loses what the framework needs; it is then declared and validated in the [JSON Schema](../02-Taxonomy/case_schema.json), which is what makes it checkable. The framework states a mapping only where OCSF is ambiguous, where the framework requires the attribute, or where it extends OCSF; any other attribute of the OCSF class is used as OCSF defines it, and the JSON Schema lets it through. The framework's own fields are the attributes of the ZeroSOC extension to OCSF, registered in OCSF's extensions registry; a source's own record, which neither OCSF nor the framework carries, goes under `unmapped`, keyed by the source's identifier.
 - **Rationale:** An adopter maps their platform to OCSF once, and every field the framework invents is one they must then carry privately; a framework that invents freely stops being a mapping target and becomes a second schema to implement. Recording what was searched for is what keeps the exception list honest — a reader can tell an extension that was checked from one that was convenient.
 - **Discarded alternatives:** extension-first, mapping to OCSF only where convenient (more expressive per Case, but every adopter carries private fields and the mapping stops being reviewable); no rule, deciding case by case (what produced the drift, and leaves no record of what was searched for).
 - **Revisit:** at every OCSF minor release — an extension whose concept the release has since adopted natively is migrated, and the list is re-tested rather than assumed.
