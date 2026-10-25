@@ -120,7 +120,7 @@ OCSF constrains none of this and no published convention maps it to OCSF, so an 
 
 ## 4. Framework Fields
 
-Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` extension object and validated in the [JSON Schema](case_schema.json).
+Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` object, the attribute of the ZeroSOC extension to OCSF ([DD-23](../01-Foundation/design_decisions.md#dd-23-native-ocsf-mapping-preferred-over-framework-extensions)), and validated in the [JSON Schema](case_schema.json).
 
 | Field | Values | Set in | Meaning |
 |---|---|---|---|
@@ -141,7 +141,7 @@ Concepts with no home in the current OCSF release. Each is declared under a sing
 
 A detection source states more than OCSF and the framework have a home for — its own classification and determination, the identifiers it uses for entities. Discarding them loses what an executor opening the source would see; inventing a field for each turns the framework into a second copy of every vendor's schema.
 
-**One object per source, under the source's own key, declared where that source is described.** The key is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. A platform may not add a key that nothing declares, and a reader who has the declaration can read the object without the platform that wrote it.
+**One object per source, under `unmapped`, declared where that source is described.** `unmapped` is OCSF's container for the source-specific attributes a mapper preserves. The object's key in it is the source's own identifier, as its description names it; the object's shape is declared by that same description — the profile or mapping document a deployment maintains for it — and validated against that declaration. A platform may not add a key that nothing declares, and a reader who has the declaration can read the object without the platform that wrote it.
 
 What belongs there is **what the source states and neither OCSF nor the framework carries**. What does not:
 
