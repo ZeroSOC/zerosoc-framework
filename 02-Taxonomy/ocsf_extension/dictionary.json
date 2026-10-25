@@ -1,0 +1,166 @@
+{
+  "caption": "Attribute Dictionary",
+  "description": "The attributes the ZeroSOC extension adds to OCSF.",
+  "name": "dictionary",
+  "attributes": {
+    "zerosoc": {
+      "caption": "ZeroSOC",
+      "description": "The ZeroSOC Framework's attributes of the record that carries it: a Case, an Observation of a Case, or a ticket a Case raised.",
+      "type": "zerosoc"
+    },
+    "candidate_incident_categories": {
+      "caption": "Candidate Incident Categories",
+      "description": "The incident categories the Case's alert types propose, each an IC-## identifier of the framework's incident categories.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "incident_category": {
+      "caption": "Incident Category",
+      "description": "The Case's incident category, an IC-## identifier of the framework's incident categories. Provisional until the Case is an Incident.",
+      "type": "string_t"
+    },
+    "reclassification_pivots": {
+      "caption": "Reclassification Pivots",
+      "description": "Each change of the Case's candidate incident category, with the evidence that triggered it.",
+      "type": "reclassification_pivot",
+      "is_array": true
+    },
+    "from_category": {
+      "caption": "From Category",
+      "description": "The incident category before the change, an IC-## identifier.",
+      "type": "string_t"
+    },
+    "to_category": {
+      "caption": "To Category",
+      "description": "The incident category after the change, an IC-## identifier.",
+      "type": "string_t"
+    },
+    "reason": {
+      "caption": "Reason",
+      "description": "Why the change was made.",
+      "type": "string_t"
+    },
+    "event_refs": {
+      "caption": "Event References",
+      "description": "The events that triggered the change, by the uid of the related events the Case cites.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "entry_path": {
+      "caption": "Entry Path",
+      "description": "How the Case entered the loop: alert, hunt or out-of-band. A hunt or out-of-band Case is a detection false negative by construction.",
+      "type": "string_t"
+    },
+    "visibility_gaps": {
+      "caption": "Visibility Gaps",
+      "description": "The required data sources that were not available, each with the check it prevented.",
+      "type": "visibility_gap",
+      "is_array": true
+    },
+    "data_source": {
+      "caption": "Data Source",
+      "description": "A required data source that was not available.",
+      "type": "string_t"
+    },
+    "check_prevented": {
+      "caption": "Check Prevented",
+      "description": "The check the missing data source prevented.",
+      "type": "string_t"
+    },
+    "provenance": {
+      "caption": "Provenance",
+      "description": "The playbooks the Case was handled under, the classes of executor that handled it, the capability classes they invoked and the products whose records it was built from.",
+      "type": "case_provenance"
+    },
+    "playbooks": {
+      "caption": "Playbooks",
+      "description": "The playbooks the Case was handled under, each by path and version.",
+      "type": "playbook_used",
+      "is_array": true
+    },
+    "executors": {
+      "caption": "Executors",
+      "description": "The classes of executor that handled the Case: human, automation or agent.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "capability_classes": {
+      "caption": "Capability Classes",
+      "description": "The capability classes the executors invoked.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "products": {
+      "caption": "Products",
+      "description": "The products whose records the Case was built from.",
+      "type": "product",
+      "is_array": true
+    },
+    "significant": {
+      "caption": "Significant",
+      "description": "Whether the incident is significant under the NIS2 Directive's test: severe operational disruption or financial loss, or considerable damage to other persons.",
+      "type": "boolean_t"
+    },
+    "cross_border": {
+      "caption": "Cross Border",
+      "description": "Whether the incident has a cross-border effect.",
+      "type": "boolean_t"
+    },
+    "notifications": {
+      "caption": "Notifications",
+      "description": "The stakeholder and regulatory notifications the Case requires, and their deadlines.",
+      "type": "stakeholder_notification",
+      "is_array": true
+    },
+    "kind": {
+      "caption": "Kind",
+      "description": "What the record is for: the kind of a notification, or what a ticket is for.",
+      "type": "string_t"
+    },
+    "recipient": {
+      "caption": "Recipient",
+      "description": "Who the notification is for.",
+      "type": "string_t"
+    },
+    "deadline": {
+      "caption": "Deadline",
+      "description": "When the notification is due.",
+      "type": "timestamp_t"
+    },
+    "sent_at": {
+      "caption": "Sent At",
+      "description": "When the notification was sent.",
+      "type": "timestamp_t"
+    },
+    "handover_reason": {
+      "caption": "Handover Reason",
+      "description": "Why the Case's assignee became a person: crown-jewel, privileged-identity or manual.",
+      "type": "string_t"
+    },
+    "watch_until": {
+      "caption": "Watch Until",
+      "description": "Until when the Case's entities are watched after an Insufficient Data or Low-confidence close.",
+      "type": "timestamp_t"
+    },
+    "master_case_uid": {
+      "caption": "Master Case UID",
+      "description": "On a Case closed as a Duplicate, the open master Case that handles the activity, by the identifier its metadata.correlation_uid holds.",
+      "type": "string_t"
+    },
+    "side": {
+      "caption": "Side",
+      "description": "The hypothesis an Observation bears on: Malicious or Benign. Absent where the Observation is context.",
+      "type": "string_t"
+    },
+    "timeline": {
+      "caption": "Timeline",
+      "description": "Whether the Case Timeline renders the entry.",
+      "type": "boolean_t"
+    },
+    "alert_type": {
+      "caption": "Alert Type",
+      "description": "On an Alert, the framework's alert type it is triaged under: the one its source declares, or the one the executor identifies.",
+      "type": "string_t"
+    }
+  }
+}

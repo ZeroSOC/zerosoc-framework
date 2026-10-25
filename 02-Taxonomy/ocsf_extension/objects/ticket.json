@@ -1,0 +1,8 @@
+{
+  "extends": "ticket",
+  "attributes": {
+    "zerosoc": {
+      "requirement": "optional"
+    }
+  }
+}

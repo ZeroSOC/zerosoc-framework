@@ -1,0 +1,20 @@
+{
+  "caption": "Case Provenance",
+  "name": "case_provenance",
+  "extends": "object",
+  "description": "What a Case was handled with: the playbooks, the classes of executor, the capability classes they invoked and the products whose records it was built from.",
+  "attributes": {
+    "playbooks": {
+      "requirement": "required"
+    },
+    "executors": {
+      "requirement": "required"
+    },
+    "capability_classes": {
+      "requirement": "optional"
+    },
+    "products": {
+      "requirement": "optional"
+    }
+  }
+}

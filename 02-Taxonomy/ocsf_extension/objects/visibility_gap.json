@@ -1,0 +1,14 @@
+{
+  "caption": "Visibility Gap",
+  "name": "visibility_gap",
+  "extends": "object",
+  "description": "A required data source that was not available, with the check it prevented.",
+  "attributes": {
+    "data_source": {
+      "requirement": "required"
+    },
+    "check_prevented": {
+      "requirement": "required"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "incident_finding",
+  "attributes": {
+    "zerosoc": {
+      "group": "context",
+      "requirement": "recommended"
+    }
+  }
+}

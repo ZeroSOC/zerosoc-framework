@@ -1,0 +1,8 @@
+{
+  "extends": "finding_info",
+  "attributes": {
+    "zerosoc": {
+      "requirement": "optional"
+    }
+  }
+}

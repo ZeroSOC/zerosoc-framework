@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
   "title": "ZeroSOC Case",
-  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under 'zerosoc', the ZeroSOC extension to OCSF. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is an attribute of the OCSF class, used as OCSF defines it; a source's own record is under 'unmapped', keyed by the source.",
+  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under 'zerosoc', the ZeroSOC extension to OCSF (declared in ocsf_extension/). The Case is identified by metadata.correlation_uid. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is an attribute of the OCSF class, used as OCSF defines it; a source's own record is under 'unmapped', keyed by the source.",
   "ocsf_version": "1.9.0",
   "type": "object",
   "additionalProperties": {
     "description": "An attribute of the OCSF class the framework does not state, used as OCSF defines it."
   },
   "required": [
-    "uid",
+    "metadata",
     "status_id",
     "severity_id",
     "verdict_id",
@@ -18,9 +18,8 @@
     "zerosoc"
   ],
   "properties": {
-    "uid": {
-      "type": "string",
-      "description": "Case identifier, cited by the Notes, tuning tickets and metrics."
+    "metadata": {
+      "$ref": "#/$defs/ocsf_metadata"
     },
     "message": {
       "type": "string",
@@ -672,15 +671,15 @@
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "from",
-              "to",
+              "from_category",
+              "to_category",
               "reason"
             ],
             "properties": {
-              "from": {
+              "from_category": {
                 "$ref": "#/$defs/incident_category"
               },
-              "to": {
+              "to_category": {
                 "$ref": "#/$defs/incident_category"
               },
               "reason": {
@@ -837,7 +836,7 @@
         },
         "master_case_uid": {
           "type": "string",
-          "description": "Set on a Duplicate close: the open master Case that handles the activity."
+          "description": "Set on a Duplicate close: the open master Case that handles the activity, by its metadata.correlation_uid."
         }
       }
     },
@@ -1133,6 +1132,21 @@
         "parent_uid": {
           "type": "string",
           "description": "The uid of the script that launched this one."
+        }
+      }
+    },
+    "ocsf_metadata": {
+      "type": "object",
+      "x-ocsf-object": "metadata",
+      "additionalProperties": true,
+      "required": [
+        "correlation_uid"
+      ],
+      "description": "OCSF's metadata of the Case. The framework states its correlation_uid: the Case's identifier, the same on every event of the Case.",
+      "properties": {
+        "correlation_uid": {
+          "type": "string",
+          "description": "Case identifier, cited by the Notes, tuning tickets and metrics."
         }
       }
     }

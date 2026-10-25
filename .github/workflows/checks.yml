@@ -51,6 +51,31 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: python3 .github/scripts/check_frontmatter.py
 
+  ocsf-extension:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 .github/scripts/check_ocsf_extension.py
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install ocsf-schema-compiler==1.1.1 ocsf-validator==0.2.5
+      - name: Compile the extension against the OCSF release the Case Schema follows
+        run: |
+          version=$(python -c 'import json; print(json.load(open("02-Taxonomy/case_schema.json"))["ocsf_version"])')
+          git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$version" https://github.com/ocsf/ocsf-schema.git "$RUNNER_TEMP/ocsf-schema"
+          ocsf-schema-compiler "$RUNNER_TEMP/ocsf-schema" -e 02-Taxonomy/ocsf_extension > "$RUNNER_TEMP/compiled.json" 2> "$RUNNER_TEMP/compile.log" || { cat "$RUNNER_TEMP/compile.log"; exit 1; }
+          cat "$RUNNER_TEMP/compile.log"
+          ! grep -q '^WARNING:' "$RUNNER_TEMP/compile.log"
+      - name: Validate it with OCSF's validator
+        run: |
+          cp -r 02-Taxonomy/ocsf_extension "$RUNNER_TEMP/ocsf-schema/extensions/zerosoc"
+          python -m ocsf_validator "$RUNNER_TEMP/ocsf-schema"
+
   dco:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
