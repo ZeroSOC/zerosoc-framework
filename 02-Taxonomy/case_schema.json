@@ -383,17 +383,9 @@
         },
         "product": {
           "$ref": "#/$defs/ocsf_product"
-        },
-        "process": {
-          "$ref": "#/$defs/ocsf_process",
-          "description": "The process the event shows, where it shows one."
-        },
-        "script": {
-          "$ref": "#/$defs/ocsf_script",
-          "description": "The decoded command the event's process ran, where it ran an encoded one."
         }
       },
-      "description": "An event that is evidence of the Observation: what the Observation rests on, kept with the Case and cited by identifier. It may be any OCSF event — a Detection Finding where the Observation is an Alert, a Remediation Activity on an action entry, an event of the telemetry a query returned — or an event that is not in OCSF at all, which `type` names instead of `type_uid`. What is left out is what the Observation did not rest on: bulk telemetry, result sets, message bodies, file content."
+      "description": "A citation of an event the Observation rests on: its uid is the event's metadata.uid, and it says what the event is and when it happened. The event itself is kept with the Case: an OCSF event of its own class — a Detection Finding where the Observation is an Alert, a Process Activity or a Script Activity of a process chain, a Remediation Activity on an action entry, an event of the telemetry a query returned — or a record that is not an OCSF event, which `type` names instead of `type_uid`. What is left out is what the Observation did not rest on: bulk telemetry, result sets, message bodies, file content."
     },
     "ocsf_finding_info": {
       "type": "object",
@@ -1040,98 +1032,6 @@
         "modified_time": {
           "type": "integer",
           "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
-        }
-      }
-    },
-    "ocsf_process": {
-      "type": "object",
-      "x-ocsf-object": "process",
-      "additionalProperties": true,
-      "description": "A process an Observation rests on, with its parentage in parent_process and ancestry. A parent the evidence does not show carries what is known of it.",
-      "properties": {
-        "uid": {
-          "type": "string"
-        },
-        "pid": {
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "cmd_line": {
-          "type": "string",
-          "description": "The command line as the process was launched, encoded or not."
-        },
-        "created_time": {
-          "type": "integer",
-          "description": "OCSF timestamp_t: milliseconds since the Unix epoch (UTC)."
-        },
-        "parent_process": {
-          "$ref": "#/$defs/ocsf_process"
-        },
-        "ancestry": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ocsf_process"
-          },
-          "description": "The extended parentage, the direct parent first."
-        }
-      }
-    },
-    "ocsf_script": {
-      "type": "object",
-      "x-ocsf-object": "script",
-      "additionalProperties": true,
-      "description": "A command decoded from its encoded form.",
-      "required": [
-        "type_id",
-        "script_content"
-      ],
-      "properties": {
-        "type_id": {
-          "type": "integer",
-          "enum": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            99
-          ],
-          "x-enum-captions": {
-            "0": "Unknown",
-            "1": "Windows Command Prompt",
-            "2": "PowerShell",
-            "3": "Python",
-            "4": "JavaScript",
-            "5": "VBScript",
-            "6": "Unix Shell",
-            "7": "VBA",
-            "99": "Other"
-          },
-          "description": "The interpreter."
-        },
-        "script_content": {
-          "type": "string",
-          "description": "The decoded content, normalized to UTF-8."
-        },
-        "hashes": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "description": "Hashes of the script in its original encoding."
-        },
-        "uid": {
-          "type": "string"
-        },
-        "parent_uid": {
-          "type": "string",
-          "description": "The uid of the script that launched this one."
         }
       }
     },
