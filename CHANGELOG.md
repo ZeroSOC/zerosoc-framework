@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-25
+last_updated: 2026-10-29
 license: Apache-2.0
 ---
 
@@ -32,6 +32,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   it; for any other Alert the executor identifies it at reception.
 
 ### Changed
+
+- **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
+  use served in this Incident, judged from the attack path and the context the investigation
+  established. A technique ATT&CK lists under several tactics is recorded under more than one only
+  where the Incident shows it served each.
 
 - **02-Taxonomy, 04-Playbooks:** a Case is identified by `metadata.correlation_uid`, the same on
   every event of the Case, and no longer by a root `uid`, which OCSF's Incident Finding does not
