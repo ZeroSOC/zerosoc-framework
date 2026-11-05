@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-10-25
+last_updated: 2026-11-05
 license: Apache-2.0
 ---
 
@@ -182,4 +182,11 @@ External standards and sources are credited in this registry once, per DD-12.
 - **Rationale:** OCSF's related event is a citation: its `uid` is the cited event's `metadata.uid`, and it says what the event is and when it happened. A process, its parentage and the script it ran are the objects of the event's own class, where OCSF's tools read them; carried on the citation, they are attributes OCSF does not give it.
 - **Discarded alternatives:** adding `process` and `script` to the related event through the ZeroSOC extension (no change to the Case, but the extension would add to a citation the objects OCSF keeps on events); the events embedded in the Case under `zerosoc` (one document, but a second copy of OCSF's event classes inside the extension).
 - **Revisit:** if OCSF gives the related event the objects of the event it cites, or a class that holds a finding with its evidence.
+
+## DD-31: Governance Sized to a Small Team
+
+- **Decision:** The project has two roles, Contributor and Maintainer. Everyday changes merge on green checks. A Design Decision on a `development` or `stable` document, a substantive change to a `stable` document and any governance change start with an issue and stay open for at least 72 hours with every objection answered. Promotion to `stable` keeps its non-author review. The Working Group discusses and holds no vote: a view counts once it is written on the issue or pull request, and a decision is final when the pull request merges. Implemented in [GOVERNANCE.md](../GOVERNANCE.md#2-decision-process).
+- **Rationale:** A non-author review and 72 hours on every substantive pull request assumed more active reviewers than the project has, and those rules were not being kept. A rule nobody follows misleads outside readers, and one that is followed would slow routine work on documents that carry no conformance guarantee. The wait stays where a decision is hard to undo, and the review where a document becomes binding. A Maintainer can therefore change `development` text alone, which remains visible on the pull request and open to objection after merging.
+- **Discarded alternatives:** keep the rules as written (not kept in practice); a review or 72 hours of silence on every substantive change (still holds up routine work when reviewers are few); a Working Group vote (membership is open and attendance varies, so a count would mean little); keep the Reviewer role and add a shorter path to it (a step the project has no use for at this size).
+- **Revisit:** when there are enough active Maintainers to review routine changes, and at the latest before `v1.0.0`.
 
