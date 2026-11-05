@@ -2,7 +2,7 @@
 title: ZeroSOC Project Governance
 type: policy
 status: draft
-last_updated: 2026-09-19
+last_updated: 2026-11-05
 license: Apache-2.0
 ---
 
@@ -14,9 +14,10 @@ This document defines **how decisions are made** in the ZeroSOC Framework projec
 
 | Role | Who | Rights | How you get there |
 |---|---|---|---|
-| **Contributor** | Anyone | Open issues and pull requests (DCO sign-off required) | Contribute |
-| **Reviewer** | Recognized contributors | Provide the **non-author review** the maturity model requires for promotion to `stable`; triage issues | Sustained quality contributions — as a guideline, ~5 merged substantive PRs and ~3 useful reviews — confirmed by maintainer consensus |
-| **Maintainer** | Project stewards | Merge rights; dispute resolution; release authority | Reviewer + ~3 months of sustained engagement, appointed by consensus of existing maintainers |
+| **Contributor** | Anyone | Open issues and pull requests (DCO sign-off required), comment and review | Contribute |
+| **Maintainer** | `G-and-alf`, `in-secure` | Merge rights; dispute resolution; release authority | Sustained contributions or relevant security operations experience, appointed by agreement of the existing Maintainers |
+
+The project aims to have Maintainers from more than one organization.
 
 ### Project Sponsor
 
@@ -26,11 +27,17 @@ The **Project Sponsor** acts solely as the **Trademark Steward** described in [T
 
 Decisions scale with the weight of the change:
 
-1. **Editorial changes** (typos, broken links, formatting, clarifications that don't alter meaning): **lazy consensus** — a PR that passes CI and review merges without prior discussion.
-2. **Substantive changes** (new or changed normative content — playbooks, taxonomy entries, metrics, process steps): **issue first**, per CONTRIBUTING §4. The issue is where scope is agreed before writing begins.
-3. **Structural changes** (schema elements, ID schemes, module layout, terminology renames, governance itself): require a **Design Decision (DD) entry**, proposed in the issue and included in the PR that implements the change. The DD registry is the project's change-control mechanism.
+| Change | What it takes |
+|---|---|
+| **Everyday changes:** editorial fixes, changes to `draft` documents, and changes to `development` documents that need no Design Decision | Green checks, then a Maintainer merges. |
+| **Decisions:** a Design Decision on a `development` or `stable` document, a substantive change to a `stable` document, and any change to this document | An issue first, where the decision is proposed, then a pull request open for at least 72 hours with every objection answered. |
+| **Promotion to `stable`** | The requirements of §3, including a review by someone other than the author. |
 
-**Disputes** are resolved by maintainer decision after the discussion has had a fair hearing; the outcome and its rationale are recorded in the issue or pull request that decided it.
+A **structural change** (schema elements, ID schemes, module layout, terminology renames, governance itself) needs a **Design Decision (DD) entry**, included in the pull request that implements it. The DD registry is the project's change-control mechanism.
+
+**Working Group.** The Working Group discusses the framework on its calls and on Slack. It holds no vote: a view counts once it is written on the issue or pull request, and a decision is final when the pull request carrying it merges. An objection to a merged change goes on its pull request or on a new issue.
+
+**Disputes** are resolved by Maintainer decision after the discussion has had a fair hearing; the outcome and its rationale are recorded in the issue or pull request that decided it. If the Maintainers cannot agree, the change does not land, and the disagreement and its reasons are recorded there.
 
 ## 3. Document maturity
 
@@ -46,22 +53,10 @@ Every framework document declares a `status` field in its YAML frontmatter, alon
 ### Promotion and demotion
 
 - **Transitions are governance events.** Every status change is recorded in [CHANGELOG.md](CHANGELOG.md) with its rationale; a promotion that settles a contested design choice also warrants a [design decision](01-Foundation/design_decisions.md) entry.
-- **Promotion to `stable` requires, at minimum:** (a) validation by a flow-test, tabletop exercise or equivalent check against real material; (b) complete cross-links with no dangling references; (c) one review pass by an executor other than the author — human or agent, per Executor Neutrality, and Reviewers or Maintainers may provide it; (d) all normative dependencies declared at `stable` status.
+- **Promotion to `stable` requires, at minimum:** (a) validation by a flow-test, tabletop exercise or equivalent check against real material; (b) complete cross-links with no dangling references; (c) one review pass by an executor other than the author — human or agent, per Executor Neutrality; (d) all normative dependencies declared at `stable` status.
 - **Demotion is legitimate.** A `stable` document invalidated by new insight returns to `development` with a changelog entry. Honesty over face-saving.
 
-## 4. Rules while the roster is small
-
-Honest governance beats aspirational governance. A two-maintainer roster can meet the review requirements in full, and does:
-
-- **Every substantive pull request is reviewed by someone other than its author**, including a maintainer's own. CI must be green. No change merges on its author's approval alone.
-- **Maintainer PRs** with substantive changes also stay open for a **72-hour comment window** before merging, so that contributors outside the roster have time to object (editorial changes exempt).
-- **Promotion to `stable`** uses the non-author review of §3. The self-review substitute this section previously allowed no longer applies and is not available.
-- **Appointments** to Reviewer or Maintainer are by consensus of the existing maintainers, which at this size means both must agree.
-- **A deadlock between the two maintainers is not resolved by merging.** Where §2 leaves a dispute undecided, the change does not land, and the disagreement and its reasons are recorded in the issue or pull request. The project would rather carry an open question than a decision one steward does not stand behind.
-
-These rules describe the current roster. As it grows they are revisited by amendment under §7, not by silent lapse.
-
-## 5. Releases
+## 4. Releases
 
 - The framework is released as tagged **Semantic Versioning (MAJOR.MINOR.PATCH)** snapshots (`v0.1.0`, `v1.0.0`, …). A release tag is the citable conformance target: adopters conform to "ZeroSOC vX.Y", or to an exact snapshot `vX.Y.Z`, never to the live repository.
 - **MAJOR (`X.0.0`):** breaking changes to `stable` content — renumbered identifiers, removed sections, changed normative schemas or lifecycle requirements.
@@ -72,11 +67,12 @@ These rules describe the current roster. As it grows they are revisited by amend
 - **Cadence:** a MINOR release is cut when a meaningful batch of work lands — as an ambition, roughly quarterly. Releases are content-driven, never date-driven.
 - **Release checklist:** milestone issues resolved → promotions completed per §3 → CHANGELOG.md release entry → annotated git tag → GitHub release.
 
-## 6. Communication channels
+## 5. Communication channels
 
-- **GitHub Issues** — defects, proposals, and all actionable work (issue-first rule).
+- **GitHub Issues** — defects, proposals, and all actionable work.
 - **GitHub Discussions** and **Slack** — questions, ideas and open-ended exchange before something becomes an issue, where enabled; otherwise an issue serves.
+- **Working Group calls** — discussion of open proposals (§2).
 
-## 7. Amendments
+## 6. Amendments
 
-This document changes by pull request accompanied by a DD entry (it is a structural document). Amendments follow the review and comment-window rules of §4.
+This document changes by pull request accompanied by a DD entry (it is a structural document), on the route for Decisions in §2.

@@ -39,9 +39,9 @@ The [Framework Manifest](01-Foundation/framework_manifest.md) states the princip
 
 ## 4. How to contribute
 
-### Step 1 — Open an issue (substantive changes)
+### Step 1 — Open an issue (structural changes)
 
-Open an issue in this repository before writing a substantive change (new or changed normative content), so that scope is agreed first; editorial fixes go straight to a pull request. Questions and ideas that are not yet actionable go to GitHub Discussions where enabled, otherwise to an issue.
+Open an issue in this repository before writing a change that needs a Design Decision, so that scope is agreed first; other changes can go straight to a pull request. Questions and ideas that are not yet actionable go to GitHub Discussions where enabled, otherwise to an issue.
 
 > **Public repository.** Never include proprietary, commercial or customer-sensitive details in issues, discussions or pull requests.
 
