@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-29
+last_updated: 2026-11-05
 license: Apache-2.0
 ---
 
@@ -32,6 +32,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   it; for any other Alert the executor identifies it at reception.
 
 ### Changed
+
+- **05-Metrics, 03-Processes:** MTTR is Mean Time To Respond, its most common meaning, and no longer
+  Mean Time To Recover. It runs from the originating Alert (G1) to the end of the response, so it no
+  longer includes the time before detection, which MTTD measures.
 
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation
