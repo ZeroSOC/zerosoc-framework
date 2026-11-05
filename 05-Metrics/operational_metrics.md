@@ -29,7 +29,7 @@ Every metric in this module is anchored to a defined state transition in the [De
 
 ## 2. Measurement Gates
 
-All metrics reference the five gates below. Objects and verdicts are as defined in [Definitions](../01-Foundation/definitions.md) and the [Case Schema](../02-Taxonomy/case_schema.md); the pipeline is Telemetry → Events → Signals → **Alerts → Cases → Incidents**.
+All metrics reference the six gates below. Objects and verdicts are as defined in [Definitions](../01-Foundation/definitions.md) and the [Case Schema](../02-Taxonomy/case_schema.md); the pipeline is Telemetry → Events → Signals → **Alerts → Cases → Incidents**.
 
 | Gate | State transition | Process anchor |
 |---|---|---|
@@ -38,6 +38,7 @@ All metrics reference the five gates below. Objects and verdicts are as defined 
 | **G3 — Investigation verdict** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`) **or** confirmed Incident (`verdict_id = 2`) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
 | **G4 — Containment** | A containment action applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
 | **G5 — Review** | A verdict re-examined: an approval rejected or a containment rolled back, [QA sampling](../07-Governance/agentic_supervision.md), or the [Post-Incident Review](../03-Processes/04-post_incident_activity.md) | Governance and Phase 4 |
+| **G6 — Incident resolved** | A confirmed Incident's `status_id` set to Resolved (`4`) | [Incident Response §5](../03-Processes/03-response.md#5-transition-to-phase-4) |
 
 **Denominator discipline.** Alerts consolidated by the deduplication, throttling and aggregation rules applied at reception ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) never enter triage and are excluded from every triage denominator and from every *automation* numerator: consolidation is plumbing, not a verdict. A Case closed as **Duplicate** is merged into its master Case and leaves every denominator the same way. A Case closed as **Insufficient Data** is a disposition — it counts in the denominators — but it is neither noise nor an Incident; the Disposition Mix (§5.1) reports it on its own.
 
@@ -73,7 +74,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 *   **Purpose:** the human-side target, tracked per class: approval requests and handovers. The number to fix when MTTC is excellent but Incidents still run long.
 
 ### Mean Time To Respond (MTTR)
-*   **Start:** the originating Alert raised (G1). **Stop:** the response ended — containment lifted and services restored ([Incident Response §5](../03-Processes/03-response.md#5-transition-to-phase-4)). Computed for confirmed Incidents.
+*   **Start:** the originating Alert raised (G1). **Stop:** the Incident resolved (G6).
 *   **Purpose:** how long the response took. Where MTTC measures how fast the threat was stopped, MTTR measures how long it took to finish the job.
 
 ## 5. Disposition Quality
@@ -242,7 +243,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Alert Volume, Consolidation Rate | G1 | [Phase 1](../03-Processes/01-preparation_and_engineering.md) output; [Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) | Capacity planning |
 | MTTD — *KPI candidate* | T0 → G1 | Phase 1; [Detection & Analysis §4, §5](../03-Processes/02-detection_and_analysis.md) | Detection Engineer |
 | MTTI — *KPI candidate* | G1 → G2/G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager |
-| MTTC — *KPI candidate*, MTTR | T0 → G4; G1 → end of response | [Incident Response §2, §5](../03-Processes/03-response.md) | SOC Manager, leadership |
+| MTTC — *KPI candidate*, MTTR | T0 → G4; G1 → G6 | [Incident Response §2, §5](../03-Processes/03-response.md) | SOC Manager, leadership |
 | HITL Dwell Time — *KPI candidate* | `Pending HITL`, handover | [Agentic Supervision §1](../07-Governance/agentic_supervision.md) | SOC Manager |
 | Detection Precision — *KPI candidate* | G1, judged at G2/G3 | Phase 1 tuning loop | Detection Engineer |
 | Disposition Mix — *KPI candidate* | G2, G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager, Detection Engineer |

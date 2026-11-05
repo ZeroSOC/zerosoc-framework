@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-10-23
+last_updated: 2026-11-05
 license: Apache-2.0
 ---
 
@@ -126,7 +126,7 @@ Recovery restores operations to a verified clean state:
 
 ## 5. Transition to Phase 4
 
-The response ends when containment has been lifted and the affected services are restored. The Case, with its timeline of detection and response actions, its Notes and its metrics (T0, MTTD, MTTC, MTTR per [Operational Metrics §4](../05-Metrics/operational_metrics.md)), is what [Phase 4: Post-Incident Activity](04-post_incident_activity.md) consumes. The framework does not yet define a separate Incident Record deliverable: the Case as the [Case Schema](../02-Taxonomy/case_schema.md) defines it, together with the Investigation Note, is the record of the Incident.
+The response ends when containment has been lifted and the affected services are restored, and the Case's `status_id` is set to Resolved. The Case, with its timeline of detection and response actions, its Notes and its metrics (T0, MTTD, MTTC, MTTR per [Operational Metrics §4](../05-Metrics/operational_metrics.md)), is what [Phase 4: Post-Incident Activity](04-post_incident_activity.md) consumes. The framework does not yet define a separate Incident Record deliverable: the Case as the [Case Schema](../02-Taxonomy/case_schema.md) defines it, together with the Investigation Note, is the record of the Incident.
 
 ---
 

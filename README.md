@@ -90,6 +90,7 @@ graph TD
     subgraph P3 ["Phase 3: Incident Response"]
         G3 -->|A: Confirmed TP Incident| Respond[Containment, Eradication & Recovery]
         Respond --> G4["G4: Containment Confirmed"]
+        Respond --> G6["G6: Incident Resolved"]
     end
 
     subgraph P4 ["Phase 4: Post-Incident Activity"]
@@ -111,12 +112,12 @@ graph TD
         Gates[Operational Metrics<br>Speed: MTTD / MTTI / MTTC / MTTR<br>Quality: precision and recall per gate<br>Cost: Token Economics]
     end
 
-    P2 -.->|Measured by Gates G1-G5| Gates
-    P3 -.->|Measured by Gates G1-G5| Gates
+    P2 -.->|Measured by Gates G1-G6| Gates
+    P3 -.->|Measured by Gates G1-G6| Gates
 
     class Telemetry,Events,Signals input;
     class Triage,Investigate,Respond,Close1,Close2 process;
-    class G1,G2,G3,G4,G5 gate;
+    class G1,G2,G3,G4,G5,G6 gate;
     class TNote,INote deliverable;
     class Guardrails,Supervision,Gates gov;
 ```
