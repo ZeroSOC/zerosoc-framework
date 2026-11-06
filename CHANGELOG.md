@@ -33,6 +33,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **04-Playbooks:** a living-off-the-land binary (`regsvr32`, `rundll32`, `mshta`, `powershell`) is
+  judged by what it was made to run. Its hash reputation is context in *Malware / loader execution*
+  check 1 and in the Commodity Malware query 2, and check 7, what the tool was asked to do, is
+  required for it. The first False Positive condition, a heuristic firing on signed vendor
+  software, holds only when the software did its routine task (check 7), and a valid signature on
+  its own is no longer called that condition.
+
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation
   established. A technique ATT&CK lists under several tactics is recorded under more than one only
