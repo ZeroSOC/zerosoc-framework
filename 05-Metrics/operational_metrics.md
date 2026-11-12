@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-10-22
+last_updated: 2026-11-12
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -35,7 +35,7 @@ All metrics reference the five gates below. Objects and verdicts are as defined 
 |---|---|---|
 | **G1 — Alert raised** | `Detection Finding [2004]` created with `severity_id ≥ Low (2)` | [Phase 1](../03-Processes/01-preparation_and_engineering.md) output |
 | **G2 — Triage decision** | Case closed (`verdict_id` False Positive `1`, Benign `5`, Duplicate `10`) **or** promoted to Investigation | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) |
-| **G3 — Investigation verdict** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`) **or** confirmed Incident (`verdict_id = 2`) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
+| **G3 — Investigation verdict** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`, or a near miss) **or** confirmed Incident (`verdict_id = 2`, `severity_id` 2–5) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
 | **G4 — Containment** | A containment action applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
 | **G5 — Review** | A verdict re-examined: an approval rejected or a containment rolled back, [QA sampling](../07-Governance/agentic_supervision.md), or the [Post-Incident Review](../03-Processes/04-post_incident_activity.md) | Governance and Phase 4 |
 
@@ -84,7 +84,7 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 
 ### 5.1 Disposition Mix
 *   **KPI candidate.**
-*   **Definition:** the distribution of the decisions taken at a gate in the window. Each share is the count of Cases with that outcome ÷ all Cases decided at the gate. At **G2** the outcomes are Closed False Positive, Closed Benign, Closed Duplicate and Promoted; at **G3** they are Closed False Positive, Closed Benign, Closed Duplicate, Closed Insufficient Data and Confirmed Incident. The **noise share** of a gate is its False Positive share plus its Benign share.
+*   **Definition:** the distribution of the decisions taken at a gate in the window. Each share is the count of Cases with that outcome ÷ all Cases decided at the gate. At **G2** the outcomes are Closed False Positive, Closed Benign, Closed Duplicate and Promoted; at **G3** they are Closed False Positive, Closed Benign, Closed Duplicate, Closed Insufficient Data, Closed near miss and Confirmed Incident. The **noise share** of a gate is its False Positive share plus its Benign share.
 *   **Reading the shares by gate:**
 
 | Share | At G2 (triage decisions) | At G3 (investigation verdicts) |
@@ -93,6 +93,7 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 | **Benign** | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each raises an exception ticket for a person to confirm. |
 | **Duplicate** | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
 | **Insufficient Data** | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
+| **Near miss** | — | Attacks stopped before they reached the environment. Counted with detection efficacy and kept out of the Incident counts. |
 | **Promoted / Confirmed Incident** | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
 
 *   **Purpose:** one distribution answers the questions a SOC asks about its noise: how much of the pipeline is noise, whether it is caught at triage or only after an investigation, how much triage promotes, and how much ends undecided. A high noise share is acceptable only while Detection Precision (§5.2) shows the detection layer is being tuned in response; a stable high noise share with no rising precision means the tuning loop is broken, and Tuning Loop Latency (§5.6) proves it.
@@ -113,7 +114,7 @@ An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing
 
 ### 5.3 Triage Precision
 *   **KPI candidate.**
-*   **Definition:** promoted Cases confirmed as Incidents ÷ promoted Cases. Of what triage flagged, how much was real.
+*   **Definition:** promoted Cases confirmed True Positive, as Incidents or near misses ÷ promoted Cases. Of what triage flagged, how much was real.
 *   **A band, not a maximum:** triage promotes a Case whenever the Benign observations do not cover its alerts ([Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision)), so promoting an unexplained Case is correct triage. A value near 100% signals over-closing at triage, a false-negative risk; a very low value signals promotion out of fear. Its recall side is Observed Triage Recall (§5.5).
 
 ### 5.4 Verdict Precision

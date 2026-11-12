@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-10-29
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -58,7 +58,7 @@ The triage process begins as soon as an Alert is triggered and a Case is opened.
 | | |
 |---|---|
 | **Consumes** | One or more **Security Alerts** (`Detection Finding [2004]`, `severity_id ≥ Low`) aggregated into a **Case** (`Incident Finding [2005]`), each with what it asserts about the threat — technique identifiers, threat name and family, detection source, per-entity remediation state, description and recommended actions (§1.1); enrichment sources (threat intelligence, CMDB, identity directory, SOC knowledge base); the active-Cases store. **Signals** (Informational Detection Findings) do not trigger triage; they are consulted during it. |
-| **Produces (exactly one)** | (a) a **Closed Case** — `verdict_id` False Positive (`1`), Benign (`5`) or Duplicate (`10`, §1.5); a False Positive additionally emits a tuning signal to [Phase 1](01-preparation_and_engineering.md); or (b) a **Case promoted to Investigation**, carrying the Triage → Investigation phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)) and the Triage Note (§1.6). Triage does **not** confirm an Incident. |
+| **Produces (exactly one)** | (a) a **Closed Case** — `verdict_id` False Positive (`1`), Benign (`5`) or Duplicate (`10`, §1.5), at `severity_id = 1`; a False Positive additionally emits a tuning signal to [Phase 1](01-preparation_and_engineering.md); or (b) a **Case promoted to Investigation**, carrying the Triage → Investigation phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)) and the Triage Note (§1.6). Triage does **not** confirm an Incident. |
 
 ### 1.1 Reception, Aggregation, and Assignment
 1.  **Alert Registration & Aggregation:** An incoming Alert is registered in the queue. To reduce alert fatigue and provide broader visibility of the potential incident, SIEM, SOAR, or XDR tools may aggregate multiple related alerts (e.g., sharing common attributes like host, user, or threat actor) into a consolidated **Security Case**.
@@ -220,7 +220,7 @@ Investigation is driven by testing competing hypotheses rather than unstructured
 | | |
 |---|---|
 | **Consumes** | The promoted Case, its Triage → Investigation phase transition contract, and its Triage Note (§1.6). The Note's tagged Observations — the enrichment of §1.2 and the scope and correlation results of §1.3 — are the starting evidence of the investigation and seed its score (§2.4); they are verified and extended, not re-collected. The Note also carries the reason the Case could not close: the Malicious observations beyond the alerts, and the Benign observations they were weighed against — the conflict Investigation starts from. |
-| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)); or (b) a **Confirmed Incident** — Malicious hypothesis proven — with the severity, confidence, Incident Category, impact estimate and planned response actions of §2.5, `verdict_id = 2` (True Positive) and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of assignee (§2.3) is a within-phase control. |
+| **Produces (exactly one)** | (a) a **Closed Case** — Benign hypothesis proven, `verdict_id` False Positive (`1`) or Benign (`5`) (a False Positive emits a tuning ticket to [Phase 1](01-preparation_and_engineering.md)), or a **near miss** (§2.5), at `severity_id = 1`; or (b) a **Confirmed Incident** — Malicious hypothesis proven — with the severity, confidence, Incident Category, impact estimate and planned response actions of §2.5, `verdict_id = 2` (True Positive) and the timeline, and emitting the Investigation → Response phase transition contract (field schema in [Playbook Architecture §5](../04-Playbooks/playbook_architecture.md)). Stakeholder and regulatory notification (§3.2) is triggered after confirmation; a change of assignee (§2.3) is a within-phase control. |
 
 ### 2.1 Concurrent Malicious/Benign Hypothesis Formulation
 The executor formulates two competing narratives based on the observed behaviors and MITRE ATT&CK techniques:
@@ -276,12 +276,12 @@ Because Benign proof requires coverage, the two sides cannot both be proven: an 
 
 ### 2.5 Incident Confirmation
 
-When the Malicious hypothesis is proven (§2.4), the executor MUST, before writing the Investigation Note:
+When the Malicious hypothesis is proven (§2.4), the executor first assesses whether the activity **reached the environment** ([Definitions](../01-Foundation/definitions.md#security-incident)). If it did not, and nothing else in the same activity succeeded, the Case is a **near miss**: the executor sets `severity_id = 1` and `verdict_id = 2`, writes the Investigation Note and closes the Case without response. Otherwise it MUST, before writing the Investigation Note:
 
 1. **Re-assess the classification:** the severity, the confidence and the Incident Category, based on its understanding of the Incident (§1.4). A value that changes is recorded with its reason in the Note's Rationale (§2.6); a change of category is a re-classification (§2.2, step 5).
 2. **Estimate the impact** (`impact_id`) from the information available.
 3. **Plan the initial response actions.** The executor chooses them from three inputs: the actions the detecting source recommends, carried by the Alerts (§1.1); the actions the Incident Category's Investigation & Response playbook describes; and its own judgment of the Case. It prioritizes the planned actions, drops the unnecessary or redundant ones, and adds the ones the Incident, its context, its severity and the impact estimate call for. Each planned action is a ticket the Case raises, of its kind (§1.6).
-4. **Confirm the Incident** by setting `verdict_id = 2` (True Positive), the step that distinguishes an Incident from a Case (see [Definitions](../01-Foundation/definitions.md)).
+4. **Confirm the Incident** by setting `verdict_id = 2` (True Positive), with `severity_id` Low to Critical, the step that distinguishes an Incident from a Case (see [Definitions](../01-Foundation/definitions.md)).
 5. **Record** the definitive [Incident Category](../02-Taxonomy/incident_categories.md), the Incident's MITRE ATT&CK tactics and techniques, and the timeline: the Investigation Note's **Case Timeline** (§2.6), whose earliest **confirmed malicious** event is **T0**, the anchor for MTTD/MTTC/MTTR ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). The techniques are assessed from the Observations that stand. Each technique is recorded under the tactic its use served in this Incident, judged from the attack path and the context the investigation established; a technique ATT&CK lists under several tactics is recorded under more than one only where the Incident shows it served each. The Alerts' mappings are provisional: one that no Observation shows is left out, and a broad one is narrowed to what the evidence shows. The response keeps them current as it reveals more ([Incident Response §1](03-response.md#1-scope-confirmation)).
 
 > **Example — a redundant action.** A host is isolated, and the Case shows a local, non-domain account on it was used by the threat. Disabling that account after the isolation succeeded is redundant: the account exists only on the host, and the isolated host reaches nothing. The executor drops it from the plan; eradication deals with the account.
