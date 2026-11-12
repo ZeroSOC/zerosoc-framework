@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-10-23
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -110,7 +110,7 @@ Eradication removes the threat actor and every foothold from the environment. Th
 *   **Closes the entry point:** patches the exploited vulnerability or corrects the configuration that allowed the initial access, so that the same path cannot be reused before recovery.
 *   **Rotates compromised credentials:** resets the credentials of the identities the Case timeline confirms as compromised or exposed, and of the secrets those identities could reach. A reset broader than the confirmed scope is an action requiring approval (§2.1).
 
-Each eradication action is recorded in the Case timeline; a foothold found during eradication that the investigation had not identified expands the scope (§1).
+Each eradication action is recorded in the Case timeline; a foothold found during eradication that the investigation had not identified expands the scope (§1). Eradication is verified (G5) when every action is confirmed and no foothold is left.
 
 ---
 
@@ -126,7 +126,7 @@ Recovery restores operations to a verified clean state:
 
 ## 5. Transition to Phase 4
 
-The response ends when containment has been lifted and the affected services are restored. The Case, with its timeline of detection and response actions, its Notes and its metrics (T0, MTTD, MTTC, MTTR per [Operational Metrics §4](../05-Metrics/operational_metrics.md)), is what [Phase 4: Post-Incident Activity](04-post_incident_activity.md) consumes. The framework does not yet define a separate Incident Record deliverable: the Case as the [Case Schema](../02-Taxonomy/case_schema.md) defines it, together with the Investigation Note, is the record of the Incident.
+The response ends when containment has been lifted and the affected services are restored: recovery is complete (G6), and the Case's status is set to Resolved. The Case, with its timeline of detection and response actions, its Notes and its metrics (T0, MTTD, MTTC, MTTR per [Operational Metrics §4](../05-Metrics/operational_metrics.md)), is what [Phase 4: Post-Incident Activity](04-post_incident_activity.md) consumes. The framework does not yet define a separate Incident Record deliverable: the Case as the [Case Schema](../02-Taxonomy/case_schema.md) defines it, together with the Investigation Note, is the record of the Incident.
 
 ---
 

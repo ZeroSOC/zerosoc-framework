@@ -49,6 +49,14 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   open for at least 72 hours; promotion to `stable` keeps its non-author review. The Working Group's
   place is stated, and GOVERNANCE.md's Releases, Communication channels and Amendments are now §4 to §6.
 
+- **05-Metrics:** seven measurement gates follow a Case from the alert to its closure (DD-33): G1
+  Alert(s) received, G2 triage disposition, G3 Incident declaration, G4 first containment, G5
+  eradication verified, G6 recovery complete, G7 Case closed. The verdict review, which was G5, is
+  an event outside the order, and the metrics that cited G5 now cite it. MTTC runs from G1 to G4;
+  T0 is labelled *Incident occurred*. The Case Schema states the status lifecycle: Closed at a
+  closing verdict, and for an Incident Resolved at G6 and Closed at G7. Incident Response marks G5
+  and G6, and Phase 4 gains §6, *Closing the Case*.
+
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation
   established. A technique ATT&CK lists under several tactics is recorded under more than one only

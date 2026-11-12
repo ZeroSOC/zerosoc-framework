@@ -2,7 +2,7 @@
 title: Phase 4 - Post-Incident Activity
 type: process
 status: draft
-last_updated: 2026-10-22
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -19,14 +19,14 @@ The review itself is a discussion among people. Its inputs are not: the timeline
 | | |
 |---|---|
 | **Consumes** | A Case whose response has ended ([Incident Response §5](03-response.md#5-transition-to-phase-4)), or a False Positive that caused a critical disruption (§1). The Case as the [Case Schema](../02-Taxonomy/case_schema.md) defines it — its timeline of detection and response actions, its Triage and Investigation Notes and its metrics — is the record the review works on; the framework does not yet define a separate Post-Incident Review report. |
-| **Produces** | A blameless root cause analysis (§2); action items (§4) — detection tuning and creation requests to [Phase 1](01-preparation_and_engineering.md), playbook updates, telemetry onboarding, configuration and patch requests to IT; lessons learned recorded in the [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb); and the adjudication of the candidate verdict false negatives the Incident surfaced (§3). |
+| **Produces** | A blameless root cause analysis (§2); action items (§4) — detection tuning and creation requests to [Phase 1](01-preparation_and_engineering.md), playbook updates, telemetry onboarding, configuration and patch requests to IT; lessons learned recorded in the [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb); and the adjudication of the candidate verdict false negatives the Incident surfaced (§3); and the Case closed (§6). |
 
 ## Process Flowchart
 
 ```mermaid
 graph TD
     Start([Response ended or critical False Positive]) --> Criteria{Review required?}
-    Criteria -->|No| EndNode([End])
+    Criteria -->|No| Close([Close the Case: G7])
     Criteria -->|Yes| Prep[Prepare from the Case: timeline, missed-detection walk, evidence review]
     Prep --> Review[Post-Incident Review]
     Review --> RCA[Root cause analysis: four systemic buckets]
@@ -35,6 +35,7 @@ graph TD
     Items --> PB[Playbook updates]
     Items --> IT[Configuration and patch requests to IT]
     Items --> KB[Lessons learned to the SOC Knowledge Base]
+    Items --> Close
 ```
 
 ## 1. Trigger Criteria
@@ -86,3 +87,7 @@ Action items are tracked to closure within a deadline set by their risk. The ban
 *   **High risk** (missing patches on production servers, weak credentials on critical accounts, a missed detection for a technique in use): 14 days.
 *   **Medium risk** (playbook gaps, a non-critical log source absent): 30 days.
 *   **Low risk** (rule refinement, documentation and knowledge base updates): 90 days.
+
+## 6. Closing the Case
+
+The Case is closed (`status_id` Closed, G7) when the review has been held and its action items recorded, or when §1 requires no review. The action items keep their own deadlines (§5) and do not hold the Case open.
