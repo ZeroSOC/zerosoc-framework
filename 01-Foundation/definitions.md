@@ -115,7 +115,7 @@ When a Security Case is investigated, a final determination or verdict is reache
 In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding).
 
 ### True Positive (TP)
-A Case whose activity is **Malicious**: an attack, or an action of any intent that exposes the organization's assets to the harm an attack would cause. A policy breach alone does not make a Case Malicious.
+A Case whose activity is **Malicious**: an attack, or an unauthorized action against the organization's assets.
 *   **Outcome:** A Security Incident when the activity reached the environment; otherwise a near miss.
 *   **OCSF `verdict_id`:** `2` (True Positive)
 *   **Reference:** [MITRE ATT&CK & D3FEND](https://attack.mitre.org/) - Broadly useful for understanding the behavioral context of true positive signals.
