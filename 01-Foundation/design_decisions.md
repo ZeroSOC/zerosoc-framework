@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-11-12
+last_updated: 2026-10-25
 license: Apache-2.0
 ---
 
@@ -183,10 +183,3 @@ External standards and sources are credited in this registry once, per DD-12.
 - **Discarded alternatives:** adding `process` and `script` to the related event through the ZeroSOC extension (no change to the Case, but the extension would add to a citation the objects OCSF keeps on events); the events embedded in the Case under `zerosoc` (one document, but a second copy of OCSF's event classes inside the extension).
 - **Revisit:** if OCSF gives the related event the objects of the event it cites, or a class that holds a finding with its evidence.
 
-
-## DD-32: An Incident Is Malicious Activity That Reached the Environment
-
-- **Decision:** A Case is an Incident when its verdict is Malicious (True Positive, `verdict_id` 2) and its activity reached the environment: something landed on a device, ran, persisted, was delivered to a person, or was gained. Malicious activity that did not reach it is a **near miss**: `verdict_id` 2, closed without response. Every closing verdict other than an Incident sets `severity_id` to 1 (Informational), and an Incident keeps 2 to 5. Malicious means an attack, or an unauthorized action against the organization's assets. A Benign Positive is activity that is authorized, expected or acceptable, and it is acceptable when whoever is accountable for the asset, data or policy says so on the Case. Defined in [Definitions](definitions.md#security-incident).
-- **Rationale:** The definition follows ISO/IEC 27035-1:2023, an event that "can harm an organization's assets or compromise its operations", and reach makes "can harm" something the evidence settles. "Near miss" is the NIS2 term: every NIS2 incident is an Incident here, and this near miss is narrower than NIS2's. Leaving intent out of the test follows ISO/IEC 27035-2:2023 Annex C, where incidents can be caused by deliberate or accidental actions. OCSF has no value that tells a stopped attack from one that reached the environment, so severity carries it; giving every non-incident close the same Informational severity, proposed on the 5 November call, means automated triage never mistakes a closed Case for a live one. The source's own severity stays in `vendor_attributes`. Proposed on framework issue #3, with no objection by the end of its comment period on 10 November 2026.
-- **Discarded alternatives:** NIST SP 800-61r3's occurrences that "imminently" jeopardize an asset (a blocked attempt would be an Incident, and "imminent" has no test); `verdict_id` 8 (Security Risk) for exposure without an attack (a further verdict and branch, which OCSF does not define); an adopter-set stricter default, such as a near miss on a critical asset treated as an Incident (deferred, since it can be added later without breaking anything).
-- **Revisit:** if OCSF adds a value that tells a stopped attack from one that reached the environment, or if adopters' Cases show the reach test misclassifies.
