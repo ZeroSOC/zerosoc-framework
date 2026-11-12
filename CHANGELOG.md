@@ -7,7 +7,7 @@ license: Apache-2.0
 
 # Changelog
 
-All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in [GOVERNANCE.md](GOVERNANCE.md#5-releases). Each release entry credits the contributors whose work landed in it.
+All notable changes to the ZeroSOC Framework are documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the framework versions per [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as described in [GOVERNANCE.md](GOVERNANCE.md#4-releases). Each release entry credits the contributors whose work landed in it.
 
 ## [Unreleased]
 
@@ -42,6 +42,12 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   or acceptable, where acceptable means its accountable owner says so on the Case. The Case Schema,
   Detection & Analysis §2.5 and the G3 gate, Disposition Mix and Triage Precision follow. A
   downstream reader can no longer take `verdict_id = 2` alone as an Incident.
+
+- **Governance:** simplified for a small team (DD-31). Two roles remain, Contributor and Maintainer,
+  and the Reviewer role is removed. Everyday changes merge on green checks; a Design Decision, a
+  substantive change to a `stable` document and a governance change start with an issue and stay
+  open for at least 72 hours; promotion to `stable` keeps its non-author review. The Working Group's
+  place is stated, and GOVERNANCE.md's Releases, Communication channels and Amendments are now §4 to §6.
 
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation

@@ -2,12 +2,12 @@
 
 ## What & why
 
-<!-- Scope of the change. Link the issue it implements (issue-first rule for substantive changes): -->
+<!-- Scope of the change. Link the issue it implements, if any (structural changes start with one): -->
 Closes #
 
 ## Checklist
 
-- [ ] An issue was opened and discussed before this PR (except editorial fixes)
+- [ ] Structural changes only: an issue was opened and discussed before this PR
 - [ ] All commits carry a DCO `Signed-off-by` line (`git commit -s`)
 - [ ] YAML frontmatter is valid on every touched document (`title`, `type`, `status`, `last_updated`, `license`; `status` exempt for `type: index`/`type: log`)
 - [ ] All cross-document links and anchors resolve

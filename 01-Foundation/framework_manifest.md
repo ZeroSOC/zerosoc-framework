@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-09-19
+last_updated: 2026-11-05
 license: Apache-2.0
 ---
 
@@ -56,7 +56,7 @@ Coverage is built in deliberate order. Today the normative modules concentrate o
 
 Adopters cannot claim conformance against a moving repository, and readers cannot tell a settled standard from a working candidate unless the document says so. ZeroSOC therefore versions at two levels: **framework releases** for the standard as a whole, and a **release status** on every document.
 
-Both are project process rather than framework content, and are defined in [GOVERNANCE.md](../GOVERNANCE.md) — [§3 Document maturity](../GOVERNANCE.md#3-document-maturity) for the `draft` / `development` / `stable` / `deprecated` statuses and their promotion rules, and [§5 Releases](../GOVERNANCE.md#5-releases) for the Semantic Versioning scheme and the release process.
+Both are project process rather than framework content, and are defined in [GOVERNANCE.md](../GOVERNANCE.md) — [§3 Document maturity](../GOVERNANCE.md#3-document-maturity) for the `draft` / `development` / `stable` / `deprecated` statuses and their promotion rules, and [§4 Releases](../GOVERNANCE.md#4-releases) for the Semantic Versioning scheme and the release process.
 
 ## Standard Alignment
 
