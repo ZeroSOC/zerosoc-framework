@@ -23,12 +23,12 @@ The Case [assignee](../01-Foundation/definitions.md#6-executors-and-functions) c
 
 ```mermaid
 graph TD
-    Start([Confirmed Incident]) --> Scope[Confirm scope, category and confidence]
+    Start([Confirmed Incident]) --> Scope[Confirm scope and category; read confidence and Impact]
     Scope --> Reg{Significant Incident?}
     Reg -->|Yes| Notify[Regulatory notifications on their deadlines]
     Reg -->|No| Plan
     Notify --> Plan[Select containment actions]
-    Plan --> Matrix{Approval required?}
+    Plan --> Matrix{Autonomy matrix: approval required?}
     Matrix -->|Yes| Approve[Request approval with the Guardrails payload]
     Approve --> Apply[Apply containment; record in the Case timeline]
     Matrix -->|No| Apply
@@ -44,9 +44,9 @@ graph TD
 The Incident arrives confirmed; this step confirms what the response acts on. From the phase transition contract, the executor:
 
 1. Confirms the **scope**: the affected entities (identities, assets, network locations, artifacts) and the confirmed [Incident Category](../02-Taxonomy/incident_categories.md), whose Investigation & Response playbook lists the containment, eradication and recovery actions for that kind of Incident.
-2. Reads the Case **confidence** re-assessed at confirmation ([Detection & Analysis §2.5](02-detection_and_analysis.md#25-incident-confirmation)) and the Case **severity**: together with the criticality of the affected entities, they decide which containment actions can be applied without approval (§2.1).
+2. Reads the Case **confidence**, as the resolution rule produced it ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)), and the Incident's **Impact**, as assessed at confirmation ([§2.5](02-detection_and_analysis.md#25-incident-confirmation)): with the impact of each action, they decide which containment actions are applied without approval (§2.1). The Case **severity** sets their timing.
 3. Reads what each affected identity is. It is a **person's account**; a **service identity**, an account or service principal that software runs under; or a **host's own identity**, the computer account a directory gives a joined device or one of the operating system's built-in principals such as `SYSTEM` or `NETWORK SERVICE`, which OCSF types as a User of type System. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
-4. Checks whether any affected entity is a Crown Jewel asset or a privileged identity. If so and the assignee is not human, the [handover](../01-Foundation/definitions.md#handover) the Guardrails require happens now; it does not delay the pre-authorized containment of §2.1.
+4. Reads the kind and the requirements recorded for each affected entity ([critical entity](../01-Foundation/definitions.md#critical-entity)): they rate the actions on it (§2.1).
 
 Scope expands during the response as containment and eradication reveal further affected entities: every expansion is recorded on the Case, a technique it reveals joins the Case's tactics and techniques, and the containment actions are re-selected for the new entities.
 
@@ -69,46 +69,55 @@ The executor applies the action in each place that holds the identity and record
 
 ### 2.1 Risk-Based Autonomy Matrix for Containment
 
-The matrix decides, for each containment action, whether the executor applies it directly or requests approval first. It keys on three things: the **reversibility** of the action, the **criticality** of the entity it acts on, and the Case **confidence** and **severity**. It is the single authority on containment autonomy in the framework: the Guardrails define how approval is requested and who grants it, and the playbooks list the actions of each Incident Category.
+The matrix decides, for each containment action, whether the executor applies it directly or requests approval first. It is the single authority on containment autonomy in the framework.
 
-**Pre-authorized actions** are reversible and leave the affected entity's service running. Any executor applies them without approval, on any entity — a Crown Jewel included — and records the action and its rollback in the Case timeline:
+**It reads three inputs, and none is the executor's own estimate:** the Case **confidence**, as the resolution rule produced it ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)); the Incident's **Impact**, as assessed at confirmation ([§2.5](02-detection_and_analysis.md#25-incident-confirmation)); and the **impact of the action**, what the organization cannot use while the action holds, read from the classes below and from what the records say of the entity it acts on ([critical entity](../01-Foundation/definitions.md#critical-entity)).
 
-*   isolating an end-user workstation from the network (reversed by reconnecting it);
-*   suspending the active sessions of an identity, or disabling an identity no critical service runs under (reversed by re-enabling it). A host's own identity is never such an identity: every service of the host runs under it, and disabling it takes the host off its directory. The host is contained by isolating it;
-*   revoking a specific API key, token or certificate (reversed by issuing a new one);
-*   applying a temporary egress block, or blocking an external IP address or domain at the perimeter (reversed by removing the rule);
-*   quarantining a file or an email message (reversed by releasing it).
+| The action's impact | What the organization cannot use | Examples |
+|---|---|---|
+| **None** | Nothing, even if the Incident proves false | Blocking an address or domain no entity of the organization uses; disabling or removing a rule, token, consent or account the records show the threat actor created, such as a mail rule that still forwards data out |
+| **Low** | The service of one person or of one end-user device | Isolating an end-user workstation; disabling a person's account or ending its sessions; quarantining a file or a message, which is someone's own if the Incident is false |
+| **Medium** | A non-critical service, or the service of a group of people | Isolating a server no critical service depends on; disabling a service identity no critical service runs under; cutting a connection to a third party that only occasional work depends on |
+| **High** | A critical service | Stopping an availability-critical entity; cutting a connection to a third party that operations depend on |
+| **Critical** | A network segment, many entities in one action, or a service the whole organization depends on | Isolating a subnet or a cloud network; disabling many identities at once; stopping the directory service |
 
-**Actions requiring approval** stop a critical service, are not reversible, or affect many entities at once. The executor requests approval before applying them and records the approval on the Case; once the action has run, its entry in the Case timeline names who approved it ([Case Schema §5](../02-Taxonomy/case_schema.md)):
+An action is rated by what the organization would lose, whoever owns the target: cutting the connection of a compromised third party is rated by what runs over it. An entity the records do not show to be an end-user device or a person's account, and whose availability requirement is not recorded, is rated High. The side effects of an action are part of its impact. Each action is rated on its own target, and reversing one is itself an action the matrix rates. A safety function is never stopped without approval. A host's own identity is never disabled: every service of the host runs under it, and disabling it takes the host off its directory. The host is contained by isolating it.
 
-*   any action that stops a Crown Jewel asset from serving: shutting down or isolating a production server, database or domain controller, disabling a service identity a critical service runs under;
-*   isolating an entire subnet, VLAN or cloud network, or modifying its routing;
-*   resetting the credentials of many identities at once;
-*   blocklisting a partner or customer network;
-*   wiping, re-imaging or deleting systems, disks or data.
+**The matrix.** Each cell gives the Case confidence at which the action is applied without approval. Below that confidence, and where the cell says so, the executor requests approval.
 
-**Confidence and severity adjust the matrix:**
+| The action's impact ↓ / the Incident's Impact → | Low | Medium | High | Critical |
+|---|---|---|---|---|
+| **None** | Low or above | Low or above | Low or above | Low or above |
+| **Low** | requires approval | Medium or above | Medium or above | Low or above |
+| **Medium** | requires approval | High | High | Medium or above |
+| **High** | requires approval | requires approval | High | Medium or above |
+| **Critical** | requires approval | requires approval | requires approval | High |
 
-*   At **Low** confidence every containment action requires approval, including the pre-authorized ones: the Incident is confirmed, but on evidence that a single retracted observation could overturn ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
-*   At **High** and **Critical** severity the pre-authorized actions are applied immediately, before the internal notification of [Detection & Analysis §3.2](02-detection_and_analysis.md#32-stakeholder--regulatory-notification) completes: a threat with a credible path to material harm is stopped first; the notified stakeholders confirm the action afterwards or request its rollback.
-*   At **Low** and **Medium** severity the pre-authorized actions may be scheduled with the affected asset owner when applying them at once would disrupt work; the schedule is recorded on the Case.
+The matrix binds every executor. A person applies without approval what it allows. Automation and agents do so within their autonomy grant ([Agentic Supervision §4](../07-Governance/agentic_supervision.md#4-autonomy-grant)), and with no grant they request approval for every action. An organization may add approvals and remove none: stricter cells, a grant limited to actions up to a given impact, by action or by time window, and classes of entities reserved in the [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb), such as its VIPs or its availability-critical entities, on which every containment action requires approval.
 
-**Approval** is requested with the presentation payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) — context, evidence, blast radius, rollback — whoever the executor is: a human analyst requesting approval from the SOC Manager submits the same payload an agent does. Who grants approval is an organization policy knob; the SOC Manager is the default approver. The time spent waiting for approval is measured as dwell time, not as containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies the pre-authorized actions the Incident allows and continues the investigation of the residual observations.
+**Severity sets the timing** of an action the matrix allows:
 
-> **Example — pre-authorized action on a Crown Jewel.** A confirmed credential-theft Incident at High confidence, High severity: an administrator's account authenticated to a domain controller from a host it never used. Disabling the administrator's account and revoking its sessions is pre-authorized, although the domain controller is a Crown Jewel: the account is a personal identity, no service runs under it, and the domain controller keeps serving. Isolating the domain controller itself is not pre-authorized; if the timeline shows the attacker executed code on it, the executor requests approval for the isolation while the account is already disabled.
+*   At **High** and **Critical** severity it is applied immediately, before the internal notification of [Detection & Analysis §3.2](02-detection_and_analysis.md#32-stakeholder--regulatory-notification) completes; the notified stakeholders confirm it afterwards or request its rollback.
+*   At **Low** and **Medium** severity it may be scheduled with the owner of the affected entity; the schedule is recorded on the Case.
+
+**Approval** is requested with the payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) and recorded on the Case; once the action has run, its entry in the Case timeline names who approved it ([Case Schema §5](../02-Taxonomy/case_schema.md)). The approver is an organization policy knob that follows the action's impact: the SOC Manager by default, the owner of the service for High, the organization's crisis authority for Critical. The wait is measured as dwell time and excluded from containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies what the matrix allows and continues the investigation.
+
+> **Example — an administrator's account and a domain controller.** A credential-theft Incident at High confidence and High Impact: an administrator's account authenticated to a domain controller from a host it never used. Disabling the account and ending its sessions are actions of Low impact, since it is a person's account and no service runs under it. That cell asks for Medium confidence, so the executor applies them. Isolating the domain controller stops the directory service, an action of Critical impact, which at High Impact requires approval.
 >
-> **Example — Low confidence changes the matrix.** A confirmed Incident at Low confidence: a new cloud access key created outside change windows and used from an unfamiliar region, with no observation above Low. Revoking the key is a pre-authorized action at Medium or High confidence; at Low confidence it requires approval, requested with the Guardrails payload and, in the meantime, the executor runs the remaining playbook queries: a single additional observation — the key downloading a storage bucket — raises the confidence to Medium and the revocation proceeds without approval.
+> **Example — Low confidence.** A new access key on a developer's cloud account, created outside change windows and used from an unfamiliar region: an Incident at Low confidence and Medium Impact. If the Incident is false the key is the developer's own, so revoking it is an action of Low impact. That cell asks for Medium confidence, and the executor requests approval. A further Observation, the key downloading a storage bucket, raises the confidence to Medium, and the key is revoked without approval.
+>
+> **Example — ransomware on a critical server.** Ransomware is encrypting an availability-critical file server: an Incident at High confidence and High Impact. Isolating the server is an action of High impact, and that cell asks for High confidence. The executor isolates it at once; one whose grant stops at actions of Low impact requests approval.
 
 ---
 
 ## 3. Eradication
 
-Eradication removes the threat actor and every foothold from the environment. The executor:
+Eradication removes the threat actor and every foothold from the environment. An eradication or recovery action that destroys what the organization holds requires approval, requested as §2.1 states. The executor:
 
 *   **Verifies containment first:** confirms, from the telemetry of the affected entities, that the contained activity has stopped — no lateral movement from the isolated hosts, no traffic to the blocked command-and-control infrastructure, no successful authentication by the disabled identities. Containment that has not held is corrected before eradication starts.
 *   **Removes artifacts and persistence:** deletes malicious files and scripts, terminates rogue processes, and removes the persistence mechanisms the timeline identified (scheduled tasks, registry entries, services, web shells, mailbox rules, added credentials or OAuth grants).
 *   **Closes the entry point:** patches the exploited vulnerability or corrects the configuration that allowed the initial access, so that the same path cannot be reused before recovery.
-*   **Rotates compromised credentials:** resets the credentials of the identities the Case timeline confirms as compromised or exposed, and of the secrets those identities could reach. A reset broader than the confirmed scope is an action requiring approval (§2.1).
+*   **Rotates compromised credentials:** resets the credentials of the identities the Case timeline confirms as compromised or exposed, and of the secrets those identities could reach. A reset broader than the confirmed scope requires approval.
 
 Each eradication action is recorded in the Case timeline; a foothold found during eradication that the investigation had not identified expands the scope (§1). Eradication is verified (G5) when every action is confirmed and no foothold is left.
 

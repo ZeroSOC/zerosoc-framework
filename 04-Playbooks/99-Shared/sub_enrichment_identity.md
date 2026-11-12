@@ -1,7 +1,7 @@
 ---
 title: Identity Entity Enrichment
 type: reference
-last_updated: 2026-09-19
+last_updated: 2026-11-12
 license: Apache-2.0
 status: draft
 ---
@@ -18,7 +18,7 @@ Sibling references: [Identity](sub_enrichment_identity.md) · [Asset](sub_enrich
 
 - Resolve the account to its **type**: a person, a service identity a workload runs under, a shared or emergency account, an external guest, or a machine identity. Each has a different normal.
 - Resolve role, department, manager and privilege level; whether the identity holds, or can activate, an administrative role.
-- Check the [SOC Knowledge Base](../../01-Foundation/definitions.md#soc-knowledge-base-soc-kb): is the identity a **VIP** or high-risk user, and is there an **approved exception** covering the observed activity? A **privileged identity** in the Case scope triggers the human assignee condition of [Agentic Guardrails §3](../../07-Governance/agentic_guardrails.md#3-human-assignee-conditions).
+- Check the [SOC Knowledge Base](../../01-Foundation/definitions.md#soc-knowledge-base-soc-kb): is the identity a **VIP** or high-risk user, and is there an **approved exception** covering the observed activity? A **privileged identity** is a [critical entity](../../01-Foundation/definitions.md#critical-entity).
 
 ## 2. What is normal for it
 

@@ -132,11 +132,6 @@
       "description": "When the notification was sent.",
       "type": "timestamp_t"
     },
-    "handover_reason": {
-      "caption": "Handover Reason",
-      "description": "Why the Case's assignee became a person: crown-jewel, privileged-identity or manual.",
-      "type": "string_t"
-    },
     "watch_until": {
       "caption": "Watch Until",
       "description": "Until when the Case's entities are watched after an Insufficient Data or Low-confidence close.",

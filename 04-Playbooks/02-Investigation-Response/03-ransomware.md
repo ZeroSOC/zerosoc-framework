@@ -1,7 +1,7 @@
 ---
 title: 03-Ransomware & Digital Extortion Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-03
 mitre_ttps:
@@ -23,7 +23,7 @@ status: draft
 
 Investigation and Incident Response knowledge for Cases whose candidate category is `IC-03 Ransomware & Digital Extortion` — encryption, data-theft extortion, or both, with a demand; including double and triple extortion and leak-only. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage observations, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 
-Ransomware is an objective category: by the time encryption is visible the adversary has held a foothold, moved laterally and often already taken the data. The investigation establishes the impact and its spread while the pre-authorized isolations already run; every hour of delay is more hosts encrypted, so containment does not wait for the last query.
+Ransomware is an objective category: by the time encryption is visible the adversary has held a foothold, moved laterally and often already taken the data. The investigation establishes the impact and its spread while the isolations the autonomy matrix allows already run; every hour of delay is more hosts encrypted, so containment does not wait for the last query.
 
 ## Investigation
 
@@ -43,12 +43,12 @@ Ransomware is an objective category: by the time encryption is visible the adver
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-03 (Ransomware & Digital Extortion)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-03 (Ransomware & Digital Extortion)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Isolate the suspected patient zero and every infected workstation from the network through the EDR or network controls, keeping them powered on for forensics (reversed by reconnecting them). Isolating a production server, file server, hypervisor, domain controller or the backup infrastructure itself — **requires approval**.
-*   Halt the ongoing exfiltration: block the identified destinations at the perimeter and apply a temporary egress block on the affected hosts (reversed by removing the rules). Disconnecting a critical data store from the network, or isolating its subnet or cloud network — **requires approval**.
-*   Revoke the active sessions and disable the identities confirmed compromised during the intrusion (reversed by re-enabling them). Disabling a service identity a critical service runs under, or resetting many identities at once — **requires approval**.
+*   Isolate the suspected patient zero and every infected workstation from the network through the EDR or network controls, keeping them powered on for forensics (reversed by reconnecting them). A production server, file server, hypervisor, domain controller or the backup infrastructure itself is isolated the same way; what depends on it decides the action's impact.
+*   Halt the ongoing exfiltration: block the identified destinations at the perimeter and apply a temporary egress block on the affected hosts (reversed by removing the rules). Disconnecting a data store from the network, or isolating its subnet or cloud network, is rated by what depends on it.
+*   Revoke the active sessions and disable the identities confirmed compromised during the intrusion (reversed by re-enabling them). For a service identity, the service that runs under it decides the impact. A reset beyond the confirmed identities — **requires approval**.
 *   Protect the backups: set the repositories to immutable or read-only and revoke the specific credentials the attacker used against them (reversed by re-issuing them).
 
 ### Eradication
@@ -71,7 +71,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-03 (Ransomware & Dig
 *   A Benign close without Query 2 executed, or with Query 3 or Query 4 unanswered.
 *   Restoring data or lifting containment before eradication — vector closed, command-and-control blocked, hosts cleansed or re-imaged — is verified complete: closure leaving a confirmed foothold.
 *   Restoring from backups without first verifying that the backups themselves are clean and untampered.
-*   A re-image or wipe, the isolation of a server, domain controller or the backup infrastructure, or a domain-wide credential reset applied without approval.
+*   A re-image, a wipe or a domain-wide credential reset applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   Paying, or committing to pay, the ransom without executive authorization under legal counsel.
 *   Files destroyed with no recovery path not re-classified when the pivot applies.
 

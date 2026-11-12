@@ -1,7 +1,7 @@
 ---
 title: 11-Data Breach / Exfiltration Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-11
 mitre_ttps:
@@ -46,16 +46,16 @@ Exfiltration is defined by the *act of removal*, regardless of actor: the same p
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-11 (Data Breach / Exfiltration)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-11 (Data Breach / Exfiltration)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Block the destination and the egress channel at the perimeter, the proxy and the DLP (reversed by removing the rules).
-*   Suspend the sessions of the involved identity and disable it, and isolate the involved host when it is an end-user workstation (reversed by re-enabling and reconnecting). Isolating a production server or database from which the data is leaving — **requires approval**.
-*   Revoke the storage credentials in use — the specific API keys, signed storage URLs and other live grants (reversed by issuing new ones). Revoking the grants of many principals at once, or the service identity a production application uses to reach the store — **requires approval**.
+*   Suspend the sessions of the involved identity and disable it, and isolate the involved host when it is an end-user workstation (reversed by re-enabling and reconnecting). Where the data is leaving from a production server or database, what depends on it decides the impact of isolating it.
+*   Revoke the storage credentials in use — the specific API keys, signed storage URLs and other live grants (reversed by issuing new ones). Revoking the grants of many principals at once is one action on all of them; for the service identity a production application uses to reach the store, that application decides the impact.
 
 ### Eradication
 *   Close the access path: rotate the credentials involved and fix the misconfiguration or public exposure that allowed the transfer.
-*   Preserve the staging artifacts (archives) and any attacker tooling on the source systems per [Detection & Analysis §3.3](../../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody), then quarantine them (reversed by releasing them). Deleting them — **requires approval**.
+*   Preserve the staging artifacts (archives) and any attacker tooling on the source systems per [Detection & Analysis §3.3](../../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody), then quarantine or delete them.
 
 ### Recovery
 *   Scope the exposed data set precisely enough to support the notification decision; where regulated data (personal, health or payment-card data) is confirmed exfiltrated, the regulatory notification of [Detection & Analysis §3.2](../../03-Processes/02-detection_and_analysis.md#32-stakeholder--regulatory-notification) is triggered through its Critical-severity path, with Legal and the data-protection officer.
@@ -70,7 +70,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-11 (Data Breach / Ex
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 5 and Query 3 executed, or with Query 2 unanswered.
 *   Regulated data confirmed exfiltrated and the Case closed, or the response continued, without the §3.2 regulatory notification triggered through the Critical-severity path.
-*   Isolating a production server or database, a mass revocation, or deleting data applied without approval.
+*   The organization's data deleted without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   The exposed data set scoped so imprecisely that a notification decision is made without it.
 *   Closure leaving a confirmed foothold: the credential, misconfiguration or public exposure that allowed the transfer still open.
 *   An extortion contact received, or a clean insider principal confirmed without removal of confidential data, and the Case not re-classified when the pivot applies.

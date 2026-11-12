@@ -1,7 +1,7 @@
 ---
 title: 14-OT/ICS Attack Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-14
 mitre_ttps:
@@ -29,7 +29,7 @@ status: draft
 
 Investigation and Incident Response knowledge for Cases whose candidate category is `IC-14 OT/ICS Attack` — manipulation or disruption of physical or industrial processes through control systems. Consumes the Triage → Investigation phase transition contract ([Playbook Architecture §5](../playbook_architecture.md#5-phase-transition-contracts)). The method — verify or retract the triage observations, run the queries, resolve by score and coverage — is [Detection & Analysis §2](../../03-Processes/02-detection_and_analysis.md#2-phase-2b--investigation); the containment autonomy matrix is [Incident Response §2.1](../../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment). Hypotheses and queries are indicative, not exhaustive.
 
-OT incidents carry physical-safety consequences. The investigation works from the IT side — the engineering workstation, the HMI, the IT→OT conduit — and any action that stops or changes a physical process, a controller, a safety system or an OT network segment is in the approval tier of the autonomy matrix. A deviation toward a safety limit is passed to plant operations on the plant's life-safety channel the moment it is observed, whatever the state of the hypotheses: the life-safety path does not wait for a verdict.
+OT incidents carry physical-safety consequences. The investigation works from the IT side — the engineering workstation, the HMI, the IT→OT conduit — and any action that stops or changes a physical process, a controller or an OT network segment is rated by what that process serves; a safety function is never stopped without approval. A deviation toward a safety limit is passed to plant operations on the plant's life-safety channel the moment it is observed, whatever the state of the hypotheses: the life-safety path does not wait for a verdict.
 
 ## Investigation
 
@@ -48,12 +48,12 @@ OT incidents carry physical-safety consequences. The investigation works from th
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-14 (OT/ICS Attack)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence. Every approval-tier action on the control side is applied per the plant's operating procedures, with the process engineer.
+Once the Malicious hypothesis is proven, the Case is an `IC-14 (OT/ICS Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. Every action on the control side is applied per the plant's operating procedures, with the process engineer.
 
 ### Containment
-*   IT-side first: isolate the engineering workstation on its IT interface (reversed by reconnecting). Isolating an HMI, or any host whose loss removes the operators' view of or control over the process — **requires approval**.
-*   Revoke the remote-access sessions and disable the identities that issued the commands (reversed by re-enabling), and block the external source at the IT→OT boundary (reversed by removing the rule). Closing the IT→OT conduit entirely, or isolating an OT segment — **requires approval**.
-*   Controller-side actions — placing a controller in manual mode, disconnecting engineering access to it, stopping a PLC, or any action on a safety-instrumented system — **requires approval**.
+*   IT-side first: isolate the engineering workstation on its IT interface (reversed by reconnecting). Isolating an HMI, or any host whose loss removes the operators' view of or control over the process, is rated by that process.
+*   Revoke the remote-access sessions and disable the identities that issued the commands (reversed by re-enabling), and block the external source at the IT→OT boundary (reversed by removing the rule). Closing the IT→OT conduit entirely, or isolating an OT segment, is an action on a network segment, rated by the process that depends on it.
+*   Controller-side actions (placing a controller in manual mode, disconnecting engineering access to it, stopping a PLC) are rated by the process the controller runs. An action on a safety-instrumented system always requires approval.
 
 ### Eradication
 *   Restore validated controller logic, configuration and firmware from the known-good project files, under engineering supervision — **requires approval**.
@@ -61,7 +61,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-14 (OT/ICS Attack)` 
 *   Close the remote-access vector: remove the unsanctioned remote-access tools and engineering software, patch the exploited service, and rotate the credentials confirmed to have OT reach. A rotation of all credentials with OT reach — **requires approval**.
 
 ### Recovery
-*   Perform a staged restart of the process per plant procedures — **requires approval**.
+*   Perform a staged restart of the process per plant procedures, with the approval of plant operations.
 *   Validate process values against the historian baselines before resuming normal operation, and lift the IT-side isolation gradually, each removal recorded in the Case timeline.
 *   Conduct a joint post-incident safety review with plant operations as input to Phase 4.
 
@@ -70,7 +70,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-14 (OT/ICS Attack)` 
 **Complete when:** the Case is resolved per [Detection & Analysis §2.4](../../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence), the Investigation Note is produced and the phase transition contract (or the closure verdict) is emitted; for IC-14, every controller reached (Query 6) is enumerated with its logic verified against the known-good project file, and any safety-setpoint deviation (Query 4) carries the time plant operations were notified.
 
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
-*   Any controller, safety-system, OT-segment or process-state action — manual mode, stop, restart, logic restore, isolation — applied without approval.
+*   An action on a safety-instrumented system, a logic restore, a rebuild or a process restart applied without approval, or a controller or OT-segment action applied without the approval the autonomy matrix requires.
 *   A safety-setpoint deviation observed and plant operations not notified on the life-safety channel at that moment, or the notification deferred until resolution.
 *   A Benign close without Query 1 and Query 2 executed, or with Query 3 unanswered for the alerted controller.
 *   Controller logic restored or a rebuilt workstation reconnected without verification against the known-good project file, or closure leaving modified logic in any controller — a confirmed foothold.

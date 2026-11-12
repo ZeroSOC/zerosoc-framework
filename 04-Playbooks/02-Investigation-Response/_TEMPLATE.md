@@ -1,7 +1,7 @@
 ---
 title: NN-<Incident Category Name> Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-NN
 mitre_ttps:
@@ -32,14 +32,14 @@ Investigation and Incident Response knowledge for Cases whose candidate category
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-NN` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-NN` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   <reversible action that leaves the entity serving — pre-authorized>
-*   <action that stops a critical service, is irreversible or affects many entities> — **requires approval**.
+*   <containment action; where its class is not plain, what decides its impact: what depends on the entity, what runs over the connection>
 
 ### Eradication
-*   <remove artifacts; close the entry point; rotate the credentials confirmed compromised>
+*   <remove what the threat actor added; close the entry point; rotate the credentials confirmed compromised>
+*   <action that destroys what the organization holds: purge, wipe, re-image> — **requires approval**.
 
 ### Recovery
 *   <verify eradication; restore; lift containment>

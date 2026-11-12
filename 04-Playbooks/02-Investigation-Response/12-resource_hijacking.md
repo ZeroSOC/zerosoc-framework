@@ -1,7 +1,7 @@
 ---
 title: 12-Resource Hijacking / Cryptojacking Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-12
 mitre_ttps:
@@ -46,19 +46,19 @@ Resource theft is usually the symptom of a credential compromise: the spend anom
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-12 (Resource Hijacking / Cryptojacking)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-12 (Resource Hijacking / Cryptojacking)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Revoke the compromised keys and disable the compromised principals (reversed by issuing new keys or re-enabling the principal). Disabling a service identity a critical service runs under — **requires approval**.
-*   Stop or quarantine the offending instances, containers and functions, snapshotting them first for forensics (reversed by restarting them). Stopping a workload a production service runs on — **requires approval**.
+*   Revoke the compromised keys and disable the compromised principals (reversed by issuing new keys or re-enabling the principal). For a service identity, the service that runs under it decides the impact.
+*   Stop or quarantine the offending instances, containers and functions, snapshotting them first for forensics (reversed by restarting them). For a workload a production service runs on, that service decides the impact.
 *   Block the mining-pool, stratum and proxy destinations at egress (reversed by removing the rule), and kill the miner process on hosts that must keep serving.
-*   Clamp the provisioning quotas of the affected account to stop further provisioning (reversed by restoring them). Clamping a quota that production workloads share — **requires approval**.
+*   Clamp the provisioning quotas of the affected account to stop further provisioning (reversed by restoring them). A quota that production workloads share is rated by those workloads.
 
 ### Eradication
 *   Remove the attacker's identity artifacts — principals, keys, roles, functions, instance templates, restart mechanisms — across **all** regions and accounts the principal could reach (Query 6), not only the affected one.
 *   Rotate the leaked credential and the secrets it could reach. A rotation beyond the confirmed scope — **requires approval**.
 *   Close the entry vector: the exposed key, the exploited workload or application, the permissive role.
-*   Delete the rogue compute, images and snapshots once the forensic copies are preserved — **requires approval**.
+*   Delete the rogue compute, images and snapshots once the forensic copies are preserved.
 
 ### Recovery
 *   Restore quotas and egress rules to normal operating levels, each removal recorded in the Case timeline.
@@ -73,7 +73,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-12 (Resource Hijacki
 *   A Benign close without Query 3 executed, or with Query 2 unanswered for the alerted workload.
 *   Data access or secret enumeration by the compromised principal (Query 6) not re-classified when the pivot applies.
 *   Attacker artifacts removed in only the affected account or region, or closure leaving a persistence mechanism from Query 4 in place — a confirmed foothold.
-*   A production workload stopped, a service identity disabled, a shared quota clamped or resources deleted without approval.
+*   The organization's own resources deleted or a rotation beyond the confirmed scope applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 
 ## Hunting Pivots
 

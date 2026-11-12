@@ -1,7 +1,7 @@
 ---
 title: 06-Identity & Credential Attack Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-06
 mitre_ttps:
@@ -47,15 +47,15 @@ The object of this investigation is the *identity*, not a host: success for the 
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-06 (Identity & Credential Attack)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-06 (Identity & Credential Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Disable the taken-over identity and revoke all its refresh and session tokens (reversed by re-enabling it and signing in again). Disabling a service identity a critical service runs under — **requires approval**.
-*   Block the source IP addresses or autonomous system in the identity provider's access policy and at the perimeter (reversed by removing the rule). Blocklisting a partner or customer network — **requires approval**.
-*   For a spray in progress, tighten the access policy on the confirmed identities — require MFA or a compliant device (reversed by restoring the policy). A policy change or a lockout-threshold change applied to many identities at once, or resetting the credentials of every targeted identity — **requires approval**.
-*   Reverting a change to the identity infrastructure configuration — a federation trust, an access policy, tenant-wide MFA settings — **requires approval**.
+*   Disable the taken-over identity and revoke all its refresh and session tokens (reversed by re-enabling it and signing in again). For a service identity, the service that runs under it decides the impact.
+*   Block the source IP addresses or autonomous system in the identity provider's access policy and at the perimeter (reversed by removing the rule). Blocking a partner or customer network is rated by what runs over that connection.
+*   For a spray in progress, tighten the access policy on the confirmed identities — require MFA or a compliant device (reversed by restoring the policy). A policy change or a lockout-threshold change applied to many identities at once is one action on all of them. Resetting the credentials of every targeted identity — **requires approval**.
 
 ### Eradication
+*   Reverting a change to the identity infrastructure configuration — a federation trust, an access policy, tenant-wide MFA settings — **requires approval**.
 *   Force a password reset with full MFA re-registration for the identities confirmed taken over. A reset beyond the confirmed identities — **requires approval**.
 *   Remove every attacker-registered MFA method, device registration, application consent, application credential and role or group grant, and revoke the tokens issued to the attacker's applications.
 *   Close the vector where it is known — the lure per the IC-01 playbook, the exposed legacy authentication endpoint, the weak lockout policy.
@@ -72,7 +72,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-06 (Identity & Crede
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 6 executed, or with Query 2 or Query 3 unanswered for the identity in scope.
 *   A confirmed takeover not followed by the session revocation of the identity and the removal of its attacker-registered MFA methods, consents and grants — closure leaving a confirmed foothold — or not re-classified when the pivot applies.
-*   A mass credential reset, the disabling of a service identity, the blocklisting of a partner network, or a revert of the identity infrastructure configuration applied without approval.
+*   A mass credential reset or a revert of the identity infrastructure configuration applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   Restoring access through the same channel used for the attack instead of a verified out-of-band channel.
 *   A change to the identity infrastructure found (Query 7) and left standing at closure.
 

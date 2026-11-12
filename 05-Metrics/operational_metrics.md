@@ -72,8 +72,8 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ### HITL Dwell Time
 *   **KPI candidate.**
-*   **Start:** an action enters `Pending HITL`, or a Case is handed over ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)). **Stop:** the approver decides, or the human assignee takes the Case.
-*   **Purpose:** the human-side target, tracked per class: approval requests and handovers. The number to fix when MTTC is excellent but Incidents still run long.
+*   **Start:** the request to a person, when an action enters `Pending HITL` or a closure is proposed outside the autonomy grant ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)). **Stop:** the person decides.
+*   **Purpose:** the human-side target, tracked per class: action approvals and proposed closures. The number to fix when MTTC is excellent but Incidents still run long.
 
 ### Mean Time To Respond (MTTR)
 *   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5) ([DD-33](../01-Foundation/design_decisions.md#dd-33-seven-gates-from-the-alert-to-the-closed-case)). Recovery complete (G6) is excluded: that would measure recovery.
@@ -174,12 +174,11 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 
 ### 6.1 Autonomous Disposition Rate (ADR)
 *   **KPI candidate.**
-*   **Definition:** Cases dispositioned at G2 (and, separately, at G3) by automation or an agent with **zero human touch** ÷ all Cases dispositioned at that gate. Zero human touch means no handover, no approval, no human edit of the verdict; a Case an executor investigated and a human approved is supervised, not autonomous.
+*   **Definition:** Cases dispositioned at G2 (and, separately, at G3) by automation or an agent with **zero human touch** ÷ all Cases dispositioned at that gate. Zero human touch means no approval and no human edit of the verdict; a Case an executor investigated and a human approved is supervised, not autonomous.
 *   **Boundary rules:** consolidated alerts and Duplicates are excluded (§2). Always sliceable into an automation share and an agent share, never reported only as a blended total.
 
-### 6.2 Handover Rate
-*   **Definition:** Cases handed over to a human ÷ Cases automation or an agent was assigned, sliced by the recorded reason (`handover_reason`: crown-jewel, privileged-identity, manual — [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions)).
-*   **Purpose:** the reason mix is the diagnostic. A rising share of manual takeovers means humans do not trust the autonomous verdicts on the Cases they watch; read it with Verdict Precision (§5.4) and Observed Verdict Recall (§5.5), which say whether they are right.
+### 6.2 Proposed Closure Rate
+*   **Definition:** closures automation or an agent proposed outside its autonomy grant ([Agentic Supervision §4](../07-Governance/agentic_supervision.md#4-autonomy-grant)) ÷ Cases on which automation or an agent reached a closing verdict other than an Incident, closed under the grant or proposed, in the window; sliced by executor and by the person's decision.
 
 ### 6.3 Approval Override Rate
 *   **Definition:** of the containment actions automation or an agent submitted for approval in the window ([Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload)), the share the approver **modified** — approved with a changed target, scope or timing — and the share **rejected**, each ÷ actions submitted; the remainder were approved as proposed. Sliced by executor, by Incident Category playbook and by action type.
@@ -226,7 +225,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 |---|---|---|---|---|
 | MTTI (§4) | 15–60 min per Case closed at triage | Instant, only for fully specifiable False Positive classes | ≤ 10 min per Case closed at triage | Investigation-stage verdicts run longer; slice by gate. |
 | MTTD (§4) | Executor-independent: a detection-content property | Executor-independent | Executor-independent | Minutes to hours for actively tuned techniques; track the trend. |
-| MTTC (§4) | 4–24 h typical | Minutes, for pre-authorized actions | ≤ 30 min, excluding HITL Dwell Time, for pre-authorized actions | Approval-loop time is never counted as containment time. |
+| MTTC (§4) | 4–24 h typical | Minutes, for actions applied without approval | ≤ 30 min, excluding HITL Dwell Time, for actions applied without approval | Approval-loop time is never counted as containment time. |
 | HITL Dwell Time (§4) | Critical ≤ 30 min · High ≤ 2 h | n/a: automation requests approval, it does not grant it | n/a: agents request approval, they do not grant it | — |
 | Detection Precision (§5.2) | Executor-independent | Executor-independent | Executor-independent | ≥ 80–90% per active rule, after tuning. |
 | Disposition Mix (§5.1) | Noise share ≤ 30% and falling | same | same | Legacy human-run SOCs commonly run 30–70% noise. An Insufficient Data share above 10% is a telemetry or playbook signal. |
@@ -247,7 +246,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | MTTD — *KPI candidate* | T0 → G1 | Phase 1; [Detection & Analysis §4, §5](../03-Processes/02-detection_and_analysis.md) | Detection Engineer |
 | MTTI — *KPI candidate* | G1 → G2/G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager |
 | MTTC — *KPI candidate*, MTTR | G1 → G4; G1 → G4 or G5, not yet settled | [Incident Response §2, §3](../03-Processes/03-response.md) | SOC Manager, leadership |
-| HITL Dwell Time — *KPI candidate* | `Pending HITL`, handover | [Agentic Supervision §1](../07-Governance/agentic_supervision.md) | SOC Manager |
+| HITL Dwell Time — *KPI candidate* | `Pending HITL`, proposed closure | [Agentic Supervision §1](../07-Governance/agentic_supervision.md) | SOC Manager |
 | Detection Precision — *KPI candidate* | G1, judged at G2/G3 | Phase 1 tuning loop | Detection Engineer |
 | Disposition Mix — *KPI candidate* | G2, G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager, Detection Engineer |
 | Triage Precision — *KPI candidate* | G2, judged at G3 | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) | SOC Manager |
@@ -256,7 +255,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Observed Detection Recall — *KPI candidate* | G3 / verdict review | [Detection & Analysis §3.1, §4, §5](../03-Processes/02-detection_and_analysis.md); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | Leadership, Detection Engineer |
 | Tuning Loop Latency | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
 | Visibility-Gap Rate | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution) | SOC leadership, Security Platform Engineer |
-| ADR — *KPI candidate*, Handover Rate, Approval Override Rate | G2–G4 | Note Provenance; [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions); [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
+| ADR — *KPI candidate*, Proposed Closure Rate, Approval Override Rate | G2–G4 | Note Provenance; [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
 | TCpC, Noise Tax — *KPI candidates* | G1–G4 | [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering) | Leadership, FinOps |
 
 ## 10. Sources & Prior Art

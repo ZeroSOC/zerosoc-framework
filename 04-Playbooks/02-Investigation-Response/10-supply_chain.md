@@ -1,7 +1,7 @@
 ---
 title: 10-Supply-Chain Compromise Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-10
 mitre_ttps:
@@ -47,11 +47,11 @@ This is a trust inversion: the malicious artifact arrives through a channel the 
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-10 (Supply-Chain Compromise)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-10 (Supply-Chain Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Quarantine the affected package version on hosts where a prior version or an alternative keeps the service running (reversed by releasing it). Blocking or removing it fleet-wide, or where the removal stops a critical service — **requires approval**.
-*   Disable the implicated vendor's or provider's remote-access identities and revoke their sessions and keys (reversed by re-enabling them). Disabling a provider service identity a critical service runs under — **requires approval**. Blocklisting the provider's network — **requires approval**.
+*   Quarantine the affected package version on hosts where a prior version or an alternative keeps the service running (reversed by releasing it). Blocking or removing it fleet-wide is one action on many entities, and where the removal stops a service, that service decides the impact.
+*   Disable the implicated vendor's or provider's remote-access identities and revoke their sessions and keys (reversed by re-enabling them). For a provider service identity, the service that runs under it decides the impact; blocking the provider's network is rated by what runs over that connection.
 *   Block the update channel and the advisory's indicators at the perimeter, the proxy and DNS (reversed by removing the rules).
 
 ### Eradication
@@ -72,7 +72,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-10 (Supply-Chain Com
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   When the Case concerns a component or build: the Incident declared or acted on before Query 1 confirms the affected component and version are deployed.
 *   A Benign close of a component or build Case without Query 1 executed, or with Query 2 unanswered on any exposed host; a Benign close of a provider-access Case without Query 5 executed.
-*   A fleet-wide block or removal, a re-imaging, a mass credential reset or a provider-network blocklisting applied without approval.
+*   A re-imaging or a mass credential reset applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   The vendor-fixed build deployed without integrity verification against the published hashes.
 *   Vendor, customer or public communication issued outside the organization's external-communications channel.
 *   Closure leaving a confirmed foothold: the compromised version still present on a host, or the provider's access restored under its old scope.

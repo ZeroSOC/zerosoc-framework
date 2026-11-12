@@ -1,7 +1,7 @@
 ---
 title: 02-Business Email Compromise (BEC) Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-02
 mitre_ttps:
@@ -42,11 +42,11 @@ BEC is an objective category: the mailbox is the instrument and the payment or t
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-02 (Business Email Compromise)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-02 (Business Email Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Disable the compromised identity and revoke all its refresh and session tokens (reversed by re-enabling it and signing in again). Disabling a shared or service mailbox identity a critical business process runs under — **requires approval**.
-*   Block the malicious IP address or autonomous system at the network boundary and in the identity provider's access policy (reversed by removing the rule). Blocklisting a partner or customer network from which the fraud was relayed — **requires approval**.
+*   Disable the compromised identity and revoke all its refresh and session tokens (reversed by re-enabling it and signing in again). For a shared or service mailbox identity, the business process that runs under it decides the impact.
+*   Block the malicious IP address or autonomous system at the network boundary and in the identity provider's access policy (reversed by removing the rule). Blocking a partner or customer network from which the fraud was relayed is rated by what runs over that connection.
 *   Quarantine the messages sent from the compromised mailbox — internally and to counterparties — and any lookalike-domain messages in every recipient mailbox (reversed by releasing them). Purging them permanently — **requires approval**.
 *   Ask finance to hold any pending payment to the changed details and to freeze the payment instruction under dispute (reversed by releasing the hold).
 
@@ -69,7 +69,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-02 (Business Email C
 *   A confirmed takeover not followed by the session revocation of the identity and the removal of its attacker rules, or not re-classified when the pivot applies.
 *   Restoring normal email functionality to the user before the attacker's forwarding and delegation rules are identified and deleted — closure leaving a confirmed foothold.
 *   A confirmed payment-redirection message with no finance hold or recall recorded in the Case timeline.
-*   A permanent purge, a reset beyond the confirmed identities, or the blocklisting of a partner network applied without approval.
+*   A permanent purge or a reset beyond the confirmed identities applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 
 ## Hunting Pivots
 

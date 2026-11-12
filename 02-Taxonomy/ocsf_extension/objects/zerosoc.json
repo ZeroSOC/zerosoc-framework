@@ -40,10 +40,6 @@
       "requirement": "optional",
       "description": "On a Case: the stakeholder and regulatory notifications the Case requires, and their deadlines."
     },
-    "handover_reason": {
-      "requirement": "optional",
-      "description": "On a Case: why the Case's assignee became a person: crown-jewel, privileged-identity or manual."
-    },
     "watch_until": {
       "requirement": "optional",
       "description": "On a Case: until when the Case's entities are watched after an Insufficient Data or Low-confidence close."

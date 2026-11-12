@@ -56,16 +56,16 @@ The review is blameless: its object is the system — telemetry, detections, pla
 1.  **Telemetry gaps:** missing log sources, parsing errors, or silent failures of the pipeline health monitoring of Phase 1.
 2.  **Software flaws:** exploitable vulnerabilities, supply-chain compromises, vulnerable dependencies.
 3.  **Configuration and credential weaknesses:** missing multi-factor authentication, weak or reused credentials, excessive privileges, misconfigured controls. A user action that opened the door — a phishing link clicked, a consent granted — is recorded as an awareness action item, not as a root cause.
-4.  **Process deficiencies:** playbook gaps, slow handover or approval, ambiguous autonomy boundaries, missing organizational context in the SOC Knowledge Base.
+4.  **Process deficiencies:** playbook gaps, slow approval, ambiguous autonomy boundaries, missing organizational context in the SOC Knowledge Base.
 
 ## 3. Review Agenda
 
 1.  **Timeline reconstruction:** walk the Case timeline from T0 — the earliest confirmed malicious event ([Detection & Analysis §2.6](02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)) — through detection, containment and recovery, with the acknowledgment and the verdict read from the Case's lifecycle events ([Case Schema §5](../02-Taxonomy/case_schema.md)), and compute the Incident's MTTD, MTTI, MTTC and MTTR and its HITL Dwell Time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)).
 2.  **Detection efficacy and missed-detection walk:** why did the first Alert fire — or, for an Incident not discovered by Phase 1 detection content ([Detection & Analysis §4.3 and §5](02-detection_and_analysis.md)), why did nothing fire? Every attacker action in the timeline for which telemetry existed but no Alert was produced is a **missed detection opportunity** and is captured as a detection-gap action item (§4) recording the discovery channel, whether the miss was a detection miss (no Alert) or a verdict miss (a Case wrongly closed), the ATT&CK techniques, the telemetry domain and the systemic bucket (§2) — the inputs of the recall metrics in [Operational Metrics §5.5](../05-Metrics/operational_metrics.md). The candidate verdict false negatives flagged by the retrospective entity sweep ([Detection & Analysis §3.1](02-detection_and_analysis.md#31-incident-promotion)) are decided here: each prior Case is confirmed as a wrong verdict, with its cause, or dismissed with the reason.
 3.  **Evidence review:** the observations retracted during investigation, a verdict reached at Low confidence, and prior Insufficient Data closes on the same entities ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). Each points at a playbook query that asked the wrong question or an enrichment source that answered late, and becomes a playbook action item.
-4.  **Response efficacy:** were the pre-authorized containment actions applied at once and did they hold; how much approval dwell time accrued and on which actions; was any action rolled back; did a handover delay the response ([Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment)). A boundary that blocked a needed action, or allowed a damaging one, is a process deficiency (§2).
+4.  **Response efficacy:** were the containment actions the matrix allows without approval applied at once and did they hold; how much approval dwell time accrued and on which actions; was any action rolled back ([Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment)). A boundary that blocked a needed action, or allowed a damaging one, is a process deficiency (§2).
 5.  **Root cause analysis:** state the root causes and assign the systemic buckets.
-6.  **Lessons learned:** what the Incident taught about the environment — an approved exception nobody had recorded, a Crown Jewel missing from the inventory, a benign pattern that will recur, a VIP user's normal behavior — is recorded in the SOC Knowledge Base so that the next triage reads it.
+6.  **Lessons learned:** what the Incident taught about the environment — an approved exception nobody had recorded, a critical entity nobody had recorded, a benign pattern that will recur, a VIP user's normal behavior — is recorded in the SOC Knowledge Base so that the next triage reads it.
 
 ## 4. Action Items
 
@@ -73,7 +73,7 @@ The output of the review is a set of tracked action items:
 
 *   detection tuning and creation requests to Phase 1, including the detection-gap items of §3;
 *   telemetry onboarding requests for the sources the missed-detection walk found absent;
-*   playbook updates: new or corrected hypotheses and queries, changed handover conditions;
+*   playbook updates: new or corrected hypotheses and queries;
 *   configuration and patch requests to IT, and awareness items;
 *   SOC Knowledge Base entries.
 

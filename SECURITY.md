@@ -2,7 +2,7 @@
 title: ZeroSOC Security Policy
 type: policy
 status: draft
-last_updated: 2026-09-10
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -14,7 +14,7 @@ The ZeroSOC Framework is a documentation standard, not executable software — b
 
 **In scope:**
 
-1. **Dangerous-guidance defects** — a playbook, process step, or guardrail that, followed *as written* by a human, automation, or AI agent, would cause harm. Examples: a containment action with destructive side effects and no verification gate; guidance that exposes credentials or sensitive data; an OSINT/enrichment step whose egress contradicts the [Agentic Guardrails](07-Governance/agentic_guardrails.md); an handover condition that lets an autonomous agent act where the framework mandates human sign-off.
+1. **Dangerous-guidance defects** — a playbook, process step, or guardrail that, followed *as written* by a human, automation, or AI agent, would cause harm. Examples: a containment action with destructive side effects and no verification gate; guidance that exposes credentials or sensitive data; an OSINT/enrichment step whose egress contradicts the [Agentic Guardrails](07-Governance/agentic_guardrails.md); an approval rule that lets an autonomous agent act where the framework mandates human sign-off.
 2. **Malicious or compromised content** — links, assets, or embedded content in this repository that point to malicious destinations or have been tampered with.
 3. **CI / supply-chain issues** — vulnerabilities in this repository's GitHub Actions workflows or validation tooling.
 

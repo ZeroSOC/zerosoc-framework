@@ -1,7 +1,7 @@
 ---
 title: 08-Infrastructure Compromise Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-08
 mitre_ttps:
@@ -51,15 +51,15 @@ Infrastructure carries trust the adversary wants to inherit. Edge devices are bo
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-08 (Infrastructure Compromise)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-08 (Infrastructure Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Cut the external management interfaces and restrict the management plane to the jump host or the management network (reversed by restoring the interfaces); the system keeps serving.
 *   Block the attacker's source addresses at the perimeter (reversed by removing the rules).
-*   Disable the personal administrative identities confirmed compromised and revoke their sessions (reversed by re-enabling them); rotate the device's AAA credentials. Disabling a service identity a critical service runs under — **requires approval**.
-*   Take an edge device out of path or offline — an outage for everything behind it — **requires approval**.
-*   Isolate a domain controller, hypervisor, identity or backup server, or the production servers hosted on a compromised hypervisor — **requires approval**.
-*   Isolate the management subnet or VLAN, or change its routing — **requires approval**.
+*   Disable the personal administrative identities confirmed compromised and revoke their sessions (reversed by re-enabling them); rotate the device's AAA credentials. For a service identity, the service that runs under it decides the impact.
+*   Take an edge device out of path or offline: an outage for everything behind it, which decides the action's impact.
+*   Isolate a domain controller, hypervisor, identity or backup server, or the production servers hosted on a compromised hypervisor: what depends on each decides the impact.
+*   Isolate the management subnet or VLAN, or change its routing: an action on a network segment.
 
 ### Eradication
 *   Edge device: reflash the vendor's known-good firmware and restore the golden configuration; patch the exploited vulnerability. Where an implanted or modified image is suspected, preserve the running image for forensic analysis per [Detection & Analysis §3.3](../../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody) before reflashing.
@@ -79,7 +79,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-08 (Infrastructure C
 
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 2 and Query 5 executed, or with Query 3 unrecorded.
-*   Taking an edge device out of path, isolating a domain controller, hypervisor, identity or backup server, isolating the management subnet, rebuilding from image, or a mass credential reset applied without approval.
+*   Rebuilding from image or a mass credential reset applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   Reflashing or rebuilding before the exploited vulnerability is patched and the compromised credentials rotated — the foothold returns through the same door.
 *   Closure leaving a confirmed foothold: a modified image, a rogue account, trust or task, or an unrotated secret the compromised infrastructure held.
 *   Data moved, encryption or backup destruction staged, and the Case not re-classified when the pivot applies.

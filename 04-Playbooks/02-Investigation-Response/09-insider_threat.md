@@ -1,7 +1,7 @@
 ---
 title: 09-Insider Threat & Privilege Misuse Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-09
 mitre_ttps:
@@ -46,12 +46,12 @@ The actor here is *authorized*: technical evidence alone rarely resolves intent,
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-09 (Insider Threat & Privilege Misuse)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-09 (Insider Threat & Privilege Misuse)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Snapshot and preserve the evidence per [Detection & Analysis §3.3](../../03-Processes/02-detection_and_analysis.md#33-evidence-preservation--chain-of-custody) before any action visible to the subject; where the subject holds administrative access, preserve first the logs and audit trails the subject could alter.
 *   Quietly restrict the specific access paths and egress channels involved — block the personal-cloud destination, disable writes to removable media, hold outbound mail to the personal address (reversed by removing the rules); prefer controls the subject does not see.
-*   Suspending the subject's sessions or disabling the identity is reversible and stops no service, but it is visible to the subject: apply it when data is leaving at that moment; otherwise sequence it with HR and Legal. Disabling a service identity the subject administers and a critical service runs under — **requires approval**.
+*   Suspending the subject's sessions or disabling the identity stops one person's service and is visible to the subject: apply it when data is leaving at that moment; otherwise sequence it with HR and Legal. For a service identity the subject administers, the service that runs under it decides the impact.
 
 ### Eradication
 *   Eradication here is actor-centric, not artifact-centric: access revocation, device recovery and every employee-facing action — interview, suspension, notification — are executed per HR and Legal direction; the executor supplies the evidence record and does not initiate them.

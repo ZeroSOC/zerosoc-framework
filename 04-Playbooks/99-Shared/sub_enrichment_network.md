@@ -1,7 +1,7 @@
 ---
 title: Network Entity Enrichment
 type: reference
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 status: draft
 ---
@@ -34,7 +34,7 @@ The subtle case is the **org-owned public range**: a routable, internet-facing I
 
 The goal is to turn the observable into a **known asset and owner**, not a reputation score. Public TI has nothing authoritative to say about your own address space, and querying it leaks topology (see [§3](#3-egress-rules-what-may-leave-the-environment)).
 
-- **Internal IP →** resolve to a host via IPAM / DHCP lease / reverse DNS (PTR); then CMDB for asset identity, owner, business criticality (Crown-Jewel status), and network zone; NAC / switch-port / AD computer object for the live binding. Pivot to [Asset](sub_enrichment_asset.md) and [Identity](sub_enrichment_identity.md) (owner).
+- **Internal IP →** resolve to a host via IPAM / DHCP lease / reverse DNS (PTR); then CMDB for asset identity, owner, business criticality (critical-entity status), and network zone; NAC / switch-port / AD computer object for the live binding. Pivot to [Asset](sub_enrichment_asset.md) and [Identity](sub_enrichment_identity.md) (owner).
 - **Internal domain / hostname →** internal (split-horizon) DNS forward/reverse, AD-integrated zones, and the service/CMDB catalog for the owning application and team.
 - **Internal URL →** the internal application/service catalog for the owning app, team, and data classification. **Do not detonate or render** a known internal service — investigate it as an [Asset](sub_enrichment_asset.md), not as a threat indicator.
 - **Signal:** an internal IP or host with **no IPAM or CMDB record** is itself notable — an unmanaged, rogue, or shadow asset — and SHOULD be flagged, not dismissed.
