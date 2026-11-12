@@ -92,7 +92,7 @@ A broader, administrative workspace used to manage the investigative workflow. I
 ### Security Incident
 A Case whose verdict is **Malicious** and whose activity **reached the environment**, and so can harm the organization's assets or compromise its operations: something landed on a device, ran, persisted, was delivered to a person, or was gained. Activity held in a gateway's quarantine, a sandbox or a decoy has not reached the environment.
 *   **Context:** An Incident requires response: its scope is confirmed, what a control already did is verified, and containment, eradication and recovery apply where something remains. It always produces lessons learned. Confirming an Incident shifts the workflow from *investigation* to *Incident Response (IR)*. Malicious activity that did not reach the environment is a **near miss**.
-*   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — discriminated by **`verdict_id`** and **`severity_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** and `severity_id` is Low (`2`) to Critical (`5`) (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A closed non-incident Case carries `verdict_id` False Positive (`1`) or Benign (`5`), or True Positive at Informational severity for a near miss.
+*   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — discriminated by **`verdict_id`** and **`severity_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** and `severity_id` is Low (`2`) to Critical (`5`) (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A Case closed without becoming an Incident carries `severity_id` Informational (`1`) and `verdict_id` False Positive (`1`), Benign (`5`), True Positive (`2`) for a near miss, Insufficient Data (`7`) or Duplicate (`10`).
 *   **Reference:** the sources and where this definition departs from them are recorded in [DD-32](design_decisions.md#dd-32-an-incident-is-malicious-activity-that-reached-the-environment).
 
 ### Near miss
@@ -115,7 +115,7 @@ When a Security Case is investigated, a final determination or verdict is reache
 In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding).
 
 ### True Positive (TP)
-A Case whose activity is **Malicious**: an attack, or an action of any intent that can compromise the confidentiality, integrity or availability of the organization's assets. A policy breach alone does not make a Case Malicious.
+A Case whose activity is **Malicious**: an attack, or an action of any intent that exposes the organization's assets to the harm an attack would cause. A policy breach alone does not make a Case Malicious.
 *   **Outcome:** A Security Incident when the activity reached the environment; otherwise a near miss.
 *   **OCSF `verdict_id`:** `2` (True Positive)
 *   **Reference:** [MITRE ATT&CK & D3FEND](https://attack.mitre.org/) - Broadly useful for understanding the behavioral context of true positive signals.
@@ -124,14 +124,14 @@ A Case whose activity is **Malicious**: an attack, or an action of any intent th
 A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. 
 *   **Context:** This represents a "technical error" by the detection logic. The activity did not pose a threat, and it shouldn't have been escalated as an incident.
 *   **Outcome:** The case is closed, and the feedback must be used for detection or triage playbook tuning to reduce noise.
-*   **OCSF `verdict_id`:** `1` (False Positive)
+*   **OCSF `verdict_id`:** `1` (False Positive), at `severity_id = 1` (Informational)
 
 ### Benign Positive (BP) Case
 A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or acceptable. Activity is acceptable when whoever is accountable for the asset, data or policy says so, and the Case cites that statement.
 *   **Context:** This is a "contextual issue" rather than a technical misfiring. The rule accurately spotted an action (like a script running), but no breach occurred because the actor was legitimate. The activity looks malicious, but was specifically authorized.
 *   **Examples:** Authorized penetration tests, scheduled vulnerability scans, an IT administrator executing a remote administration script, or an unapproved application its owner reviews and accepts; a policy breach closed this way goes to the policy's owner.
-*   **Outcome:** The case is closed. Benign Positives typically require minor tuning such as whitelisting to reduce noise.
-*   **OCSF `verdict_id`:** `5` (Benign)
+*   **Outcome:** The case is closed and the exception recorded, so the same activity is explained the next time it fires.
+*   **OCSF `verdict_id`:** `5` (Benign), at `severity_id = 1` (Informational)
 
 ### Duplicate
 A Case closed because its activity, root cause and threat vector are already handled by an open master Case, and the recurrence adds neither risk nor evidence to it.
@@ -229,11 +229,11 @@ The change of a Case's **assignee** (OCSF `assignee`) from one executor to anoth
 Every Case carries three measures, defined in the [Case Schema](../02-Taxonomy/case_schema.md) and assessed in [Detection & Analysis](../03-Processes/02-detection_and_analysis.md#14-case-classification-severity-confidence--impact): **Severity** ("how bad"), **Confidence** ("how sure") and **Impact** ("how much harm"). The levels below are the framework's readable definitions; the numeric values are OCSF's.
 
 ### Severity (OCSF `severity_id`)
-Severity estimates the *potential* harm of the observed activity and sets the urgency of the response. It combines the threat severity of the behavior with the criticality of what it touches. On a Case, the verdict settles it: a near miss is set to Informational, an Incident stays Low to Critical, and the source's own severity stays in `vendor_attributes`.
+Severity estimates the *potential* harm of the observed activity and sets the urgency of the response. It combines the threat severity of the behavior with the criticality of what it touches. On a Case, the verdict settles it: every closing verdict other than an Incident sets it to Informational, and an Incident stays Low to Critical, so automated triage never mistakes a closed Case for a live one. The source's own severity stays in `vendor_attributes`.
 
 | Level | OCSF meaning | Framework guidance | Example |
 |---|---|---|---|
-| **1 Informational** | Informational message; no action required. | On a Detection Finding, a Signal: consulted during triage, never triaged on its own. On a Case, a near miss. | A single failed login (Signal); a phishing email blocked before any mailbox (near miss). |
+| **1 Informational** | Informational message; no action required. | On a Detection Finding, a Signal: consulted during triage, never triaged on its own. On a Case, a closing verdict other than an Incident. | A single failed login (Signal); a phishing email blocked before any mailbox (a near miss). |
 | **2 Low** | The user decides if action is needed. | Suspicious but contained in scope; routine triage, no deadline pressure. | A phishing email delivered to one inbox and removed unopened. |
 | **3 Medium** | Action is required but the situation is not serious at this time. | Likely malicious or policy-relevant activity on non-critical entities; investigate within the shift. | Commodity malware detected and quarantined on a standard workstation. |
 | **4 High** | Action is required immediately. | Malicious activity with a credible path to material harm, or touching a critical entity; investigate now, response likely. | Credential dumping on a server; a privileged role granted outside change control. |

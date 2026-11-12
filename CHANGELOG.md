@@ -36,7 +36,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **01-Foundation:** an Incident is Malicious activity that reached the environment (DD-32):
   something landed on a device, ran, persisted, was delivered to a person, or was gained. Malicious
   activity stopped before it reached the environment is a **near miss**, a new Definitions entry:
-  `verdict_id` 2 at `severity_id` 1, closed without response and kept out of the Incident counts.
+  `verdict_id` 2, closed without response and kept out of the Incident counts. Every closing verdict
+  other than an Incident sets `severity_id` to 1 (Informational), and an Incident keeps 2 to 5.
   True Positive no longer covers a policy violation, and a Benign Positive is authorized, expected
   or acceptable, where acceptable means its accountable owner says so on the Case. The Case Schema,
   Detection & Analysis §2.5 and the G3 gate, Disposition Mix and Triage Precision follow. A
