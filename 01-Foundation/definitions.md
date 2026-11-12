@@ -146,6 +146,10 @@ A Case closed because its activity, root cause and threat vector are already han
 *   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, an active assignee on the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
 *   **OCSF `verdict_id`:** `10` (Duplicate). The closing Note records the master Case identifier.
 
+### Insufficient Data
+A Case closed because no evidence that could prove either side can be obtained ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). Until then a Case that proves neither side stays open, On Hold while its questions wait for answers.
+*   **OCSF `verdict_id`:** `7` (Insufficient Data), at `severity_id = 1` (Informational).
+
 ### False Negative (FN)
 Malicious activity that occurred but failed to generate a Security Alert. (Not a direct case classification, but a critical metric for SOC health representing "missed detections").
 

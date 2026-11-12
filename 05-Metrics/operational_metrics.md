@@ -72,8 +72,8 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ### HITL Dwell Time
 *   **KPI candidate.**
-*   **Start:** the request to a person, when an action enters `Pending HITL` or a closure is proposed outside the autonomy grant ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)). **Stop:** the person decides.
-*   **Purpose:** the human-side target, tracked per class: action approvals and proposed closures. The number to fix when MTTC is excellent but Incidents still run long.
+*   **Start:** the request to a person, when an action enters `Pending HITL`, a closure is proposed outside the autonomy grant ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)), or a Case goes On Hold ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). **Stop:** the person decides, or the answer arrives.
+*   **Purpose:** the human-side target, tracked per class: action approvals, proposed closures and questions. The number to fix when MTTC is excellent but Incidents still run long.
 
 ### Mean Time To Respond (MTTR)
 *   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5) ([DD-33](../01-Foundation/design_decisions.md#dd-33-seven-gates-from-the-alert-to-the-closed-case)). Recovery complete (G6) is excluded: that would measure recovery.
@@ -95,7 +95,7 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 | **False Positive** | Detection misfires caught cheaply; each is a tuning ticket. Read with Detection Precision (§5.2). | Misfires that survived triage: the subtle rule problems, and the tuning tickets that matter most. |
 | **Benign** | Authorized activity the Knowledge Base already explained. | Context the Knowledge Base lacked; each raises an exception ticket for a person to confirm. |
 | **Duplicate** | Recurrences of open Cases: a volume, not a quality signal. | Rare. A Duplicate found only after investigation means correlation failed at reception. |
-| **Insufficient Data** | — | Investigations that ended undecided: investigative thrash or missing telemetry. Read with the Visibility-Gap Rate (§5.7). |
+| **Insufficient Data** | — | Cases whose deciding evidence could not be obtained: missing telemetry, or a source that no longer holds it. Read with the Visibility-Gap Rate (§5.7). |
 | **Near miss** | — | Attacks stopped before they reached the environment. Counted with detection efficacy and kept out of the Incident counts. |
 | **Promoted / Confirmed Incident** | The promotion share. Read with Triage Precision (§5.3). | The confirmation share. Read with Verdict Precision (§5.4). |
 

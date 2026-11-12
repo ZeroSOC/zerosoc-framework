@@ -33,6 +33,14 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes:** an undecided Case is held, never closed by a clock (DD-34). When its Observations
+  prove neither side and no discriminating query is left, the Case goes On Hold with verdict Unknown,
+  its questions named and asked; each answer is an Observation, and the Case is resolved again. It
+  closes as Insufficient Data only when no evidence that could prove either side can be obtained.
+  Urgency comes from response-time targets by severity. Agentic Guardrails §5 drops the
+  investigation timebox; Definitions gains an Insufficient Data entry; HITL Dwell Time counts the
+  time a Case waits On Hold.
+
 - **01-Foundation:** an Incident is Malicious activity that reached the environment (DD-32):
   something landed on a device, ran, persisted, was delivered to a person, or was gained. Malicious
   activity stopped before it reached the environment is a **near miss**, a new Definitions entry:
