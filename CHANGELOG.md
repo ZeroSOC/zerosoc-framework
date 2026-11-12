@@ -55,7 +55,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   an event outside the order, and the metrics that cited G5 now cite it. MTTC runs from G1 to G4;
   MTTR is Mean Time To Respond, from G1, with its stop still open (G4 or G5). T0 is labelled
   *Incident occurred* and anchors MTTD. The Case Schema states the status lifecycle: Closed at a
-  closing verdict, and for an Incident Resolved at G6 and Closed at G7. Incident Response marks G5
+  closing verdict, and for an Incident Resolved at G6 and Closed at G7; On Hold keeps OCSF's
+  meaning, a Case waiting on information or a response from a person or a third party. Incident Response marks G5
   and G6, and Phase 4 gains §6, *Closing the Case*.
 
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
