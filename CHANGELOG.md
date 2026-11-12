@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-10-29
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -32,6 +32,15 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   it; for any other Alert the executor identifies it at reception.
 
 ### Changed
+
+- **01-Foundation:** an Incident is Malicious activity that reached the environment (DD-32):
+  something landed on a device, ran, persisted, was delivered to a person, or was gained. Malicious
+  activity stopped before it reached the environment is a **near miss**, a new Definitions entry:
+  `verdict_id` 2 at `severity_id` 1, closed without response and kept out of the Incident counts.
+  True Positive no longer covers a policy violation, and a Benign Positive is authorized, expected
+  or acceptable, where acceptable means its accountable owner says so on the Case. The Case Schema,
+  Detection & Analysis §2.5 and the G3 gate, Disposition Mix and Triage Precision follow. A
+  downstream reader can no longer take `verdict_id = 2` alone as an Incident.
 
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation

@@ -2,13 +2,13 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-10-25
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
 # Case Schema
 
-The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§7).
+The **Case** is the object the operating loop works on: opened when Alerts are aggregated (Phase 2.a), promoted to an **Incident** when its verdict becomes True Positive and its activity reached the environment (Phase 2.b), responded to (Phase 3) and reviewed (Phase 4). This document defines the Case once — the OCSF fields the framework uses and the fields the framework adds — so that processes, playbooks, deliverables and metrics refer to the same names. A formal [JSON Schema](case_schema.json) accompanies this document (§7).
 
 The release this mapping follows is declared on the schema itself, as `ocsf_version`: a consumer handed a Case out of band — written into another system's record, exported, archived — reads which OCSF release it was written against without being told.
 
@@ -29,10 +29,10 @@ A Case maps to the OCSF [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/c
 | `metadata.correlation_uid` | string | 2.a | Case identifier, the same on every event of the Case, cited by the Notes, tuning tickets and metrics |
 | `message` | string | 2.a; follows the source while the Case is open | The Case's **title**: the source's own title for the Case, which it may change as alerts join; the first Alert's title where the source gives none. Each Alert keeps its own title (§3) |
 | `status_id` | 1 New · 2 In Progress · 3 On Hold · 4 Resolved · 5 Closed | 2.a → 4 | Workflow state; `In Progress` is set at acknowledgment |
-| `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification |
+| `severity_id` | 1 Informational · 2 Low · 3 Medium · 4 High · 5 Critical | 2.a, refined in 2.b | "How bad" — potential harm; drives urgency and internal notification. Informational (`1`) at a near miss verdict ([Definitions](../01-Foundation/definitions.md#near-miss)) |
 | `confidence_id` | 1 Low · 2 Medium · 3 High | 2.a, resolved in 2.b | "How sure" — set by hypothesis resolution ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)) and re-assessed when the Incident is confirmed ([§2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)). A source's own `confidence_id` and `likelihood_id` are inputs triage validates, never accepted at face value |
 | `impact_id` | 1 Low · 2 Medium · 3 High · 4 Critical | 2.a when already known; 2.b at incident confirmation | Realized or expected harm; drives regulatory notification ([§3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion)) |
-| `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
+| `verdict_id` | 0 Unknown · 1 False Positive · 2 True Positive · 5 Benign · 7 Insufficient Data · 10 Duplicate | 2.a / 2.b | Open (`0`) until resolved; `2` promotes the Case to an Incident at `severity_id` 2–5 and marks a near miss at `1`; levels in [Definitions §3](../01-Foundation/definitions.md#3-case-dispositions-verdicts) |
 | `assignee` | user | 2.a; changes at handover | The Case **assignee**: the executor responsible for advancing it and for its verdict ([§2.3](../03-Processes/02-detection_and_analysis.md#23-case-assignment)) |
 | `desc` | string | 2.a; refreshed at each gate and while the response runs | The Case **Summary**: what happened and when, the entities involved and which acted on which, and — once established — the root cause, with the Observations that establish it |
 | `notes` | list of note | 2.a / 2.b | Among them the Triage Note and the Investigation Note, one `note` each: `title` the deliverable name, `comment` the rendering, `owner` the executor, `created_time` and `modified_time` its anchors |

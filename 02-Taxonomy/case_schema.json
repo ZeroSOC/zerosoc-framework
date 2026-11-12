@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ZeroSOC/zerosoc-framework/02-Taxonomy/case_schema.json",
   "title": "ZeroSOC Case",
-  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under 'zerosoc', the ZeroSOC extension to OCSF (declared in ocsf_extension/). The Case is identified by metadata.correlation_uid. A Case becomes an Incident when verdict_id = 2. See case_schema.md. A property this schema does not name is an attribute of the OCSF class, used as OCSF defines it; a source's own record is under 'unmapped', keyed by the source.",
+  "description": "A ZeroSOC Case: the subset of the OCSF Incident Finding [2005] fields the framework uses, plus the framework's own fields under 'zerosoc', the ZeroSOC extension to OCSF (declared in ocsf_extension/). The Case is identified by metadata.correlation_uid. A Case becomes an Incident when verdict_id = 2 and severity_id is 2 to 5; verdict_id = 2 at severity_id 1 is a near miss. See case_schema.md. A property this schema does not name is an attribute of the OCSF class, used as OCSF defines it; a source's own record is under 'unmapped', keyed by the source.",
   "ocsf_version": "1.9.0",
   "type": "object",
   "additionalProperties": {
