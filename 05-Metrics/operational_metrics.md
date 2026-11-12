@@ -53,7 +53,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ## 4. Speed Metrics
 
-**T0**, *Incident occurred*, anchors MTTD and MTTR: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Observation cites an earlier event, through Investigation ([Detection & Analysis §2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
+**T0**, *Incident occurred*, anchors MTTD: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Observation cites an earlier event, through Investigation ([Detection & Analysis §2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
 
 ### Mean Time To Detect (MTTD)
 *   **KPI candidate.**
@@ -75,9 +75,9 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 *   **Start:** an action enters `Pending HITL`, or a Case is handed over ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)). **Stop:** the approver decides, or the human assignee takes the Case.
 *   **Purpose:** the human-side target, tracked per class: approval requests and handovers. The number to fix when MTTC is excellent but Incidents still run long.
 
-### Mean Time To Recover (MTTR)
-*   **Start:** T0. **Stop:** recovery complete (G6) — services restored and containment lifted ([Incident Response §4](../03-Processes/03-response.md#4-recovery)).
-*   **Purpose:** the full duration of the Incident as the organization experienced it. Where MTTC measures how fast the threat was stopped, MTTR measures how long it cost.
+### Mean Time To Respond (MTTR)
+*   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5) ([DD-33](../01-Foundation/design_decisions.md#dd-33-seven-gates-from-the-alert-to-the-closed-case)). Recovery complete (G6) is excluded: that would measure recovery.
+*   **Purpose:** how long the response took.
 
 ## 5. Disposition Quality
 
@@ -246,7 +246,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Alert Volume, Consolidation Rate | G1 | [Phase 1](../03-Processes/01-preparation_and_engineering.md) output; [Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) | Capacity planning |
 | MTTD — *KPI candidate* | T0 → G1 | Phase 1; [Detection & Analysis §4, §5](../03-Processes/02-detection_and_analysis.md) | Detection Engineer |
 | MTTI — *KPI candidate* | G1 → G2/G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager |
-| MTTC — *KPI candidate*, MTTR | G1 → G4; T0 → G6 | [Incident Response §2, §4](../03-Processes/03-response.md) | SOC Manager, leadership |
+| MTTC — *KPI candidate*, MTTR | G1 → G4; G1 → G4 or G5, not yet settled | [Incident Response §2, §3](../03-Processes/03-response.md) | SOC Manager, leadership |
 | HITL Dwell Time — *KPI candidate* | `Pending HITL`, handover | [Agentic Supervision §1](../07-Governance/agentic_supervision.md) | SOC Manager |
 | Detection Precision — *KPI candidate* | G1, judged at G2/G3 | Phase 1 tuning loop | Detection Engineer |
 | Disposition Mix — *KPI candidate* | G2, G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager, Detection Engineer |

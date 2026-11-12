@@ -53,7 +53,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   Alert(s) received, G2 triage disposition, G3 Incident declaration, G4 containment completed, G5
   eradication verified, G6 recovery complete, G7 Case closed. The verdict review, which was G5, is
   an event outside the order, and the metrics that cited G5 now cite it. MTTC runs from G1 to G4;
-  T0 is labelled *Incident occurred*. The Case Schema states the status lifecycle: Closed at a
+  MTTR is Mean Time To Respond, from G1, with its stop still open (G4 or G5). T0 is labelled
+  *Incident occurred* and anchors MTTD. The Case Schema states the status lifecycle: Closed at a
   closing verdict, and for an Incident Resolved at G6 and Closed at G7. Incident Response marks G5
   and G6, and Phase 4 gains §6, *Closing the Case*.
 
