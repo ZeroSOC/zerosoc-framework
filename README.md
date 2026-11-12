@@ -69,31 +69,33 @@ graph TD
     subgraph P1 ["Phase 1: Preparation & Detection"]
         Telemetry[Raw Telemetry] -->|Parsed & Normalized| Events[Security Events]
         Events -->|Security Observations| Signals["Signals<br>(Informational Detection Finding)"]
-        Signals -->|Correlated & Thresholded| G1["G1: Alert Raised<br>(Detection Finding severity ≥ 2)"]
+        Signals -->|Correlated & Thresholded| G1["G1: Alert(s) Received<br>(Detection Finding severity ≥ 2)"]
         Events -->|Direct Detection Rules| G1
     end
 
     subgraph P2 ["Phase 2: Detection & Analysis"]
         subgraph P21 ["Phase 2.a: Triage"]
             G1 --> Triage[Domain Triage Playbook<br>Enrich Context & Validate Priority]
-            Triage --> G2{"G2: Triage Decision"}
+            Triage --> G2{"G2: Triage Disposition"}
             G2 -->|Close: FP / Benign| Close1[Close Case & Emit Tuning Signal]
         end
 
         subgraph P22 ["Phase 2.b: Investigation"]
             G2 -->|Promote to Investigation| Investigate[IC Playbook<br>Concurrent Malicious/Benign hypothesis testing]
-            Investigate --> G3{"G3: Case Verdict"}
+            Investigate --> G3{"G3: Incident Declaration"}
             G3 -->|Close: Benign / FP| Close2[Close Case & Emit Tuning Signal]
         end
     end
 
     subgraph P3 ["Phase 3: Incident Response"]
         G3 -->|A: Confirmed TP Incident| Respond[Containment, Eradication & Recovery]
-        Respond --> G4["G4: Containment Confirmed"]
+        Respond --> G4["G4: Containment Completed"]
+        G4 --> G5["G5: Eradication Verified"]
+        G5 --> G6["G6: Recovery Complete"]
     end
 
     subgraph P4 ["Phase 4: Post-Incident Activity"]
-        Respond -.-> G5["G5: Post-Incident Review / RCA & QA Sampling"]
+        G6 --> G7["G7: Case Closed<br>after the Post-Incident Review"]
     end
 
     subgraph Deliverables ["06-Deliverables"]
@@ -103,29 +105,29 @@ graph TD
 
     subgraph Governance ["07-Governance"]
         Guardrails[Agentic Guardrails & JIT Scoping] -.->|Constrains Execution| Respond
-        Supervision[Agentic Supervision & QA] -.->|Audits at G5| TNote
-        Supervision -.->|Audits at G5| INote
+        Supervision[Agentic Supervision & QA] -.->|Verdict review| TNote
+        Supervision -.->|Verdict review| INote
     end
 
     subgraph Metrics ["05-Metrics"]
         Gates[Operational Metrics<br>Speed: MTTD / MTTI / MTTC / MTTR<br>Quality: precision and recall per gate<br>Cost: Token Economics]
     end
 
-    P2 -.->|Measured by Gates G1-G5| Gates
-    P3 -.->|Measured by Gates G1-G5| Gates
+    P2 -.->|Measured by Gates G1-G7| Gates
+    P3 -.->|Measured by Gates G1-G7| Gates
 
     class Telemetry,Events,Signals input;
     class Triage,Investigate,Respond,Close1,Close2 process;
-    class G1,G2,G3,G4,G5 gate;
+    class G1,G2,G3,G4,G5,G6,G7 gate;
     class TNote,INote deliverable;
     class Guardrails,Supervision,Gates gov;
 ```
 
 * **Domain Triage Playbooks (Phase 2.a):** Initial alert ingest (Gate G1) routes to one of 8 telemetry domains (Endpoint, Cloud, Identity, Network, etc.) where entities are enriched and operational priority is recalibrated. Alerts are either closed as False Positive / Benign Positive (emitting tuning feedback) or promoted to active investigation with a candidate Incident Category (Gate G2).
 * **Incident Category (IC) Investigation Playbooks (Phase 2.b):** Promoted cases undergo Concurrent Malicious/Benign hypothesis testing (Malicious vs. Benign) to establish a definitive Case Verdict (Gate G3).
-* **Incident Response (Phase 3):** Confirmed True Positive incidents trigger active incident response, tactical containment execution (Gate G4), eradication, and recovery.
+* **Incident Response (Phase 3):** Confirmed True Positive incidents trigger active incident response, tactical containment execution (Gate G4), eradication (G5) and recovery (G6), then the Post-Incident Review and the Case's closure (G7).
 * **Deliverables & Provenance:** Every Phase produces structured, human-readable documentation (Triage Note, Investigation Note) with mandatory audit trails.
-* **Governance & Metrics:** Agent and automation execution is bound by Least Access / JIT guardrails and audited by human supervision QA (Gate G5), with metrics tracking speed (MTTD/MTTI/MTTC/MTTR), stage-differentiated false-positive surfaces, and token economics.
+* **Governance & Metrics:** Agent and automation execution is bound by Least Access / JIT guardrails and audited by human supervision QA (the verdict review), with metrics tracking speed (MTTD/MTTI/MTTC/MTTR), stage-differentiated false-positive surfaces, and token economics.
 
 ## Core Modules Index
 

@@ -29,15 +29,18 @@ Every metric in this module is anchored to a defined state transition in the [De
 
 ## 2. Measurement Gates
 
-All metrics reference the five gates below. Objects and verdicts are as defined in [Definitions](../01-Foundation/definitions.md) and the [Case Schema](../02-Taxonomy/case_schema.md); the pipeline is Telemetry → Events → Signals → **Alerts → Cases → Incidents**.
+All metrics reference the seven gates below, in the order a Case passes them, and the verdict review, an event outside that order. A Case passes only the gates its path reaches: one closed at G2 or G3 goes no further. Objects and verdicts are as defined in [Definitions](../01-Foundation/definitions.md) and the [Case Schema](../02-Taxonomy/case_schema.md); the pipeline is Telemetry → Events → Signals → **Alerts → Cases → Incidents**.
 
 | Gate | State transition | Process anchor |
 |---|---|---|
-| **G1 — Alert raised** | `Detection Finding [2004]` created with `severity_id ≥ Low (2)` | [Phase 1](../03-Processes/01-preparation_and_engineering.md) output |
-| **G2 — Triage decision** | Case closed (`verdict_id` False Positive `1`, Benign `5`, Duplicate `10`) **or** promoted to Investigation | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) |
-| **G3 — Investigation verdict** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`, or a near miss) **or** confirmed Incident (`verdict_id = 2`, `severity_id` 2–5) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
-| **G4 — Containment** | A containment action applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
-| **G5 — Review** | A verdict re-examined: an approval rejected or a containment rolled back, [QA sampling](../07-Governance/agentic_supervision.md), or the [Post-Incident Review](../03-Processes/04-post_incident_activity.md) | Governance and Phase 4 |
+| **G1 — Alert(s) received** | A `Detection Finding [2004]` with `severity_id ≥ Low (2)` received into a Case | [Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) |
+| **G2 — Triage disposition** | Case closed (`verdict_id` False Positive `1`, Benign `5`, Duplicate `10`) **or** promoted to Investigation | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) |
+| **G3 — Incident declaration** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`, or a near miss) **or** confirmed Incident (`verdict_id = 2`, `severity_id` 2–5) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
+| **G4 — Containment completed** | The initial containment actions applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
+| **G5 — Eradication verified** | Every eradication action confirmed, with no foothold left | [Incident Response §3](../03-Processes/03-response.md#3-eradication) |
+| **G6 — Recovery complete** | Containment lifted and services restored; the Case's `status_id` set to Resolved (`4`) | [Incident Response §4, §5](../03-Processes/03-response.md#5-transition-to-phase-4) |
+| **G7 — Case closed** | The Case's `status_id` set to Closed (`5`) when Phase 4 completes | [Phase 4 §6](../03-Processes/04-post_incident_activity.md#6-closing-the-case) |
+| **Verdict review** *(event)* | A verdict re-examined: an approval rejected or a containment rolled back, [QA sampling](../07-Governance/agentic_supervision.md), or the [Post-Incident Review](../03-Processes/04-post_incident_activity.md) | Governance and Phase 4 |
 
 **Denominator discipline.** Alerts consolidated by the deduplication, throttling and aggregation rules applied at reception ([Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment)) never enter triage and are excluded from every triage denominator and from every *automation* numerator: consolidation is plumbing, not a verdict. A Case closed as **Duplicate** is merged into its master Case and leaves every denominator the same way. A Case closed as **Insufficient Data** is a disposition — it counts in the denominators — but it is neither noise nor an Incident; the Disposition Mix (§5.1) reports it on its own.
 
@@ -50,21 +53,21 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ## 4. Speed Metrics
 
-**T0** is the anchor of every speed metric: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Observation cites an earlier event, through Investigation ([Detection & Analysis §2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
+**T0**, *Incident occurred*, anchors MTTD: the timestamp of the *earliest confirmed malicious* event, which a confirmed Incident carries as its `start_time` ([Case Schema](../02-Taxonomy/case_schema.md)). It opens at the earliest Alert and moves earlier whenever a Malicious Observation cites an earlier event, through Investigation ([Detection & Analysis §2.6](../03-Processes/02-detection_and_analysis.md#26-investigation-note-verdict-evidence-record)) and the Post-Incident Review. Every Case carries a `start_time`, but only a confirmed Incident has proven that it is T0: **T0-anchored metrics are computed for Cases whose verdict is True Positive**, and for no others. All speed metrics: median and p95, per severity band.
 
 ### Mean Time To Detect (MTTD)
 *   **KPI candidate.**
-*   **Start:** T0. **Stop:** the originating Alert raised (G1).
+*   **Start:** T0. **Stop:** the originating Alert received (G1).
 *   **Two populations, never blended:** Incidents whose originating Alert was produced by Phase 1 detection content, and Incidents discovered by threat hunting or out-of-band intake ([Detection & Analysis §4.3 and §5](../03-Processes/02-detection_and_analysis.md)), for which the stop is the registration of the Alert by that step. The second population is the cost of a miss expressed in time; averaging it into the first hides it.
 
 ### Mean Time To Investigate (MTTI)
 *   **KPI candidate.**
-*   **Start:** the originating Alert raised (G1). **Stop:** the Case's disposition — closed at G2, or closed or confirmed at G3.
+*   **Start:** the originating Alert received (G1). **Stop:** the Case's disposition — closed at G2, or closed or confirmed at G3.
 *   **Purpose:** the end-to-end throughput of Detection & Analysis. It stops at a *verdict*, not at queue removal, which is what makes it the honest replacement for "we close alerts fast". Sliced by the gate at which the Case was dispositioned, since triage-stage and investigation-stage verdicts run on different clocks.
 
 ### Mean Time To Contain (MTTC)
 *   **KPI candidate.**
-*   **Start:** T0. **Stop:** the first containment action applied and confirmed (G4).
+*   **Start:** the originating Alert received (G1). **Stop:** containment completed (G4).
 *   **Boundary rule:** MTTC **excludes HITL Dwell Time**. If an executor proposes containment and waits four hours for approval, those hours measure the organization's approval loop, not the operation's capability; mixing them makes fast executors look slow and hides slow approvers.
 
 ### HITL Dwell Time
@@ -72,9 +75,9 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 *   **Start:** an action enters `Pending HITL`, or a Case is handed over ([Agentic Supervision §1](../07-Governance/agentic_supervision.md)). **Stop:** the approver decides, or the human assignee takes the Case.
 *   **Purpose:** the human-side target, tracked per class: approval requests and handovers. The number to fix when MTTC is excellent but Incidents still run long.
 
-### Mean Time To Recover (MTTR)
-*   **Start:** T0. **Stop:** recovery complete — services restored and containment lifted ([Incident Response §4](../03-Processes/03-response.md#4-recovery)).
-*   **Purpose:** the full duration of the Incident as the organization experienced it. Where MTTC measures how fast the threat was stopped, MTTR measures how long it cost.
+### Mean Time To Respond (MTTR)
+*   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5) ([DD-33](../01-Foundation/design_decisions.md#dd-33-seven-gates-from-the-alert-to-the-closed-case)). Recovery complete (G6) is excluded: that would measure recovery.
+*   **Purpose:** how long the response took.
 
 ## 5. Disposition Quality
 
@@ -105,7 +108,7 @@ A single "false positive rate" is not a metric; it is an ambiguity. The term con
 | **Precision** — of what we flagged, how much was real | **Detection Precision** (§5.2): alerts whose Case was confirmed ÷ alerts whose Case reached a verdict | **Triage Precision** (§5.3): promoted Cases confirmed ÷ promoted Cases | **Verdict Precision** (§5.4): confirmed Incidents that stand at review ÷ confirmed Incidents |
 | **Recall** — of what was real, how much we flagged | **Observed Detection Recall** (§5.5): confirmed Incidents that detection content alerted on ÷ all confirmed Incidents | **Observed Triage Recall** (§5.5): confirmed Incidents that triage promoted ÷ those plus the threats triage closed | **Observed Verdict Recall** (§5.5): confirmed Incidents ÷ those plus the threats investigation closed |
 
-An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing a verdict. Every recall is *Observed*: an estimate bounded by the channels that surface misses (§5.5). Precision and recall of the same gate are reported together and never averaged into one "accuracy": most Cases are noise, so a single figure would be dominated by correct closes and hide the missed threats.
+An **overturn** is the event that feeds the G3 metrics: a verdict review reversing a verdict. Every recall is *Observed*: an estimate bounded by the channels that surface misses (§5.5). Precision and recall of the same gate are reported together and never averaged into one "accuracy": most Cases are noise, so a single figure would be dominated by correct closes and hide the missed threats.
 
 ### 5.2 Detection Precision
 *   **KPI candidate.**
@@ -119,7 +122,7 @@ An **overturn** is the event that feeds the G3 metrics: a review at G5 reversing
 
 ### 5.4 Verdict Precision
 *   **KPI candidate.**
-*   **Definition:** confirmed Incidents that stand at review ÷ all confirmed Incidents, in the window. A confirmed Incident is **overturned** when the review at G5 finds it was noise: an approval rejected on its evidence, a containment rolled back, a Post-Incident re-classification to False Positive or Benign. Of what the verdict flagged, how much was real.
+*   **Definition:** confirmed Incidents that stand at review ÷ all confirmed Incidents, in the window. A confirmed Incident is **overturned** when a verdict review finds it was noise: an approval rejected on its evidence, a containment rolled back, a Post-Incident re-classification to False Positive or Benign. Of what the verdict flagged, how much was real.
 *   **Purpose:** an efficiency and trust measure: every wrongly confirmed Incident mobilizes asset owners and leadership and may start a regulatory deadline. Every confirmed Incident is examined by the Response phase and the Post-Incident Review, so the figure needs no sampling.
 *   **Slices:** by executor, and by the Case **confidence** at the verdict. Low-confidence Incidents are expected to be overturned more often than High ones; a High-confidence Incident overturned is an observation against the playbook, and equal rates across confidence levels mean the evidence model is not calibrated.
 
@@ -243,14 +246,14 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Alert Volume, Consolidation Rate | G1 | [Phase 1](../03-Processes/01-preparation_and_engineering.md) output; [Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) | Capacity planning |
 | MTTD — *KPI candidate* | T0 → G1 | Phase 1; [Detection & Analysis §4, §5](../03-Processes/02-detection_and_analysis.md) | Detection Engineer |
 | MTTI — *KPI candidate* | G1 → G2/G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager |
-| MTTC — *KPI candidate*, MTTR | T0 → G4; T0 → recovery | [Incident Response §2, §4](../03-Processes/03-response.md) | SOC Manager, leadership |
+| MTTC — *KPI candidate*, MTTR | G1 → G4; G1 → G4 or G5, not yet settled | [Incident Response §2, §3](../03-Processes/03-response.md) | SOC Manager, leadership |
 | HITL Dwell Time — *KPI candidate* | `Pending HITL`, handover | [Agentic Supervision §1](../07-Governance/agentic_supervision.md) | SOC Manager |
 | Detection Precision — *KPI candidate* | G1, judged at G2/G3 | Phase 1 tuning loop | Detection Engineer |
 | Disposition Mix — *KPI candidate* | G2, G3 | [Detection & Analysis §1.5, §2.4](../03-Processes/02-detection_and_analysis.md) | SOC Manager, Detection Engineer |
 | Triage Precision — *KPI candidate* | G2, judged at G3 | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) | SOC Manager |
-| Verdict Precision — *KPI candidate* | G5 | [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager |
-| Observed Triage Recall, Observed Verdict Recall — *KPI candidates*; Reopen Rate | G5 | [Agentic Supervision §2](../07-Governance/agentic_supervision.md); [Detection & Analysis §3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager, leadership |
-| Observed Detection Recall — *KPI candidate* | G3 / G5 | [Detection & Analysis §3.1, §4, §5](../03-Processes/02-detection_and_analysis.md); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | Leadership, Detection Engineer |
+| Verdict Precision — *KPI candidate* | Verdict review | [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager |
+| Observed Triage Recall, Observed Verdict Recall — *KPI candidates*; Reopen Rate | Verdict review | [Agentic Supervision §2](../07-Governance/agentic_supervision.md); [Detection & Analysis §3.1](../03-Processes/02-detection_and_analysis.md#31-incident-promotion); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | SOC Manager, leadership |
+| Observed Detection Recall — *KPI candidate* | G3 / verdict review | [Detection & Analysis §3.1, §4, §5](../03-Processes/02-detection_and_analysis.md); [Phase 4 §3](../03-Processes/04-post_incident_activity.md#3-review-agenda) | Leadership, Detection Engineer |
 | Tuning Loop Latency | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
 | Visibility-Gap Rate | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution) | SOC leadership, Security Platform Engineer |
 | ADR — *KPI candidate*, Handover Rate, Approval Override Rate | G2–G4 | Note Provenance; [Agentic Guardrails §3](../07-Governance/agentic_guardrails.md#3-human-assignee-conditions); [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
