@@ -123,19 +123,19 @@ When a Security Case is investigated, a final determination or verdict is reache
 In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding).
 
 ### True Positive (TP)
-A Case whose activity is **Malicious**: an attack, or an unauthorized action against the organization's assets.
-*   **Outcome:** A Security Incident when the activity reached the environment; otherwise a near miss.
+A Case whose activity is **Malicious**: an attack, or an unauthorized action against the organization's assets. A True Positive is either a [Security Incident](#security-incident), when the activity reached the environment, or a [near miss](#near-miss).
+*   **Outcome:** An Incident goes to response; a near miss closes without response.
 *   **OCSF `verdict_id`:** `2` (True Positive)
 *   **Reference:** [MITRE ATT&CK & D3FEND](https://attack.mitre.org/) - Broadly useful for understanding the behavioral context of true positive signals.
 
 ### False Positive (FP) Case
-A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. 
+A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. The activity is **Benign**; the detection was wrong.
 *   **Context:** This represents a "technical error" by the detection logic. The activity did not pose a threat, and it shouldn't have been escalated as an incident.
 *   **Outcome:** The case is closed, and the feedback must be used for detection or triage playbook tuning to reduce noise.
 *   **OCSF `verdict_id`:** `1` (False Positive), at `severity_id = 1` (Informational)
 
 ### Benign Positive (BP) Case
-A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or acceptable. Activity is acceptable when whoever is accountable for the asset, data or policy says so, and the Case cites that statement.
+A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or acceptable. Activity is acceptable when whoever is accountable for the asset, data or policy says so, and the Case cites that statement. The activity is **Benign**; the detection was right.
 *   **Context:** This is a "contextual issue" rather than a technical misfiring. The rule accurately spotted an action (like a script running), but no breach occurred because the actor was legitimate. The activity looks malicious, but was specifically authorized.
 *   **Examples:** Authorized penetration tests, scheduled vulnerability scans, an IT administrator executing a remote administration script, or an unapproved application its owner reviews and accepts; a policy breach closed this way goes to the policy's owner.
 *   **Outcome:** The case is closed and the exception recorded, so the same activity is explained the next time it fires.
