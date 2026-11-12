@@ -89,7 +89,7 @@ graph TD
 
     subgraph P3 ["Phase 3: Incident Response"]
         G3 -->|A: Confirmed TP Incident| Respond[Containment, Eradication & Recovery]
-        Respond --> G4["G4: First Containment"]
+        Respond --> G4["G4: Containment Completed"]
         G4 --> G5["G5: Eradication Verified"]
         G5 --> G6["G6: Recovery Complete"]
     end

@@ -36,7 +36,7 @@ All metrics reference the seven gates below, in the order a Case passes them, an
 | **G1 — Alert(s) received** | A `Detection Finding [2004]` with `severity_id ≥ Low (2)` received into a Case | [Detection & Analysis §1.1](../03-Processes/02-detection_and_analysis.md#11-reception-aggregation-and-assignment) |
 | **G2 — Triage disposition** | Case closed (`verdict_id` False Positive `1`, Benign `5`, Duplicate `10`) **or** promoted to Investigation | [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) |
 | **G3 — Incident declaration** | Case closed (`verdict_id` `1`, `5`, `10`, Insufficient Data `7`, or a near miss) **or** confirmed Incident (`verdict_id = 2`, `severity_id` 2–5) | [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence) |
-| **G4 — First containment** | The first containment action applied and confirmed | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
+| **G4 — Containment completed** | The containment actions planned at Incident declaration ([Detection & Analysis §2.5](../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)) all applied and confirmed; containment added later, as the scope grows, does not move it | [Incident Response §2](../03-Processes/03-response.md#2-containment) |
 | **G5 — Eradication verified** | Every eradication action confirmed, with no foothold left | [Incident Response §3](../03-Processes/03-response.md#3-eradication) |
 | **G6 — Recovery complete** | Containment lifted and services restored; the Case's `status_id` set to Resolved (`4`) | [Incident Response §4, §5](../03-Processes/03-response.md#5-transition-to-phase-4) |
 | **G7 — Case closed** | The Case's `status_id` set to Closed (`5`) when Phase 4 completes | [Phase 4 §6](../03-Processes/04-post_incident_activity.md#6-closing-the-case) |
@@ -67,7 +67,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 
 ### Mean Time To Contain (MTTC)
 *   **KPI candidate.**
-*   **Start:** the originating Alert received (G1). **Stop:** the first containment action applied and confirmed (G4).
+*   **Start:** the originating Alert received (G1). **Stop:** containment completed (G4).
 *   **Boundary rule:** MTTC **excludes HITL Dwell Time**. If an executor proposes containment and waits four hours for approval, those hours measure the organization's approval loop, not the operation's capability; mixing them makes fast executors look slow and hides slow approvers.
 
 ### HITL Dwell Time

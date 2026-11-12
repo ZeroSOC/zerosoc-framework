@@ -50,7 +50,7 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   place is stated, and GOVERNANCE.md's Releases, Communication channels and Amendments are now §4 to §6.
 
 - **05-Metrics:** seven measurement gates follow a Case from the alert to its closure (DD-33): G1
-  Alert(s) received, G2 triage disposition, G3 Incident declaration, G4 first containment, G5
+  Alert(s) received, G2 triage disposition, G3 Incident declaration, G4 containment completed, G5
   eradication verified, G6 recovery complete, G7 Case closed. The verdict review, which was G5, is
   an event outside the order, and the metrics that cited G5 now cite it. MTTC runs from G1 to G4;
   T0 is labelled *Incident occurred*. The Case Schema states the status lifecycle: Closed at a
