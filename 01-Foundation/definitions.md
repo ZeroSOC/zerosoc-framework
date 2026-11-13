@@ -123,19 +123,19 @@ When a Security Case is investigated, a final determination or verdict is reache
 In OCSF, these dispositions are represented by the `verdict_id` enum on [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding).
 
 ### True Positive (TP)
-A Case whose activity is **Malicious**: an attack, or an unauthorized action against the organization's assets.
-*   **Outcome:** A Security Incident when the activity reached the environment; otherwise a near miss.
+A Case whose activity is **Malicious**: an attack, or an unauthorized action against the organization's assets. A True Positive is either a [Security Incident](#security-incident), when the activity reached the environment, or a [near miss](#near-miss).
+*   **Outcome:** An Incident goes to response; a near miss closes without response.
 *   **OCSF `verdict_id`:** `2` (True Positive)
 *   **Reference:** [MITRE ATT&CK & D3FEND](https://attack.mitre.org/) - Broadly useful for understanding the behavioral context of true positive signals.
 
 ### False Positive (FP) Case
-A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. 
+A Case where an alert was generated, but triage reveals the system misinterpreted benign or normal activity as malicious. The activity is **Benign**; the detection was wrong.
 *   **Context:** This represents a "technical error" by the detection logic. The activity did not pose a threat, and it shouldn't have been escalated as an incident.
 *   **Outcome:** The case is closed, and the feedback must be used for detection or triage playbook tuning to reduce noise.
 *   **OCSF `verdict_id`:** `1` (False Positive), at `severity_id = 1` (Informational)
 
 ### Benign Positive (BP) Case
-A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or acceptable. Activity is acceptable when whoever is accountable for the asset, data or policy says so, and the Case cites that statement.
+A Case where the detection tool worked exactly as intended and correctly identified specific behavior, but triage determines the activity was authorized, expected or acceptable. Activity is acceptable when whoever is accountable for the asset, data or policy says so, and the Case cites that statement. The activity is **Benign**; the detection was right.
 *   **Context:** This is a "contextual issue" rather than a technical misfiring. The rule accurately spotted an action (like a script running), but no breach occurred because the actor was legitimate. The activity looks malicious, but was specifically authorized.
 *   **Examples:** Authorized penetration tests, scheduled vulnerability scans, an IT administrator executing a remote administration script, or an unapproved application its owner reviews and accepts; a policy breach closed this way goes to the policy's owner.
 *   **Outcome:** The case is closed and the exception recorded, so the same activity is explained the next time it fires.
@@ -145,6 +145,10 @@ A Case where the detection tool worked exactly as intended and correctly identif
 A Case closed because its activity, root cause and threat vector are already handled by an open master Case, and the recurrence adds neither risk nor evidence to it.
 *   **Context:** Permitted at triage or during investigation only after the validation criteria of [Detection & Analysis §1.5](../03-Processes/02-detection_and_analysis.md#15-triage-decision) are met — matching core entities, overlapping timeline, an active assignee on the master Case, evidence merged — and never on the strength of a shared rule name, a different affected entity, or a recurrence long after the prior Case was resolved.
 *   **OCSF `verdict_id`:** `10` (Duplicate). The closing Note records the master Case identifier.
+
+### Insufficient Data
+A Case closed because no evidence that could prove either side can be obtained ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)). Until then a Case that proves neither side stays open, On Hold while its questions wait for answers.
+*   **OCSF `verdict_id`:** `7` (Insufficient Data), at `severity_id = 1` (Informational).
 
 ### False Negative (FN)
 Malicious activity that occurred but failed to generate a Security Alert. (Not a direct case classification, but a critical metric for SOC health representing "missed detections").
