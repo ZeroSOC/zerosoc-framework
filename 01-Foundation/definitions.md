@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -64,7 +64,7 @@ An asset or an identity with a **High** requirement on at least one of confident
 *   **Requirements:** every asset and identity has a requirement of Low, Medium or High on each of the three properties. The availability requirement follows the downtime the organization tolerates. An entity nobody rated counts as Medium when [Impact](#impact-ocsf-impact_id) is assessed. *Availability-critical* is shorthand for a High availability requirement, *data-critical* for a High confidentiality or integrity requirement.
 *   **Context:** the property says what the rating is used for. The confidentiality and integrity requirements are an input to the informational effect of Impact, and the availability requirement to its functional effect. The availability requirement also rates an action that stops the entity ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)): stopping an availability-critical entity is an action of High impact, while stopping a data-critical one may be of Low or Medium impact.
 *   **Privileged identity:** an administrator, a service identity a critical service runs under, or an identity with equivalent reach is a critical entity by definition and needs no rating: an administrator's reach is a High integrity requirement, and an identity a critical service runs under has a High availability requirement.
-*   **VIP:** a person the organization names in the SOC Knowledge Base. The person's identity carries requirements the same way: what its compromise exposes is a confidentiality and integrity requirement, and a need to keep access is an availability requirement.
+*   **VIP:** a person the organization names in the SOC Knowledge Base. A VIP's identity is a critical entity, with a High confidentiality and integrity requirement.
 *   **OCSF Mapping:** None. The requirements are statements the SOC Knowledge Base holds and an Observation cites ([Case Schema §5](../02-Taxonomy/case_schema.md#5-events-the-case-references)). OCSF's `criticality_id` rates a resource with one level and does not say which property it is for.
 
 ## 2. Detection & Investigation Entities
@@ -242,7 +242,7 @@ Severity estimates the *potential* harm of the observed activity and sets the ur
 
 | Level | OCSF meaning | Framework guidance | Example |
 |---|---|---|---|
-| **1 Informational** | Informational message; no action required. | On a Detection Finding, a Signal: consulted during triage, never triaged on its own. On a Case, a closing verdict other than an Incident. | A single failed login (Signal); a phishing email blocked before any mailbox (a near miss). |
+| **1 Informational** | Informational message; no action required. | On a Detection Finding, a Signal: consulted during triage, never triaged on its own. A Case with Informational severity is not an Incident. | A single failed login (Signal); a phishing email blocked before any mailbox (a near miss). |
 | **2 Low** | The user decides if action is needed. | Suspicious but contained in scope; routine triage, no deadline pressure. | A phishing email delivered to one inbox and removed unopened. |
 | **3 Medium** | Action is required but the situation is not serious at this time. | Likely malicious or policy-relevant activity on non-critical entities; investigate within the shift. | Commodity malware detected and quarantined on a standard workstation. |
 | **4 High** | Action is required immediately. | Malicious activity with a credible path to material harm, or touching a critical entity; investigate now, response likely. | Credential dumping on a server; a privileged role granted outside change control. |

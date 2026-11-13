@@ -2,7 +2,7 @@
 title: Agentic Supervision
 type: process
 status: draft
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -14,12 +14,13 @@ Automation and agents close Cases and apply containment without a human in the l
 
 ## 1. Human-in-the-Loop (HITL) Reviews
 
-A human is brought into an autonomous Case in two situations:
+A human is brought into an autonomous Case in three situations:
 
-*   **Approval request:** an action that requires approval under the containment autonomy matrix ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)) is requested with the payload of [Agentic Guardrails §2](agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload). The action enters the `Pending HITL` state; the approver approves, modifies or rejects it, and the decision is recorded in the Case timeline.
+*   **Approval request:** an action that requires approval under the containment autonomy matrix ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)) enters the `Pending HITL` state; the approver approves, modifies or rejects it, and the decision is recorded in the Case timeline.
 *   **Proposed closure:** automation or an agent proposes a closure outside its autonomy grant (§4). A person decides on the Case's Note, and the Case is On Hold until then.
+*   **Question:** a held Case asks for the evidence it lacks ([Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
 
-An executor never stops for doubt: when the evidence is insufficient it applies the resolution rule of [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence). The human-side target for both situations is the HITL Dwell Time of [Operational Metrics §4](../05-Metrics/operational_metrics.md): the time an action or a closure waits for the human, which is never counted as containment time.
+The human-side target is the HITL Dwell Time of [Operational Metrics §4](../05-Metrics/operational_metrics.md).
 
 ## 2. Quality Assurance Sampling
 
@@ -28,7 +29,7 @@ A Case closed by automation or an agent with no human touch is reviewed after th
 *   **Objective:** find wrong verdicts — the verdict misses of [Operational Metrics §5.5](../05-Metrics/operational_metrics.md) — and the drift, hallucination or confirmation bias behind them, before an Incident does.
 *   **Review basis:** the Triage Note and the Investigation Note ([Detection & Analysis §1.6 and §2.6](../03-Processes/02-detection_and_analysis.md)) — the observations, their tags and the resolution — not raw execution transcripts.
 *   **Outcome:** an overturned verdict reopens the Case and counts against Verdict Precision when a confirmed Incident is overturned ([Operational Metrics §5.4](../05-Metrics/operational_metrics.md)) or as a triage or investigation miss in Observed Triage Recall or Observed Verdict Recall when a close is overturned ([Operational Metrics §5.5](../05-Metrics/operational_metrics.md)); a wrong verdict traced to a playbook query or a missing organizational context becomes a playbook update or a [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb) entry.
-*   **Standing input:** budget-exhaustion closes and per-action ceiling trips ([Agentic Guardrails §5](agentic_guardrails.md#5-resource--token-metering)) are always in the sample: they indicate playbook inefficiency or runaway behavior, a failure mode distinct from verdict quality.
+*   **Standing input:** Cases that exhausted their budget and per-action ceiling trips ([Agentic Guardrails §4](agentic_guardrails.md#4-resource--token-metering)) are always in the sample: they indicate playbook inefficiency or runaway behavior, a failure mode distinct from verdict quality.
 
 ## 3. Playbook Drift Monitoring
 

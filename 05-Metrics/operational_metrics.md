@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -68,7 +68,6 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 ### Mean Time To Contain (MTTC)
 *   **KPI candidate.**
 *   **Start:** the originating Alert received (G1). **Stop:** containment completed (G4).
-*   **Boundary rule:** MTTC **excludes HITL Dwell Time**. If an executor proposes containment and waits four hours for approval, those hours measure the organization's approval loop, not the operation's capability; mixing them makes fast executors look slow and hides slow approvers.
 
 ### HITL Dwell Time
 *   **KPI candidate.**
@@ -181,7 +180,7 @@ An Alert produced by Phase 1 detection content carries its producing analytic (t
 *   **Definition:** closures automation or an agent proposed outside its autonomy grant ([Agentic Supervision §4](../07-Governance/agentic_supervision.md#4-autonomy-grant)) ÷ Cases on which automation or an agent reached a closing verdict other than an Incident, closed under the grant or proposed, in the window; sliced by executor and by the person's decision.
 
 ### 6.3 Approval Override Rate
-*   **Definition:** of the containment actions automation or an agent submitted for approval in the window ([Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload)), the share the approver **modified** — approved with a changed target, scope or timing — and the share **rejected**, each ÷ actions submitted; the remainder were approved as proposed. Sliced by executor, by Incident Category playbook and by action type.
+*   **Definition:** of the containment actions automation or an agent submitted for approval in the window ([Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment)), the share the approver **modified** — approved with a changed target, scope or timing — and the share **rejected**, each ÷ actions submitted; the remainder were approved as proposed. Sliced by executor, by Incident Category playbook and by action type.
 *   **Purpose:** consistent modification is the playbook-drift signal of [Agentic Supervision §3](../07-Governance/agentic_supervision.md); a rising rejection share is the early warning of confirmed Incidents being overturned (§5.4).
 
 ### 6.4 Paired Reporting
@@ -202,7 +201,7 @@ Reporting the left column without the right column is non-conformant:
 Autonomous SecOps converts what used to be headcount into **inference spend that scales per Case**. That makes the economics measurable — with the same numerator and denominator rigor as everything above. Published production figures (§10) put triage-stage inference at low single-digit dollars per investigated alert, with token consumption rising by roughly an order of magnitude per stage: thousands of tokens for a triage classification, tens of thousands for a scoped investigation, unbounded for an open agentic loop.
 
 ### 7.1 Attribution and capture
-*   **Every model invocation is attributed to a Case.** Already mandated by [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering); token accounting is a by-product of auditability, not new plumbing.
+*   **Every model invocation is attributed to a Case.** Already mandated by [Agentic Guardrails §4](../07-Governance/agentic_guardrails.md#4-resource--token-metering); token accounting is a by-product of auditability, not new plumbing.
 *   **Input and output token counts are captured for every invocation**, named per the OpenTelemetry GenAI semantic conventions, adopted provisionally while that specification remains in Development status.
 *   **Reported in tokens first, currency second.** Token counts are stable; prices are not. A currency figure states the model mix and the price date.
 
@@ -225,7 +224,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 |---|---|---|---|---|
 | MTTI (§4) | 15–60 min per Case closed at triage | Instant, only for fully specifiable False Positive classes | ≤ 10 min per Case closed at triage | Investigation-stage verdicts run longer; slice by gate. |
 | MTTD (§4) | Executor-independent: a detection-content property | Executor-independent | Executor-independent | Minutes to hours for actively tuned techniques; track the trend. |
-| MTTC (§4) | 4–24 h typical | Minutes, for actions applied without approval | ≤ 30 min, excluding HITL Dwell Time, for actions applied without approval | Approval-loop time is never counted as containment time. |
+| MTTC (§4) | 4–24 h typical | Minutes, for actions applied without approval | ≤ 30 min, for actions applied without approval | — |
 | HITL Dwell Time (§4) | Critical ≤ 30 min · High ≤ 2 h | n/a: automation requests approval, it does not grant it | n/a: agents request approval, they do not grant it | — |
 | Detection Precision (§5.2) | Executor-independent | Executor-independent | Executor-independent | ≥ 80–90% per active rule, after tuning. |
 | Disposition Mix (§5.1) | Noise share ≤ 30% and falling | same | same | Legacy human-run SOCs commonly run 30–70% noise. An Insufficient Data share above 10% is a telemetry or playbook signal. |
@@ -256,7 +255,7 @@ The bands below are **illustrative**, synthesized from industry practice and the
 | Tuning Loop Latency | G2/G3 → Phase 1 | [Phase 1 §1.1, §1.2](../03-Processes/01-preparation_and_engineering.md) | Detection Engineer |
 | Visibility-Gap Rate | G2/G3 | Note Visibility Gaps; [Playbook Architecture §7](../04-Playbooks/playbook_architecture.md#7-execution) | SOC leadership, Security Platform Engineer |
 | ADR — *KPI candidate*, Proposed Closure Rate, Approval Override Rate | G2–G4 | Note Provenance; [Agentic Supervision](../07-Governance/agentic_supervision.md) | SOC Manager |
-| TCpC, Noise Tax — *KPI candidates* | G1–G4 | [Agentic Guardrails §5](../07-Governance/agentic_guardrails.md#5-resource--token-metering) | Leadership, FinOps |
+| TCpC, Noise Tax — *KPI candidates* | G1–G4 | [Agentic Guardrails §4](../07-Governance/agentic_guardrails.md#4-resource--token-metering) | Leadership, FinOps |
 
 ## 10. Sources & Prior Art
 

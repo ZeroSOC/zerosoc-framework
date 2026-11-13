@@ -2,7 +2,7 @@
 title: Phase 3 - Incident Response
 type: process
 status: draft
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -29,7 +29,7 @@ graph TD
     Reg -->|No| Plan
     Notify --> Plan[Select containment actions]
     Plan --> Matrix{Autonomy matrix: approval required?}
-    Matrix -->|Yes| Approve[Request approval with the Guardrails payload]
+    Matrix -->|Yes| Approve[Request approval]
     Approve --> Apply[Apply containment; record in the Case timeline]
     Matrix -->|No| Apply
     Apply --> Eradicate[Eradicate: remove artifacts, close the entry point, rotate compromised credentials]
@@ -44,7 +44,7 @@ graph TD
 The Incident arrives confirmed; this step confirms what the response acts on. From the phase transition contract, the executor:
 
 1. Confirms the **scope**: the affected entities (identities, assets, network locations, artifacts) and the confirmed [Incident Category](../02-Taxonomy/incident_categories.md), whose Investigation & Response playbook lists the containment, eradication and recovery actions for that kind of Incident.
-2. Reads the Case **confidence**, as the resolution rule produced it ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)), and the Incident's **Impact**, as assessed at confirmation ([§2.5](02-detection_and_analysis.md#25-incident-confirmation)): with the impact of each action, they decide which containment actions are applied without approval (§2.1). The Case **severity** sets their timing.
+2. Reads the Case **confidence**, as the resolution rule produced it ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)), and the Incident's **Impact**, as assessed at confirmation ([§2.5](02-detection_and_analysis.md#25-incident-confirmation)): with the impact of each action, they decide which containment actions are applied without approval (§2.1).
 3. Reads what each affected identity is. It is a **person's account**; a **service identity**, an account or service principal that software runs under; or a **host's own identity**, the computer account a directory gives a joined device or one of the operating system's built-in principals such as `SYSTEM` or `NETWORK SERVICE`, which OCSF types as a User of type System. An identity action (suspending sessions, disabling the account, resetting its credentials) is selected for a person's account or a service identity that the Case shows was used or exposed by the threat. A host's own identity appears in the scope because something ran under it on that host, and it is contained through the host (§2.1): no identity action is selected on it.
 4. Reads the kind and the requirements recorded for each affected entity ([critical entity](../01-Foundation/definitions.md#critical-entity)): they rate the actions on it (§2.1).
 
@@ -95,12 +95,15 @@ An action is rated by what the organization would lose, whoever owns the target:
 
 The matrix binds every executor. A person applies without approval what it allows. Automation and agents do so within their autonomy grant ([Agentic Supervision §4](../07-Governance/agentic_supervision.md#4-autonomy-grant)), and with no grant they request approval for every action. An organization may add approvals and remove none: stricter cells, a grant limited to actions up to a given impact, by action or by time window, and classes of entities reserved in the [SOC Knowledge Base](../01-Foundation/definitions.md#soc-knowledge-base-soc-kb), such as its VIPs or its availability-critical entities, on which every containment action requires approval.
 
-**Severity sets the timing** of an action the matrix allows:
+**Approval** is requested with the payload below; once the action has run, its entry in the Case timeline names who approved it ([Case Schema §5](../02-Taxonomy/case_schema.md)). An action is requested only on an entity of the kind it acts on (§1): disabling an account is never requested on a host's own identity. The approver decides whether to act; whether the action can apply to the entity is settled before the request. The payload is what the approver decides on; the decision — approved, modified, rejected — is recorded in the Case timeline, and a rejection is an overturn source for [Operational Metrics §5.4](../05-Metrics/operational_metrics.md).
 
-*   At **High** and **Critical** severity it is applied immediately, before the internal notification of [Detection & Analysis §3.2](02-detection_and_analysis.md#32-stakeholder--regulatory-notification) completes; the notified stakeholders confirm it afterwards or request its rollback.
-*   At **Low** and **Medium** severity it may be scheduled with the owner of the affected entity; the schedule is recorded on the Case.
+1.  **Context:** the Incident Category, the Case severity and confidence, the Incident's Impact, and in plain language why the Malicious hypothesis was proven — the score and the observations that carry it ([Detection & Analysis §2.4](02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence)).
+2.  **Evidence:** the observations, each with its tag and the event references and queries behind it.
+3.  **The action and its matrix entry:** what will be done, to which entity and what that entity is (for an identity: a person's account or a service identity), and the reason the matrix gives for requiring approval: the action's impact, the Incident's Impact and the confidence, the proportionality condition, a limit of the grant, or the reserved class.
+4.  **Blast radius:** the expected effect on operations, e.g., "disconnects the primary database server; the customer portal is unavailable until reconnected".
+5.  **Rollback:** the exact call, script or procedure that reverses the action, or the statement that it cannot be reversed.
 
-**Approval** is requested with the payload of [Agentic Guardrails §2](../07-Governance/agentic_guardrails.md#2-the-human-in-the-loop-hitl-presentation-payload) and recorded on the Case; once the action has run, its entry in the Case timeline names who approved it ([Case Schema §5](../02-Taxonomy/case_schema.md)). The approver is an organization policy knob that follows the action's impact: the SOC Manager by default, the owner of the service for High, the organization's crisis authority for Critical. The wait is measured as dwell time and excluded from containment time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies what the matrix allows and continues the investigation.
+The approver is an organization policy knob that follows the action's impact, e.g.: the owner of the service for High, the organization's crisis authority for Critical. The wait is measured as dwell time ([Operational Metrics §4](../05-Metrics/operational_metrics.md)). While approval is pending the executor applies what the matrix allows and continues the investigation.
 
 > **Example — an administrator's account and a domain controller.** A credential-theft Incident at High confidence and High Impact: an administrator's account authenticated to a domain controller from a host it never used. Disabling the account and ending its sessions are actions of Low impact, since it is a person's account and no service runs under it. That cell asks for Medium confidence, so the executor applies them. Isolating the domain controller stops the directory service, an action of Critical impact, which at High Impact requires approval.
 >

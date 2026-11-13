@@ -33,6 +33,24 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **07-Governance, 03-Processes, 01-Foundation:** wording aligned with DD-34 and DD-36. Agentic
+  Supervision §1 lists the question of a held Case among the situations that bring a person into
+  an autonomous Case, and §2 samples the Cases that exhausted their budget. Detection & Analysis
+  §2.4 and DD-34 lose the sentence on response-time targets. Definitions says a Case with
+  Informational severity is not an Incident, and that a VIP's identity is a critical entity with a
+  High confidentiality and integrity requirement. Incident Response §2.1 loses the SOC
+  Manager as default approver and the rule by which severity set the timing of an action the matrix
+  allows.
+
+- **03-Processes, 07-Governance:** the approval request is specified in Incident Response §2.1, for
+  every executor. The payload moves there from Agentic Guardrails §2, and the Guardrails' later
+  sections move up one number. The Guardrails' introduction loses the sentence that applied its
+  controls to any executor.
+
+- **05-Metrics:** MTTC runs from G1 to G4 and includes the time an action waits for approval. The
+  rule that excluded HITL Dwell Time from it is removed, in Operational Metrics §4 and §8, Incident
+  Response §2.1 and Agentic Supervision §1.
+
 - **04-Playbooks:** the investigation playbooks apply the near miss (DD-32): a proven Malicious
   hypothesis makes the Case an Incident only when the activity reached the environment. The Web
   App Exploitation playbook no longer tags an attack blocked at the WAF as Benign, and the Identity
@@ -44,9 +62,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   prove neither side and no discriminating query is left, the Case goes On Hold with verdict Unknown,
   its questions named and asked; each answer is an Observation, and the Case is resolved again. It
   closes as Insufficient Data only when no evidence that could prove either side can be obtained.
-  Urgency comes from response-time targets by severity. Agentic Guardrails §5 drops the
-  investigation timebox; Definitions gains an Insufficient Data entry; HITL Dwell Time counts the
-  time a Case waits On Hold.
+  Agentic Guardrails §4 drops the investigation timebox; Definitions gains an Insufficient Data
+  entry; HITL Dwell Time counts the time a Case waits On Hold.
 
 - **01-Foundation:** an Incident is Malicious activity that reached the environment (DD-32):
   something landed on a device, ran, persisted, was delivered to a person, or was gained. Malicious
@@ -92,7 +109,7 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 - **07-Governance:** the autonomy grant states its scope (Agentic Supervision §4, DD-36): the grant
   to close Cases SHOULD cover a Case whose scope includes a critical entity only when its closing
   verdict is at High confidence, and an organization may narrow it by entity class. Outside the grant the
-  executor proposes the closure and a person decides. Agentic Guardrails §3 points to the grant,
+  executor proposes the closure and a person decides. Agentic Guardrails §2 points to the grant,
   and HITL Dwell Time starts at the request to a person.
 
 - **04-Playbooks:** every Investigation & Response playbook opens its response section with one
@@ -102,8 +119,8 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   marks on containment actions are removed; where an action's class is not plain, the playbook says
   what decides its impact.
 
-- **07-Governance:** the approval payload states the reason the matrix gives (Agentic Guardrails
-  §2), and an autonomy grant may be limited to actions up to a given impact, by action or by time window
+- **07-Governance:** the approval payload states the reason the matrix gives (Incident Response
+  §2.1), and an autonomy grant may be limited to actions up to a given impact, by action or by time window
   (Agentic Supervision §4).
 
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
