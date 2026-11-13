@@ -2,7 +2,7 @@
 title: Design Decisions
 type: concept
 status: development
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -116,7 +116,7 @@ External standards and sources are credited in this registry once, per DD-12.
 
 ## DD-21: One Containment Autonomy Matrix
 
-- **Decision:** Containment autonomy is specified once, in [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment), keyed on three things: the Case's confidence, the Incident's Impact, and the action's own impact. The Guardrails govern how approval is requested and granted; the playbooks list the actions of each Incident Category; neither restates the matrix. *(Keys amended by [DD-35](#dd-35-containment-autonomy-weighs-the-risk-of-waiting-against-the-risk-of-acting): they were the reversibility of the action, the criticality of the entity it acts on, and the Case's confidence and severity.)*
+- **Decision:** Containment autonomy is specified once, in [Incident Response §2.1](../03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment), keyed on three things: the Case's confidence, the Incident's Impact, and the action's own impact. The playbooks list the actions of each Incident Category and do not restate the matrix. *(Keys amended by [DD-35](#dd-35-containment-autonomy-weighs-the-risk-of-waiting-against-the-risk-of-acting): they were the reversibility of the action, the criticality of the entity it acts on, and the Case's confidence and severity.)*
 - **Rationale:** The boundaries had been stated in three places with drifting lists, all keyed on the asset alone — so disabling a compromised administrator account was blocked for touching a domain controller, while the same action was pre-authorized on a workstation. Keying on what the action does to the entity's service lets fast, reversible actions run everywhere and reserves approval for the disruptive ones.
 - **Discarded alternatives:** asset-only boundaries (block reversible actions on the assets that most need them); a matrix per Incident Category in the playbooks (duplication and drift); autonomy by executor class (breaks executor neutrality — a human needs the same approval to shut down a production database).
 - **Revisit:** when OCSF standardizes a containment-action vocabulary.
@@ -207,9 +207,9 @@ External standards and sources are credited in this registry once, per DD-12.
 
 ## DD-34: An Undecided Case Is Held, Never Closed by a Clock
 
-- **Decision:** A Case whose Observations prove neither side (Detection & Analysis §2.4) goes On Hold with verdict Unknown once the executor has no discriminating query left to run. The questions whose answers could prove a side are named and asked; each answer is an Observation with a side and a confidence, and the Case is resolved again. It closes as Insufficient Data only when no evidence that could prove either side can be obtained. No clock closes a Case: urgency comes from response-time targets by severity, set by the organization, that escalate when missed. The investigation timebox is removed. Defined in [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
+- **Decision:** A Case whose Observations prove neither side (Detection & Analysis §2.4) goes On Hold with verdict Unknown once the executor has no discriminating query left to run. The questions whose answers could prove a side are named and asked; each answer is an Observation with a side and a confidence, and the Case is resolved again. It closes as Insufficient Data only when no evidence that could prove either side can be obtained. No clock closes a Case. The investigation timebox is removed. Defined in [Detection & Analysis §2.4](../03-Processes/02-detection_and_analysis.md#24-hypothesis-resolution-verdict-and-confidence).
 - **Rationale:** Closing at a timebox reported as closed a Case nobody had decided, and a source's console could show it as a False Positive. The verdict rests on the confidence of the evidence, so the missing evidence is what to ask for; a deadline adds none. On Hold is OCSF's status for an incident that requires information or a response from a person or a third party. Proposed on framework issue #36, with no objection since 14 October 2026.
-- **Discarded alternatives:** Insufficient Data at timebox or budget expiry (the status quo; a closed Case nobody decided); a watch window ending in a Benign close at Low confidence (weak evidence against low-and-slow activity, and nobody is asked); a handover at expiry (the person faces the same evidence); a forced Low-confidence verdict (a verdict the resolution rule rejects); Insufficient Data closed only by a person (a rule about the executor where the condition belongs to the evidence).
+- **Discarded alternatives:** Insufficient Data at timebox or budget expiry (the status quo; a closed Case nobody decided); a watch window ending in a Benign close at Low confidence (weak evidence against low-and-slow activity, and nobody is asked); assigning the Case to a person at expiry (the person faces the same evidence); a forced Low-confidence verdict (a verdict the resolution rule rejects); Insufficient Data closed only by a person (a rule about the executor where the condition belongs to the evidence).
 - **Revisit:** if adopters report Cases held without end because nobody answers.
 
 ## DD-35: Containment Autonomy Weighs the Risk of Waiting Against the Risk of Acting
