@@ -1,7 +1,7 @@
 ---
 title: 00-Generic Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: ANY
 mitre_ttps: []   # catch-all: selected when no category playbook applies
@@ -35,7 +35,7 @@ The catch-all has two jobs: resolve the Case, and recognize as early as possible
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an Incident of the category the evidence established; where a specialized playbook exists, re-classify and apply its actions. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an Incident of the category the evidence established; where a specialized playbook exists, re-classify and apply its actions. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Determine the blast radius — every entity the confirmed activity touched — then apply the least-disruptive isolating control on the confirmed entities: revoke the sessions and tokens of the identities involved (reversed by signing in again), isolate the affected workstations (reversed by reconnecting them), block the external IP addresses and domains at the perimeter (reversed by removing the rules).

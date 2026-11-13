@@ -1,7 +1,7 @@
 ---
 title: 01-Phishing / Social Engineering Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-01
 mitre_ttps:
@@ -36,14 +36,14 @@ Phishing is usually an entry vector, not the objective: the lure buys the advers
    * *Query 1:* What do the sender infrastructure and the payload say — authentication posture and alignment, a lookalike or newly registered sender domain, the detonation verdict of the URL or attachment ([Email message](../99-Shared/sub_enrichment_email_message.md))? → `Malicious (High)` when the detonation verdict is malicious, or a brand-lookalike domain carries a credential-harvesting page; `Malicious (Medium)` when authentication fails, the domain is newly registered, or the domain resembles an owned or partner brand without a harvesting payload — marketing senders resemble brands too; `Benign (Low)` when authentication passes from a domain with prior legitimate correspondence — a compromised partner mailbox passes every check.
    * *Query 2:* How many mailboxes received the same sender, subject, URL or attachment cluster, and how many reported it? → `Malicious (Low)` for a cluster across many mailboxes or several independent reports — graymail produces the same breadth; context for a single recipient — targeted fraud is not less suspicious for being narrow.
    * *Query 3:* Does the sanctioned phishing-simulation platform or the approved sender confirm the message and its payload as theirs, and is the detonation clean? → `Benign (High)` when the platform or the sender confirms the message and the payload and the detonation is clean — the explanation of the alert; `Benign (Medium)` when only the reporter later confirms the message as expected — a deceived reporter confirms the lure too; `Malicious (Low)` when the message claims to be a simulation or a known sender and is not.
-   * *Query 4:* Did any recipient click the URL, or did the attachment execute on any recipient's host (proxy, DNS and EDR telemetry)? → `Malicious (High)` on a click that reached the harvesting page or an execution; context when no recipient interacted or the gateway held the message — a blocked lure is still a lure; the answer sets the impact, not the side.
+   * *Query 4:* Did any recipient click the URL, or did the attachment execute on any recipient's host (proxy, DNS and EDR telemetry)? → `Malicious (High)` on a click that reached the harvesting page or an execution; context when no recipient interacted or the gateway held the message — a blocked lure is still a lure; the answer decides reach ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)) and impact, leaving the side unchanged.
    * *Query 5:* For recipients who clicked or submitted data, is there a subsequent anomalous sign-in, a new inbox rule, a new MFA method or a consent grant on their account ([Identity](../99-Shared/sub_enrichment_identity.md))? → `Malicious (High)` on any of these — and the re-classification trigger below; `Benign (Low)` when the account shows nothing new in the following 24 hours.
 
 **Re-classification pivots:** credentials submitted and used — a sign-in, a persistence action on the account (Query 5) → [IC-06 (Identity & Credential Attack)](06-identity_credential_attack.md); a fraud attempted through the mailbox → [IC-02 (Business Email Compromise)](02-bec.md); payload executed → [IC-05 (Commodity Malware / Loader)](05-commodity_malware.md).
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-01 (Phishing / Social Engineering)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-01 (Phishing / Social Engineering)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Quarantine the message cluster in every recipient mailbox (reversed by releasing the messages). Purging the cluster permanently — **requires approval**.

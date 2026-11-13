@@ -1,7 +1,7 @@
 ---
 title: 12-Resource Hijacking / Cryptojacking Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-12
 mitre_ttps:
@@ -46,7 +46,7 @@ Resource theft is usually the symptom of a credential compromise: the spend anom
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-12 (Resource Hijacking / Cryptojacking)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-12 (Resource Hijacking / Cryptojacking)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Revoke the compromised keys and disable the compromised principals (reversed by issuing new keys or re-enabling the principal). For a service identity, the service that runs under it decides the impact.

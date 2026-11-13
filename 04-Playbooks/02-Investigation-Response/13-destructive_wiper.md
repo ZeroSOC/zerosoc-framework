@@ -1,7 +1,7 @@
 ---
 title: 13-Destructive / Wiper Attack Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-13
 mitre_ttps:
@@ -45,7 +45,7 @@ Wipers often masquerade as ransomware; the discriminator matters because communi
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-13 (Destructive / Wiper Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. The order matters: the backups are protected before anything else.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-13 (Destructive / Wiper Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. The order matters: the backups are protected before anything else.
 
 ### Containment
 *   Protect the backup infrastructure first: sever replication from the affected zones and revoke the credentials and sessions of the identities confirmed in the attack path that reach the backup system (reversed by re-enabling replication and issuing new credentials). Revoking every credential that reaches the backup system is one action on many identities. Isolating the backup servers themselves from the network is rated by what the backup service supports; where it requires approval, that approval is requested first.

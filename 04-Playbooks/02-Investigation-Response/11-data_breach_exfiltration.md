@@ -1,7 +1,7 @@
 ---
 title: 11-Data Breach / Exfiltration Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-11
 mitre_ttps:
@@ -46,7 +46,7 @@ Exfiltration is defined by the *act of removal*, regardless of actor: the same p
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-11 (Data Breach / Exfiltration)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-11 (Data Breach / Exfiltration)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Block the destination and the egress channel at the perimeter, the proxy and the DLP (reversed by removing the rules).

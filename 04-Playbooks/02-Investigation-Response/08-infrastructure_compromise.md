@@ -1,7 +1,7 @@
 ---
 title: 08-Infrastructure Compromise Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-08
 mitre_ttps:
@@ -51,7 +51,7 @@ Infrastructure carries trust the adversary wants to inherit. Edge devices are bo
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-08 (Infrastructure Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-08 (Infrastructure Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Cut the external management interfaces and restrict the management plane to the jump host or the management network (reversed by restoring the interfaces); the system keeps serving.

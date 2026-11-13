@@ -1,7 +1,7 @@
 ---
 title: 02-Business Email Compromise (BEC) Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-02
 mitre_ttps:
@@ -42,7 +42,7 @@ BEC is an objective category: the mailbox is the instrument and the payment or t
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-02 (Business Email Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-02 (Business Email Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Disable the compromised identity and revoke all its refresh and session tokens (reversed by re-enabling it and signing in again). For a shared or service mailbox identity, the business process that runs under it decides the impact.

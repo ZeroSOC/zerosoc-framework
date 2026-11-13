@@ -2,7 +2,7 @@
 title: Phase 2 - Detection & Analysis
 type: process
 status: development
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -31,7 +31,9 @@ graph TD
     Playbooks --> Resolve{Resolve: score both sides}
     Resolve -->|"Benign proven, or duplicate of an open Case"| CloseI[Close the Case: False Positive / Benign / Duplicate]
     Resolve -->|"Neither proven: remaining queries, then On Hold with its questions asked"| Playbooks
-    Resolve -->|"Malicious proven"| Assess[Re-assess severity, confidence and category; estimate impact]
+    Resolve -->|"Malicious proven"| Reach{Reached the environment?}
+    Reach -->|"No: near miss"| CloseN[Close the Case: near miss, severity Informational]
+    Reach -->|Yes| Assess[Re-assess severity, confidence and category; estimate impact]
     Assess --> Reclass{Category changed?}
     Reclass -->|"Yes: re-classify"| Playbooks
     Reclass -->|No| PlanR[Plan the initial response actions]
@@ -258,7 +260,7 @@ Every observation — an alert, a tagged Triage Note Observation (§1.6) or a qu
 | Outcome | Verdict (`verdict_id`) | Confidence (`confidence_id`) | Next step |
 |---|---|---|---|
 | Benign proven | False Positive (`1`) if the detection was wrong; Benign Positive (`5`) if the activity was authorized | the highest confidence on the Benign side, minus one level for residual Low-confidence Malicious observations | Close; a False Positive raises a `tuning` ticket to Phase 1, a Benign an `exception` ticket unless the Knowledge Base already holds the exception (§1.5); a Low-confidence close carries a monitoring watch and is flagged for QA sampling |
-| Malicious proven (and Benign not) | True Positive (`2`) | the highest confidence on the Malicious side, resolved again in §2.5 | Confirm the Incident (§2.5); containment autonomy keys on its confidence ([Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment)) |
+| Malicious proven (and Benign not) | True Positive (`2`) | the highest confidence on the Malicious side, resolved again in §2.5 | Assess reach (§2.5): confirm the Incident, or close the Case as a near miss; containment autonomy keys on its confidence ([Incident Response §2.1](03-response.md#21-risk-based-autonomy-matrix-for-containment)) |
 | The activity is already handled by an open master Case (§1.5 duplicate criteria met) | Duplicate (`10`) | — | Close; evidence merged into the master Case |
 | Neither proven | none — **insufficient data** | — | Run the remaining discriminating queries, listed or added. When none is left that the executor can run, the Case goes **On Hold** with verdict Unknown (`0`): the questions whose answers could prove a side are named and asked of whoever can answer them. Each answer is an Observation, tagged with a side and a confidence like any check, and the Case returns to In Progress to be resolved again. The Case closes as Insufficient Data (`7`) when no evidence that could prove either side can be obtained: every open question has been answered that the evidence does not exist or cannot be reached, an answer that adds no Observation. It closes with a monitoring watch (re-open on recurrence of the entities; active monitoring for the retention window at High/Critical severity) and a visibility or tuning ticket |
 

@@ -1,7 +1,7 @@
 ---
 title: 03-Ransomware & Digital Extortion Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-03
 mitre_ttps:
@@ -43,7 +43,7 @@ Ransomware is an objective category: by the time encryption is visible the adver
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-03 (Ransomware & Digital Extortion)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-03 (Ransomware & Digital Extortion)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Isolate the suspected patient zero and every infected workstation from the network through the EDR or network controls, keeping them powered on for forensics (reversed by reconnecting them). A production server, file server, hypervisor, domain controller or the backup infrastructure itself is isolated the same way; what depends on it decides the action's impact.

@@ -1,7 +1,7 @@
 ---
 title: 10-Supply-Chain Compromise Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-10
 mitre_ttps:
@@ -47,7 +47,7 @@ This is a trust inversion: the malicious artifact arrives through a channel the 
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-10 (Supply-Chain Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-10 (Supply-Chain Compromise)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Quarantine the affected package version on hosts where a prior version or an alternative keeps the service running (reversed by releasing it). Blocking or removing it fleet-wide is one action on many entities, and where the removal stops a service, that service decides the impact.
