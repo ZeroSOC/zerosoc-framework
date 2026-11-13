@@ -1,7 +1,7 @@
 ---
 title: 15-AI/ML System Attack Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-15
 mitre_ttps:
@@ -47,14 +47,14 @@ Three attack surfaces share this category: the model's inputs (prompt injection,
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-15 (AI/ML System Attack)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-15 (AI/ML System Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Revoke the offending API keys and suspend the offending clients (reversed by issuing new keys or re-enabling the client). Suspending a key or identity the production application runs under — **requires approval**.
+*   Revoke the offending API keys and suspend the offending clients (reversed by issuing new keys or re-enabling the client). For a key or identity the production application runs under, that application decides the impact.
 *   Rate-limit the inference API for the offending clients (reversed by lifting the limit).
-*   Tighten the input and output filters at the model gateway, and constrain or suspend the target agent's tool permissions (reversed by restoring them). Removing a tool a critical production workflow depends on — **requires approval**.
+*   Tighten the input and output filters at the model gateway, and constrain or suspend the target agent's tool permissions (reversed by restoring them). Where a production workflow depends on a tool, that workflow decides the impact of removing it.
 *   Quarantine the documents or retrieval sources carrying the injected content (reversed by releasing them).
-*   Taking the AI service or the model endpoint offline, or disabling the target agent — **requires approval**.
+*   Taking the AI service or the model endpoint offline, or disabling the target agent, stops that service: what depends on it decides the impact.
 
 ### Eradication
 *   Enumerate every tool call and action of the manipulated session and reverse each one — messages sent, records changed, transactions submitted. A reversal that is itself irreversible or touches many records — **requires approval**.
@@ -75,7 +75,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-15 (AI/ML System Att
 
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 5 and Query 6 executed, or with Query 2 unanswered for a session that carried an injection pattern.
-*   A model endpoint taken offline, a production model rolled back, training data purged or a production key suspended without approval.
+*   A production model rolled back or training data purged without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   A retrain performed before the poisoned data or artifacts are identified and purged, or a rollback to a version whose hash was not verified against the pipeline's recorded output.
 *   Regulated data confirmed disclosed through outputs and the Case closed without the §3.2 regulatory notification triggered.
 *   Closure with a manipulated target agent's actions not enumerated and reversed, or leaving injected content in the retrieval corpus — a confirmed foothold.

@@ -1,7 +1,7 @@
 ---
 title: 00-Generic Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: ANY
 mitre_ttps: []   # catch-all: selected when no category playbook applies
@@ -35,12 +35,12 @@ The catch-all has two jobs: resolve the Case, and recognize as early as possible
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an Incident of the category the evidence established; where a specialized playbook exists, re-classify and apply its actions. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an Incident of the category the evidence established; where a specialized playbook exists, re-classify and apply its actions. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Determine the blast radius — every entity the confirmed activity touched — then apply the least-disruptive isolating control on the confirmed entities: revoke the sessions and tokens of the identities involved (reversed by signing in again), isolate the affected workstations (reversed by reconnecting them), block the external IP addresses and domains at the perimeter (reversed by removing the rules).
-*   Isolating a production server, a database, a domain controller or any other Crown Jewel, or an entire subnet, VLAN or cloud network — **requires approval**.
-*   Disabling an identity a critical service runs under, or blocklisting a partner or customer network — **requires approval**.
+*   Isolate a server, a database or a domain controller, or an entire subnet, VLAN or cloud network, where the lighter controls do not hold the threat: what depends on the entity decides the action's impact.
+*   For an identity a service runs under, that service decides the impact of disabling it; blocking a partner or customer network is rated by what runs over that connection.
 
 ### Eradication
 *   Identify all malicious artifacts — files, scheduled tasks, registry keys, services, backdoors, added credentials, grants or rules — from the Case timeline, remove them, and patch or close the initial vector.
@@ -60,7 +60,7 @@ Once the Malicious hypothesis is proven, the Case is an Incident of the category
 *   Techniques that cluster into a category with a specialized playbook not re-classified when the pivot applies.
 *   Eradicating or remediating an affected system before its malicious artifacts and initial vector are identified and recorded.
 *   Lifting containment before eradication is confirmed complete — closure leaving a confirmed foothold.
-*   Isolation of a Crown Jewel or a network segment, a reset beyond the confirmed identities, or a wipe or re-image applied without approval.
+*   A reset beyond the confirmed identities, a wipe or a re-image applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 
 ## Hunting Pivots
 

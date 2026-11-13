@@ -2,7 +2,7 @@
 title: Framework Manifest
 type: concept
 status: development
-last_updated: 2026-11-05
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -35,7 +35,7 @@ Human readability and actionability are therefore **conformance properties**, no
 
 ### Tier-less Operating Model
 
-The operating model is **tier-less by design**. There are no Tier 1/2/3 ranks and no escalation by seniority: the framework's functions (see [Definitions §6](definitions.md#6-executors-and-functions)) are specialized peer functions, work is routed by skill and by risk through explicit handover boundaries, and the executor that takes a Case owns it to conclusion. Tiered handovers degrade investigative context and stretch response times; they concentrate automatable toil on entry-level staff; and once front-line triage is absorbed by automation and agents, the base of the pyramid is an automation boundary, not an organizational layer.
+The operating model is **tier-less by design**. There are no Tier 1/2/3 ranks and no escalation by seniority: the framework's functions (see [Definitions §6](definitions.md#6-executors-and-functions)) are specialized peer functions, work is routed by skill and by risk, and the executor that takes a Case owns it to conclusion. Tiered handovers degrade investigative context and stretch response times; they concentrate automatable toil on entry-level staff; and once front-line triage is absorbed by automation and agents, the base of the pyramid is an automation boundary, not an organizational layer.
 
 The same discipline applies software-engineering practice to operations: teams balance their time between running operations and engineering away the toil that operations generate, so recurring manual work is eliminated rather than redistributed.
 

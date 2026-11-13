@@ -59,6 +59,38 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   meaning, a Case waiting on information or a response from a person or a third party. Incident Response marks G5
   and G6, and Phase 4 gains §6, *Closing the Case*.
 
+- **03-Processes:** the containment autonomy matrix of Incident Response §2.1 weighs the risk of
+  waiting for a person against the risk of acting (DD-21 amended, DD-35). One table gives, for the
+  action's own impact (five classes from None to Critical) and the Incident's Impact, the lowest
+  confidence at which a containment action is applied without approval. An organization
+  may add approvals: reserved entity classes, a limited grant, stricter cells. The
+  matrix replaces the lists of pre-authorized and approval-requiring actions and the rule that
+  every containment action requires approval at Low confidence. An eradication or recovery action
+  that destroys what the organization holds requires approval (§3).
+
+- **01-Foundation:** *critical entity* is a defined term: an asset or identity with a High
+  requirement on confidentiality, integrity or availability, which a privileged identity is by
+  definition. It replaces the earlier name for a business-critical asset across the framework.
+  Definitions §7 Confidence describes evidence only; what a level allows without approval is in
+  Incident Response §2.1.
+
+- **07-Governance:** the autonomy grant states its scope (Agentic Supervision §4, DD-36): the grant
+  to close Cases SHOULD cover a Case whose scope includes a critical entity only when its closing
+  verdict is at High confidence, and an organization may narrow it by entity class. Outside the grant the
+  executor proposes the closure and a person decides. Agentic Guardrails §3 points to the grant,
+  and HITL Dwell Time starts at the request to a person.
+
+- **04-Playbooks:** every Investigation & Response playbook opens its response section with one
+  rule (Playbook Architecture §4.2): containment actions are applied under the autonomy matrix, and
+  a **requires approval** mark stays only on an eradication or recovery action that destroys
+  what the organization holds, or resets credentials beyond the confirmed scope. The
+  marks on containment actions are removed; where an action's class is not plain, the playbook says
+  what decides its impact.
+
+- **07-Governance:** the approval payload states the reason the matrix gives (Agentic Guardrails
+  §2), and an autonomy grant may be limited to actions up to a given impact, by action or by time window
+  (Agentic Supervision §4).
+
 - **03-Processes:** at incident confirmation (§2.5), each technique is recorded under the tactic its
   use served in this Incident, judged from the attack path and the context the investigation
   established. A technique ATT&CK lists under several tactics is recorded under more than one only
@@ -101,13 +133,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 - **03-Processes:** Investigation gains §2.5, *Incident Confirmation*, between the resolution of
   §2.4 and the Investigation Note, which is now §2.6. When the Malicious hypothesis is proven the
-  executor re-assesses severity, confidence and Incident Category, estimates the impact, and plans
+  executor re-assesses severity and Incident Category, estimates the impact, and plans
   the initial response actions from the source's recommendations, the category's playbook and its
   own judgment, dropping redundant ones. Setting `verdict_id = 2` and recording the category,
   techniques and T0 move here from §3.1, which keeps significance, the retrospective sweep and the
   hand-off to Response. Response starts from the planned actions, and the Investigation → Response
-  contract carries them in place of the playbook's list. The Case's confidence is re-assessed at
-  confirmation instead of staying the highest on the proven side.
+  contract carries them in place of the playbook's list. The Case's confidence at confirmation is
+  the resolution rule's, applied again to the Observations that stand.
 
 - **03-Processes:** checking whether the Case changed while it was being worked on, before a gate
   decision, is a MUST. Before resolving, Investigation checks for alerts that joined the Case after
@@ -148,6 +180,11 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   answered and could not get (§1.2). §1.1 and the *Before deciding* list of §1.2 are shorter.
 
 ### Removed
+
+- **01-Foundation, 02-Taxonomy, 07-Governance, 05-Metrics:** the handover and the `handover_reason`
+  field (DD-36). No rule makes a Case's assignee a human: any executor may take a Case over, and the
+  change of assignee is a lifecycle event. The scope of the autonomy grant takes its place, and the
+  Proposed Closure Rate replaces the Handover Rate in Operational Metrics §6.2.
 
 - **03-Processes:** the two "former elements" paragraphs of the Triage Note and the Investigation
   Note, which described an earlier version of the Notes.

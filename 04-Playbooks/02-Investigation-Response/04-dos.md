@@ -1,7 +1,7 @@
 ---
 title: 04-Denial of Service Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-04
 mitre_ttps:
@@ -42,12 +42,12 @@ IC-04 is the one Incident Category where the Containment, Eradication and Recove
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-04 (Denial of Service)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-04 (Denial of Service)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
-*   Apply rate limiting, geographic and autonomous-system blocks, and WAF and CDN filtering rules against the identified flood signature and sources (reversed by removing the rules). Blocklisting a partner or customer network found among the sources — **requires approval**.
-*   Activate the scrubbing or anycast mitigation of the CDN or DDoS-mitigation provider for volumetric floods beyond local absorption capacity (reversed by deactivating it). Changing the network's routing or route announcements to divert the traffic, or requesting upstream filtering that covers a whole prefix — **requires approval**.
-*   Fail over to alternate capacity to preserve service for legitimate users (reversed by failing back). Replacing a revenue-critical service with a maintenance or static page — **requires approval**.
+*   Apply rate limiting, geographic and autonomous-system blocks, and WAF and CDN filtering rules against the identified flood signature and sources (reversed by removing the rules). Blocking a partner or customer network found among the sources is rated by what runs over that connection.
+*   Activate the scrubbing or anycast mitigation of the CDN or DDoS-mitigation provider for volumetric floods beyond local absorption capacity (reversed by deactivating it). Changing the network's routing or route announcements to divert the traffic, or requesting upstream filtering that covers a whole prefix, acts on everything the prefix carries.
+*   Fail over to alternate capacity to preserve service for legitimate users (reversed by failing back). Replacing a service with a maintenance or static page stops that service: its availability requirement decides the impact.
 
 ### Eradication
 *   Sustain the upstream filtering for the duration of the attack; there is no artifact to remove, only pressure to outlast.
@@ -64,7 +64,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-04 (Denial of Servic
 
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 3 or Query 6 executed.
-*   An upstream ISP engagement, a routing change, the blocklisting of a partner or customer network, or the replacement of a revenue-critical service with a maintenance page applied without approval.
+*   A routing change, a block on a partner or customer network, the replacement of a service with a maintenance page or any other containment action applied without the approval the autonomy matrix requires.
 *   Lifting mitigation in a single step rather than in stages, without monitoring for resumption before each next step.
 *   A received extortion demand not preserved and not recorded in the Investigation Note.
 *   Systems or data found destroyed not re-classified when the pivot applies.

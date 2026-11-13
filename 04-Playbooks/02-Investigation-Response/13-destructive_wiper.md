@@ -1,7 +1,7 @@
 ---
 title: 13-Destructive / Wiper Attack Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-13
 mitre_ttps:
@@ -45,13 +45,13 @@ Wipers often masquerade as ransomware; the discriminator matters because communi
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-13 (Destructive / Wiper Attack)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence. The order matters: the backups are protected before anything else.
+Once the Malicious hypothesis is proven, the Case is an `IC-13 (Destructive / Wiper Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. The order matters: the backups are protected before anything else.
 
 ### Containment
-*   Protect the backup infrastructure first: sever replication from the affected zones and revoke the credentials and sessions of the identities confirmed in the attack path that reach the backup system (reversed by re-enabling replication and issuing new credentials). Revoking every credential that reaches the backup system, many identities at once — **requires approval**. Isolating the backup servers themselves from the network — **requires approval**, requested before any other approval-tier action.
-*   Disable the abused deployment mechanism: unlink the group policy object, pause the deployment jobs, revoke the management-plane session (reversed by re-linking or resuming). Disabling the service identity the deployment platform runs under — **requires approval**.
-*   Disable the identities that pushed the destructive binary and revoke their sessions (reversed by re-enabling). A reset or disablement of many identities at once — **requires approval**.
-*   Isolate the affected end-user workstations (reversed by reconnecting). Isolating a production server, hypervisor or domain controller — **requires approval**. Isolating an entire segment, VLAN or cloud network — **requires approval**.
+*   Protect the backup infrastructure first: sever replication from the affected zones and revoke the credentials and sessions of the identities confirmed in the attack path that reach the backup system (reversed by re-enabling replication and issuing new credentials). Revoking every credential that reaches the backup system is one action on many identities. Isolating the backup servers themselves from the network is rated by what the backup service supports; where it requires approval, that approval is requested first.
+*   Disable the abused deployment mechanism: unlink the group policy object, pause the deployment jobs, revoke the management-plane session (reversed by re-linking or resuming). For the service identity the deployment platform runs under, that platform decides the impact.
+*   Disable the identities that pushed the destructive binary and revoke their sessions (reversed by re-enabling). Disabling many identities at once is one action on all of them. A reset beyond the confirmed identities — **requires approval**.
+*   Isolate the affected end-user workstations (reversed by reconnecting). A production server, hypervisor or domain controller is isolated the same way, and what depends on it decides the impact; isolating an entire segment, VLAN or cloud network is an action on that segment.
 *   Block the staging and command-and-control destinations at egress (reversed by removing the rule) and quarantine the destructive binary wherever it is staged but not yet triggered (reversed by releasing it).
 
 ### Eradication
@@ -72,7 +72,7 @@ Once the Malicious hypothesis is proven, the Case is an `IC-13 (Destructive / Wi
 **Critical failures** (auto-fail conditions for [QA sampling](../../07-Governance/agentic_supervision.md)):
 *   A Benign close without Query 3 executed, or with Query 4 unanswered for the backup infrastructure.
 *   A verdict emitted without the wiper-vs-ransomware discriminator recorded, or not re-classified to IC-03 when the pivot applies.
-*   Segment isolation, the isolation of a domain controller, deployment server, hypervisor or backup server, a domain-wide credential reset or a re-image applied without approval.
+*   A domain-wide credential reset or a re-image applied without approval, or a containment action applied without the approval the autonomy matrix requires.
 *   Segment isolation applied before the backup infrastructure is protected (replication severed, access revoked).
 *   A system restored or reconnected before its integrity and the backup's integrity are verified, or closure leaving a staged payload or the deployment-infrastructure access in place — a confirmed foothold.
 

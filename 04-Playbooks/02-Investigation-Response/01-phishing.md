@@ -1,7 +1,7 @@
 ---
 title: 01-Phishing / Social Engineering Investigation & Response
 type: playbook
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 incident_category: IC-01
 mitre_ttps:
@@ -43,7 +43,7 @@ Phishing is usually an entry vector, not the objective: the lure buys the advers
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-01 (Phishing / Social Engineering)` Incident. Actions marked **requires approval** fall in the approval tier of the autonomy matrix; every other action is pre-authorized, subject to the Case confidence.
+Once the Malicious hypothesis is proven, the Case is an `IC-01 (Phishing / Social Engineering)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Quarantine the message cluster in every recipient mailbox (reversed by releasing the messages). Purging the cluster permanently — **requires approval**.

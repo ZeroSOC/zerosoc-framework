@@ -1,7 +1,7 @@
 ---
 title: Triage Note Template
 type: template
-last_updated: 2026-10-23
+last_updated: 2026-11-12
 license: Apache-2.0
 status: draft
 ---
@@ -88,7 +88,7 @@ The one Benign observation (3) weighs 1 and does not exceed the alert's own weig
 | # | Observation | Tag | Produced by | Event ref |
 |---|---|---|---|---|
 | O1 | Unsanctioned SaaS app usage: `j.doe` → AI assistant, content posted over the corporate network path. No technique asserted; no threat name; no entity remediated — the session was recorded, not blocked. Tool reports no confidence; severity Low → Low. | `Malicious (Low)` | SaaS discovery control | `DF-4711-001` |
-| O2 | `j.doe` is a standard-privilege user in Marketing, within normal working hours; the endpoint is a managed laptop, not a Crown Jewel. | context | CMDB and identity directory lookup | `EVT-4711-003`, `EVT-4711-004` |
+| O2 | `j.doe` is a standard-privilege user in Marketing, within normal working hours; the endpoint is a managed laptop; neither is a critical entity. | context | CMDB and identity directory lookup | `EVT-4711-003`, `EVT-4711-004` |
 | O3 | Access over the normal corporate network path: no VPN bypass, no private browsing session. | `Benign (Low)` | Session detail on the alert record | `DF-4711-001` |
 | O4 | Destination is a well-known AI assistant with a non-malicious reputation. Reputation does not bear on the hypothesis: the concern is the data posted, not the destination. | context | Multi-engine reputation lookup | `DF-4711-002` |
 | O5 | No approved exception in the Knowledge Base for this user or application; no prior Cases for the user, the endpoint or the alert type. | context | Knowledge Base and active-Cases query | `EVT-4711-005` |

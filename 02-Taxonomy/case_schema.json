@@ -814,14 +814,6 @@
             }
           }
         },
-        "handover_reason": {
-          "type": "string",
-          "enum": [
-            "crown-jewel",
-            "privileged-identity",
-            "manual"
-          ]
-        },
         "watch_until": {
           "type": "integer",
           "description": "OCSF timestamp_t: monitoring watch on the Case's entities after an Insufficient Data or Low-confidence close."

@@ -2,7 +2,7 @@
 title: ZeroSOC Framework Contributing Guidelines
 type: policy
 status: development
-last_updated: 2026-09-24
+last_updated: 2026-11-12
 license: Apache-2.0
 ---
 
@@ -30,7 +30,7 @@ The [Framework Manifest](01-Foundation/framework_manifest.md) states the princip
 
 1. **Playbooks** ([Playbook Architecture](04-Playbooks/playbook_architecture.md) is the normative structure):
    *   **Triage playbooks** (`04-Playbooks/01-Triage/`), by telemetry domain: per alert type, the entities to enrich, the **checks** and what each result is evidence of (tagged), the **False Positive conditions** (the detection misfires) kept apart from the **Benign conditions** (authorized activity), and the candidate categories.
-   *   **Investigation & Response playbooks** (`04-Playbooks/02-Investigation-Response/`), by Incident Category: the Malicious and Benign hypotheses; validation queries that state **both outcomes** in the observation tags, including at least one query that yields the `Benign (High)` observation explaining the alerts; containment, eradication and recovery with approval-tier actions marked per [Incident Response §2.1](03-Processes/03-response.md#21-risk-based-autonomy-matrix-for-containment); completion criteria and critical failures.
+   *   **Investigation & Response playbooks** (`04-Playbooks/02-Investigation-Response/`), by Incident Category: the Malicious and Benign hypotheses; validation queries that state **both outcomes** in the observation tags, including at least one query that yields the `Benign (High)` observation explaining the alerts; containment, eradication and recovery, with **requires approval** marked as [Playbook Architecture §4.2](04-Playbooks/playbook_architecture.md#4-playbook-templates-mandatory-sections) states; completion criteria and critical failures.
    *   **Shared enrichment** (`04-Playbooks/99-Shared/`): per-entity enrichment content with a Produces block.
 2. **Taxonomies and vocabulary:** new Alert Types, refinements to Incident Categories, terms in Definitions.
 3. **Processes and metrics:** the lifecycle phases, the evidence model, the [Operational Metrics](05-Metrics/operational_metrics.md).
