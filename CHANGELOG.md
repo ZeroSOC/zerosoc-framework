@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 ---
 
@@ -32,6 +32,13 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
   it; for any other Alert the executor identifies it at reception.
 
 ### Changed
+
+- **04-Playbooks:** the investigation playbooks apply the near miss (DD-32): a proven Malicious
+  hypothesis makes the Case an Incident only when the activity reached the environment. The Web
+  App Exploitation playbook no longer tags an attack blocked at the WAF as Benign, and the Identity
+  triage playbook no longer closes a rejected legacy-protocol attempt as a False Positive because
+  it was blocked. Detection & Analysis shows the near-miss branch in its flowchart and resolution
+  table, and the Email triage check on how far a message spread is renamed *Spread and interaction*.
 
 - **03-Processes:** an undecided Case is held, never closed by a clock (DD-34). When its Observations
   prove neither side and no discriminating query is left, the Case goes On Hold with verdict Unknown,

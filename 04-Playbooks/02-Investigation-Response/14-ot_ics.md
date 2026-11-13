@@ -1,7 +1,7 @@
 ---
 title: 14-OT/ICS Attack Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-14
 mitre_ttps:
@@ -48,7 +48,7 @@ OT incidents carry physical-safety consequences. The investigation works from th
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-14 (OT/ICS Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. Every action on the control side is applied per the plant's operating procedures, with the process engineer.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-14 (OT/ICS Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope. Every action on the control side is applied per the plant's operating procedures, with the process engineer.
 
 ### Containment
 *   IT-side first: isolate the engineering workstation on its IT interface (reversed by reconnecting). Isolating an HMI, or any host whose loss removes the operators' view of or control over the process, is rated by that process.

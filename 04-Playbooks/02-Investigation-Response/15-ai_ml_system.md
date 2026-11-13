@@ -1,7 +1,7 @@
 ---
 title: 15-AI/ML System Attack Investigation & Response
 type: playbook
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 license: Apache-2.0
 incident_category: IC-15
 mitre_ttps:
@@ -47,7 +47,7 @@ Three attack surfaces share this category: the model's inputs (prompt injection,
 
 ## Incident Response
 
-Once the Malicious hypothesis is proven, the Case is an `IC-15 (AI/ML System Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
+Once the Malicious hypothesis is proven and the activity reached the environment ([Detection & Analysis §2.5](../../03-Processes/02-detection_and_analysis.md#25-incident-confirmation)), the Case is an `IC-15 (AI/ML System Attack)` Incident. Containment actions are applied under the autonomy matrix of Incident Response §2.1, which decides from the Case's confidence, the Incident's Impact and the action's own impact whether each requires approval; an eradication or recovery action marked **requires approval** destroys what the organization holds, or resets credentials beyond the confirmed scope.
 
 ### Containment
 *   Revoke the offending API keys and suspend the offending clients (reversed by issuing new keys or re-enabling the client). For a key or identity the production application runs under, that application decides the impact.
