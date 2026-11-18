@@ -2,7 +2,7 @@
 title: Phase 4 - Post-Incident Activity
 type: process
 status: draft
-last_updated: 2026-11-12
+last_updated: 2026-11-18
 license: Apache-2.0
 ---
 
@@ -42,10 +42,10 @@ graph TD
 
 A Post-Incident Review is mandatory for:
 
-*   every confirmed Incident that was responded to in [Phase 3](03-response.md); Incidents discovered by threat hunting or out-of-band intake are confirmed detection false negatives and always include the missed-detection walk of §3;
+*   every High or Critical Incident that was responded to in [Phase 3](03-response.md); Incidents discovered by threat hunting or out-of-band intake are confirmed detection false negatives and always include the missed-detection walk of §3;
 *   every False Positive that caused a critical business disruption, such as a containment action applied on a Case later closed as False Positive and rolled back.
 
-An organization may extend the criteria, for example to every Case closed as Insufficient Data whose monitoring watch fired.
+Low and Medium Incidents are reviewed together monthly (a reference cadence), for what recurs across them.
 
 The [SOC Manager](../01-Foundation/definitions.md#6-executors-and-functions) convenes the review; the Case assignee presents the Case; the Detection Engineer receives the detection and telemetry action items. Organizations map their own titles onto these functions.
 

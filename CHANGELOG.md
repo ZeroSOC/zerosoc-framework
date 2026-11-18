@@ -33,6 +33,9 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **03-Processes:** Post-Incident Activity §1 makes the review mandatory for High and Critical
+  Incidents; Low and Medium Incidents are reviewed together monthly, a reference cadence, for what
+  recurs across them.
 - **01-Foundation:** DD-23 to DD-36 shortened to the decision, the reason and the alternatives
   that were weighed; what the documents already state is left to them, and DD-05, DD-07 and DD-21
   lose their notes on later amendments. Definitions, the Case Schema and Operational Metrics no
