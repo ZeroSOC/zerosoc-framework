@@ -2,7 +2,7 @@
 title: Definitions
 type: concept
 status: development
-last_updated: 2026-11-13
+last_updated: 2026-11-18
 license: Apache-2.0
 ---
 
@@ -101,7 +101,6 @@ A broader, administrative workspace used to manage the investigative workflow. I
 A Case whose verdict is **Malicious** and whose activity **reached the environment**, and so can harm the organization's assets or compromise its operations: something landed on a device, ran, persisted, was delivered to a person, or was gained. Activity held in a gateway's quarantine, a sandbox or a decoy has not reached the environment.
 *   **Context:** An Incident requires response: its scope is confirmed, what a control already did is verified, and containment, eradication and recovery apply where something remains. It always produces lessons learned. Confirming an Incident shifts the workflow from *investigation* to *Incident Response (IR)*. Malicious activity that did not reach the environment is a **near miss**.
 *   **OCSF Mapping:** The **same class as a Case** — [Incident Finding [2005]](https://schema.ocsf.io/1.9.0/classes/incident_finding) — discriminated by **`verdict_id`** and **`severity_id`**. A Case becomes a confirmed Security Incident when **`verdict_id = 2` (True Positive)** and `severity_id` is Low (`2`) to Critical (`5`) (optionally `is_suspected_breach = true`); this is the promotion gate into Phase 3. Other key attributes: `priority_id`, `impact_id`, `status_id`, and `assignee` / `src_url` (ticketing links). A Case closed without becoming an Incident carries `severity_id` Informational (`1`) and `verdict_id` False Positive (`1`), Benign (`5`), True Positive (`2`) for a near miss, Insufficient Data (`7`) or Duplicate (`10`).
-*   **Reference:** the sources and where this definition departs from them are recorded in [DD-32](design_decisions.md#dd-32-an-incident-is-malicious-activity-that-reached-the-environment).
 
 ### Near miss
 A Case whose verdict is **Malicious** but whose activity did not reach the environment: nothing landed on a device, ran, persisted, was delivered to a person, or was gained. It closes without response and is not an Incident.

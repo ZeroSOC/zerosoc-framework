@@ -2,7 +2,7 @@
 title: Case Schema
 type: concept
 status: draft
-last_updated: 2026-11-12
+last_updated: 2026-11-18
 license: Apache-2.0
 ---
 
@@ -120,7 +120,7 @@ OCSF constrains none of this and no published convention maps it to OCSF, so an 
 
 ## 4. Framework Fields
 
-Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` object, the attribute of the ZeroSOC extension to OCSF ([DD-23](../01-Foundation/design_decisions.md#dd-23-native-ocsf-mapping-preferred-over-framework-extensions)), and validated in the [JSON Schema](case_schema.json). The Case, its Observations (§3) and the tickets it raises carry the same object, and each attribute applies to one of them.
+Concepts with no home in the current OCSF release. Each is declared under a single `zerosoc` object, the attribute of the ZeroSOC extension to OCSF, and validated in the [JSON Schema](case_schema.json). The Case, its Observations (§3) and the tickets it raises carry the same object, and each attribute applies to one of them.
 
 | Field | Values | Set in | Meaning |
 |---|---|---|---|

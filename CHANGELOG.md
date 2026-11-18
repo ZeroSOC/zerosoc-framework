@@ -1,7 +1,7 @@
 ---
 title: Changelog
 type: log
-last_updated: 2026-11-13
+last_updated: 2026-11-18
 license: Apache-2.0
 ---
 
@@ -33,6 +33,10 @@ All notable changes to the ZeroSOC Framework are documented in this file. The fo
 
 ### Changed
 
+- **01-Foundation:** DD-23 to DD-36 shortened to the decision, the reason and the alternatives
+  that were weighed; what the documents already state is left to them, and DD-05, DD-07 and DD-21
+  lose their notes on later amendments. Definitions, the Case Schema and Operational Metrics no
+  longer link to the registry.
 - **07-Governance, 03-Processes, 01-Foundation:** wording aligned with DD-34 and DD-36. Agentic
   Supervision §1 lists the question of a held Case among the situations that bring a person into
   an autonomous Case, and §2 samples the Cases that exhausted their budget. Detection & Analysis
