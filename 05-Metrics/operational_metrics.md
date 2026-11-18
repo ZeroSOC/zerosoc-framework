@@ -2,7 +2,7 @@
 title: SOC Operational Metrics
 type: concept
 status: draft
-last_updated: 2026-11-13
+last_updated: 2026-11-18
 license: Apache-2.0
 description: Process-anchored volume, speed, quality, autonomy and token-economics metrics for the detection and response pipeline
 ---
@@ -75,7 +75,7 @@ Context metrics: they size the pipeline so that the rates and costs downstream a
 *   **Purpose:** the human-side target, tracked per class: action approvals, proposed closures and questions. The number to fix when MTTC is excellent but Incidents still run long.
 
 ### Mean Time To Respond (MTTR)
-*   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5) ([DD-33](../01-Foundation/design_decisions.md#dd-33-seven-gates-from-the-alert-to-the-closed-case)). Recovery complete (G6) is excluded: that would measure recovery.
+*   **Start:** the originating Alert received (G1). **Stop:** not yet settled: containment completed (G4) or eradication verified (G5). Recovery complete (G6) is excluded: that would measure recovery.
 *   **Purpose:** how long the response took.
 
 ## 5. Disposition Quality
